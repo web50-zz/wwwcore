@@ -1,0 +1,21 @@
+<div class="faq" id="faq">
+<div class="faq_part" id="faq_part">
+<div class="back_to_parts" id="back_to_parts">
+	<a href="/information/">К списку разделов</a><br>
+	<span id="make_q" class="make_q" cid="{__faq_part_id__}">Задать вопрос</span>
+</div>
+<h1>Раздел: {__part_title__}</h1>
+{__(apply(/records)__}
+	<div id="faq_item" class="faq_item">
+		<div id="faq_quest" class="faq_quest">
+			Вопрос:	{__faq_question__}
+		</div>
+		{__(if($faq_answer)__}
+		<div id="faq_answer" class="faq_answer">
+			Ответ: {__faq_answer__}
+		</div>
+		{__if)__}
+	</div>
+{__apply)__}
+</div>
+</div>

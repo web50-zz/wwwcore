@@ -1,0 +1,28 @@
+.action_page{
+margin:auto;
+border:1px solid #CCC;
+width:400px;
+height:200px;
+margin-top:200px;
+padding:10px;
+}
+#action_page h1{
+font-size:12px;
+text-align:center;
+}
+
+#action_page .msg{
+margin-top:30px;
+margin-bottom:30px;
+}
+
+#action_page .link{
+width:100%;
+background:#CCC;
+text-align:center;
+}
+#link a{
+color:#000;
+font-weight:bold;
+border-bottom:1px dashed #000;
+}

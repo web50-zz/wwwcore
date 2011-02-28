@@ -1,0 +1,176 @@
+body{
+margin:0px;
+background-image:url("/images/background-main.gif");
+}
+
+.bdy{
+}
+
+.bdy_wrap{
+font-family:Verdana;
+font-size:11px;
+line-height:18px;
+margin:auto;
+padding:10px 10px;
+position:relative;
+width:1024px;
+min-width:1024px;
+min-height:900px;
+background:#FFF;
+}
+
+a{
+text-decoration:none;
+}
+
+.view_point_1{
+min-width:900px;
+padding:0px;
+border:1px dotted #CCC;
+}
+
+
+.view_point_2{
+min-width:200px;
+padding:5px;
+border:1px dotted #CCC;
+width:210px;
+}
+
+
+.view_point_4{
+min-width:200px;
+padding:5px;
+border:1px dotted #CCC;
+width:210px;
+}
+
+.view_point_7{
+min-width:200px;
+padding:5px;
+border:1px dotted #CCC;
+width:210px;
+}
+.view_point_5{
+min-width:200px;
+padding:5px;
+border:1px dotted #CCC;
+width:350px;
+float:right;
+position:relative;
+height:100%;
+}
+
+
+.left_area{
+position:relative;
+padding:5px 10px 5px 0px;
+margin-top:10px;
+float:left;
+}
+
+.center_area{
+padding:5px;
+position:relative;
+margin-top:15px;
+margin-bottom:15px;
+float:left;
+width:532px;
+height:100%;
+border:1px dotted #CCC;
+}
+
+.right_area{
+position:relative;
+padding:5px 10px 5px 0px;
+margin-top:10px;
+margin-left:10px;
+float:left;
+}
+
+.bottom_area{
+height:100px;
+padding:10px;
+width:97%;
+border:1px dotted #CCC;
+clear:left;
+}
+
+#bottom_area div{
+text-align:center;
+margin:auto;
+}
+
+.dsc{
+float:left;
+width:200px;
+position:relative;
+}
+
+.top_area{
+width:100%;
+height:50px;
+margin-bottom:5px;
+}
+
+.level2{
+width:100%;
+height:20px;
+margin-bottom:5px;
+}
+
+.view_point_6{
+min-width:200px;
+border:1px dotted #CCC;
+width:100%;
+float:left;
+position:relative;
+height:100%;
+padding:5px;
+}
+
+ul {
+	list-style-type:none;
+}
+div.paginator {
+	color: #666;
+	font-family: Verdana,Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 10;
+	margin: 15px 0px 20px 0px;
+	overflow: hidden;
+}
+div.paginator p {
+	float: left;
+	margin: 0px;
+}
+div.paginator p b {
+	color: #000;
+	font-weight:bold;
+}
+div.paginator ul {
+	float: right;
+	line-height: 120%;
+	margin: 0px;
+}
+div.paginator ul li {
+	background: none;
+	float: left;
+	margin: 0px;
+	padding: 0px 4px 0px 4px;
+}
+div.paginator ul li.bordered {
+	border-right: 1px solid #666;	
+}
+div.paginator ul li a {
+	text-decoration: none;
+	color: #000;
+}
+div.paginator ul li.active {
+	color:#666;
+	font-size: 12;
+	font-weight:bold;
+	border-bottom:1px dotted;
+}
+div.paginator ul li.active a {
+	color: #000;
+}

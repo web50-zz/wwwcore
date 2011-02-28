@@ -1,0 +1,23 @@
+<div class="sub_menu">
+{__(if(!empty(/childs))__}
+{__set(#level = /root/level + 1)__}
+{__apply(/childs[left > /root/left AND right < /root/right AND level == #level])__}
+{__else__}
+&nbsp;
+{__if)__}
+
+</div>
+
+{__(template(/childs)__}
+{__set(#level = $level + 1)__}
+<ul class="sub_menu_ul" id="sub_menu_ul">
+{__(if($id == /page/id)__}
+<li>	<a class="active" href="{__uri__}" title="{__php::htmlspecialchars($title)__}">{__title__}</a></li>
+{__else__}
+<li>	<a href="{__uri__}" title="{__php::htmlspecialchars($title)__}">{__title__}</a></li>
+{__if)__}
+{__(if(($left < /page/left AND $right > /page/right) OR ($id == /page/id))__}
+				{__apply(/childs[left > $left AND right < $right AND level == #level])__}
+{__if)__}
+</ul>
+{__template)__}

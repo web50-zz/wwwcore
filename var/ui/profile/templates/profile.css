@@ -1,0 +1,108 @@
+.profile{
+border: 1px dotted;
+height:100%;
+margin-bottom:10px;
+padding:5px;
+font-family:Verdana;
+}
+
+#profile h1{
+font-size:11px;
+}
+#profile .pnav{
+border-bottom: 1px dotted #CCC;
+padding:10px;
+}
+#pnav a{
+border-bottom:1px dashed #666;
+color:#666;
+}
+#profile #pcontent #pd .f_t{
+float:left;
+margin-right:10px;
+text-align:right;
+font-weight:bold;
+width:150px;
+}
+#profile #pcontent #pd .f_c{
+text-align:center;
+width:100%;
+height:10px;
+}
+
+#profile #pcontent #pd #f_c .cpd{
+border-bottom: 1px dashed #000;
+cursor:pointer;
+}
+
+#pnav span{
+border-bottom: 1px dashed #000;
+cursor:pointer;
+}
+
+#pd h1{
+text-align:center;
+font-size:12px;
+margin:0px;
+}
+
+#od h1{
+text-align:center;
+font-size:12px;
+margin:0px;
+}
+.pcontent{
+margin-top:20px;
+margin-bottom:20px;
+}
+
+
+
+#profile #pcontent #od .item{
+margin-bottom:20px;
+border-bottom:1px dotted #CCC;
+padding-bottom:20px;
+}
+
+#profile #pcontent #od #item .f_t{
+float:left;
+margin-right:10px;
+text-align:left;
+font-weight:bold;
+width:150px;
+}
+
+#profile #pcontent #od .f_c{
+text-align:right;
+width:100%;
+height:10px;
+}
+
+#profile #pcontent #od #f_c .cpda{
+border-bottom: 1px dashed #000;
+cursor:pointer;
+}
+
+
+#frmwrap h1{
+text-align:center;
+font-weight:bold;
+font-size:12px;
+}
+#ffqf #item  .f_n{
+float:left;
+margin-right:10px;
+text-align:left;
+font-weight:bold;
+width:150px;
+}
+
+#ffqf #item  a{
+color:#000;
+border-bottom:1px dashed #000;
+}
+
+#ffqf .item{
+margin-bottom:20px;
+font-size:11px;
+}

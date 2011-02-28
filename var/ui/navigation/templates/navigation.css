@@ -1,0 +1,46 @@
+.trunc_menu{
+min-width:200px;
+padding:0px 10px;
+color:#666;
+}
+
+#trunc_menu a{
+color:#666;
+white-space:nowrap;
+}
+
+.top_menu{
+padding:10px;
+font-weight:bold;
+border:1px dotted #CCC;
+background:#CCC;
+}
+
+#top_menu a{
+color:#FFF;
+}
+
+.sub_menu{
+}
+
+.sub_menu_ul{
+margin:0px;
+padding:0px;
+list-style:none outside none;
+}
+
+#sub_menu_ul li{
+margin:0px;
+padding:0px;
+}
+
+#sub_menu_ul li a{
+color:#666;
+}
+
+#sub_menu_ul li a.active{
+text-decoration:underline;
+}
+
+
+

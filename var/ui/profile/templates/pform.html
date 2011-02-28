@@ -1,0 +1,48 @@
+<div id="closewrap" class="closewrap">
+<span class="closebt" id="closebt">закрыть</span>
+</div>
+<br><br>
+<form name="ffqf" id="ffqf" class="ffqf">
+	<div id="te" class="field_name">E-mail:</div> <input fldttlid="te"  class="req field email" id="email" type="Text" value="{__clnt_email__}" name="email" title="e-mail"><br>
+	<div id="tl" class="field_name">Фамилия:</div><input fldttlid="tl"  class="req field lname" id="lname" type="Text" name="lname" value="{__clnt_lname__}" title="lname"> <br>
+	<div id="tn" class="field_name">Имя:</div><input fldttlid="tn"  class="req field name" id="name" type="Text" name="name" value="{__clnt_name__}" title="name"> <br>
+	<div id="tm" class="field_name">Отчество:</div><input fldttlid="tm"  class="field mname" id="mname" type="Text" name="mname" value="{__clnt_mname__}" title="mname"> <br>
+	<div id="tcc" class="field_name">Страна:</div>
+	<select fldttlid="tcc"  class="req field clnt_country" id="clnt_country" type="Text" name="clnt_country" title="clnt_country"> 
+		<option value="">Выбрать</option>
+		{__(apply(/cntrys/records)__}
+		    <option value="{__id__}" {__(if($id == /clnt_country_selected)__} selected {__if)__} >{__(if($title != '')__}{__title__}{__else__}{__title_eng__}{__if)__}</option>
+		{__apply)__}
+	</select>
+	<br>
+	<div id="tcr" class="field_name">Регион:</div>
+	<div id="reg_wrap"> </div>
+	<select fldttlid="tcr"  class="req field clnt_region" id="clnt_region" name="clnt_region"  title="clnt_region"> 
+		<option value="">Выбрать</option>
+		{__(apply(/regs/records)__}
+		    <option value="{__id__}" {__(if($id == /clnt_region_selected)__} selected {__if)__} >{__(if($title != '')__}{__title__}{__else__}{__title_eng__}{__if)__}</option>
+		{__apply)__}
+	</select><br>
+	<div id="ee" class="ee"></div>
+	<div id="tcrc" class="field_name">Другой регион:</div><input fldttlid="tcrc"  class="field clnt_region_custom" id="clnt_region_custom" type="Text" name="clnt_region_custom" value="{__clnt_region_custom__}" title="clnt_region_custom"><br>
+	<div id="tcn" class="field_name">Город/Населенный пункт:</div><input fldttlid="tcn"  class="req field clnt_nas_punkt" id="clnt_nas_punkt" type="Text" name="clnt_nas_punkt" value="{__clnt_nas_punkt__}" title="clnt_nas_punkt"> <br><br>
+	<div id="tca" class="field_name">Адрес:</div><textarea fldttlid="tca"  class="req field clnt_address" id="clnt_address"  name="clnt_address"  title="clnt_address">{__clnt_address__}</textarea> <br>
+
+	<div id="tcp" class="field_name">Телефон:</div><input fldttlid="tcp"  class="req field clnt_phone" id="clnt_phone" type="Text" name="clnt_phone" value="{__clnt_phone__}" title="clnt_phone"> <br><br>
+	<div id="tcpp" class="field_name">Предпочтительный <br>способ оплаты:</div> 
+	<select fldttlid="tcpp"  class="req field clnt_payment_pref" id="clnt_payment_pref" type="Text" name="clnt_payment_pref" value="" title="clnt_payment_pref"> 
+		<option value="">Выбрать</option>
+		{__(apply(/payvar/records)__}
+		<option value="{__id__}" {__(if($id = /clnt_payment_pref_selected)__} selected {__if)__}>{__title__}</option>
+		{__apply)__}
+	</select><br><br>
+
+	<div id="tcpc" class="field_name">Валюта:</div> 
+	<select fldttlid="tcpc"  class="req field clnt_payment_curr" id="clnt_payment_curr" type="Text" name="clnt_payment_curr" value="" title="clnt_payment_curr"> 
+		<option value="">Выбрать</option>
+		{__(apply(/currencys/records)__}
+			<option value="{__id__}" {__(if($id == /clnt_payment_curr_selected)__} selected {__if)__}>{__name__}</option>
+		{__apply)__}
+	</select><br>
+	<input type="button" id="sbbt" class="sbbt" value="Отправить">
+</form>

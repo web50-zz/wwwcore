@@ -1,0 +1,11 @@
+.contacts{
+border: 1px dotted;
+height:100%;
+margin-top:10px;
+padding:5px;
+font-family:Verdana;
+}
+
+#contacts h1{
+font-size:11px;
+}

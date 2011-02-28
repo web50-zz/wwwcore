@@ -1,0 +1,16 @@
+<div id="closewrap" class="closewrap">
+<span class="closebt" id="closebt">закрыть</span>
+</div>
+<h1>Детальный список товаров в заказе</h1>
+<br><br>
+<form name="ffqf" id="ffqf" class="ffqf">
+	{__(apply(/records)__}
+	<div class="item" id="item">
+		<div id="tgan" class="f_n">Группа: </div><span><a target="blanck" href="/products/group/{__group_id__}/">{__str_group__}</a></span> <br>
+		<div id="tgan" class="f_n">Название: </div><span><a target="blanck" href="/products/item_{__item_id__}.html">{__str_title__}</a></span> <br>
+		<div id="tgan" class="f_n">Тип: </div><span>{__str_type__}</span> <br>
+		<div id="tgan" class="f_n">Количество: </div><span>{__count__}</span><br> 
+		<div id="tgan" class="f_n">Цена: </div><span>{__price1__}</span>
+	</div>
+	{__apply)__}
+</form>

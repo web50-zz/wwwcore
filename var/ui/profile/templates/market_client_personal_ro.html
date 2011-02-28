@@ -1,0 +1,15 @@
+	<div id="pd" class="pd">
+	<h1>Личные данные</h1>
+	<div class="f_c" id="f_c"><span class="cpd" id="cpd">Изменить</span></div><br>
+	<div class="f_t">Регистрация : </div>{__php::date('d.m.Y',strtotime($clnt_created_datetime))__}	<br>
+	<div class="f_t">Имя : </div>{__name__}	<br>
+	<div class="f_t">Страна : </div>{__(if($country != '')__}{__country__}{__else__}{__country_eng__}{__if)__}<br>
+	<div class="f_t">Регион : </div>{__(if($region != '')__}{__region__}{__else__}{__region_eng__}{__if)__}<br>
+	<div class="f_t">Регион : </div>{__clnt_region_custom__}<br>
+	<div class="f_t">Населенный пункт : </div>{__clnt_nas_punkt__}<br>
+	<div class="f_t">Адрес : </div>{__address__}<br>
+	<div class="f_t">E-mail : </div>{__clnt_email__}<br>
+	<div class="f_t">Телефон : </div>{__clnt_phone__}<br>
+	<div class="f_t">Способ оплаты : </div>{__ppref__}<br>
+	<div class="f_t">Валюта : </div>{__pcurr__}<br>
+	</div>

@@ -1,0 +1,14 @@
+{
+id:'clnt_region',
+cls:'req field clnt_region',
+fldttlid:'title_clnt_region',
+title:'clnt_region',
+name:'clnt_region',
+tag:'select',	
+children:[ 
+{tag: 'option', value: '', html: 'Выбрать'},
+{__(apply(/records)__}
+{tag: 'option', value: '{__id__}', html: '{__title__}'},
+{__apply)__}
+]
+}

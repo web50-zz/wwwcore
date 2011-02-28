@@ -1,0 +1,14 @@
+.subscribe{
+border: 1px dotted;
+height:100%;
+margin-bottom:10px;
+padding:5px;
+font-family:Verdana;
+}
+
+#subscribe h1{
+font-size:11px;
+}
+#subscribe .subscrbtt{
+margin-left:50px;
+}

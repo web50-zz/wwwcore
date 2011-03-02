@@ -43,6 +43,7 @@ class ui_navigation extends user_interface
 	{
 		$st = data_interface::get_instance('structure');
 		$data = $st->get_trunc_menu();
+		$data = array_merge($data, $this->get_sub_structure($data[count($data) - 1]));
 		$this->title_words = '';
 		$this->key_words = '';
 		$this->description = '';
@@ -52,5 +53,25 @@ class ui_navigation extends user_interface
 		return $this->parse_tmpl('trunc_menu.html',$data);
 	}
 	
+	/**
+	*
+	*/
+	private function get_sub_structure($page)
+	{
+		$divp = data_interface::get_instance('ui_view_point');
+		$divp->_flush();
+		$divp->set_args(array('_spid' => $page['id'], '_shas_structure' => 1));
+		$divp->set_order('view_point');
+		$divp->set_order('order');
+		$vps = $divp->_get();
+
+		foreach ($vps as $vp)
+		{
+			$ui = user_interface::get_instance($vp->ui_name);
+			return $ui->call('trunc_menu', array('data_only' => 1));
+		}
+
+		return array();
+	}
 }
 ?>

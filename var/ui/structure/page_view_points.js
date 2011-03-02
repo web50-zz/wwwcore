@@ -19,7 +19,7 @@ ui.structure.page_view_points = function(config){
 			root: 'records',
 			messageProperty: 'errors'
 		},
-		[{name: 'id', type: 'int'}, {name: 'view_point', type: 'int'}, 'title', 'cache_enabled', 'cache_timeout', 'ui_name', 'human_name', 'ui_call', 'ui_configure', 'order', 'deep_hide']
+		[{name: 'id', type: 'int'}, {name: 'view_point', type: 'int'}, 'title', 'cache_enabled', 'cache_timeout', 'has_structure', 'ui_name', 'human_name', 'ui_call', 'ui_configure', 'order', 'deep_hide']
 	);
 	// Typical JsonWriter
 	var writer = new Ext.data.JsonWriter({
@@ -45,6 +45,7 @@ ui.structure.page_view_points = function(config){
 		{header: this.clmnVPoint, id: 'view_point', dataIndex: 'view_point', sortable: true, width: 50, editor: new fm.NumberField({minValue: 0, maxValue: 255})},
 		{header: this.clmnTitle, id: 'title', dataIndex: 'title', sortable: true, editor: new fm.TextField({maxLength: 255})},
 		{header: this.clmnOrder, id: 'order', dataIndex: 'order', sortable: true, width: 50, editor: new fm.NumberField({minValue: 0, maxValue: 255})},
+		{header: this.clmnHasStrc, id: 'has_structure', dataIndex: 'has_structure', sortable: true, width: 50, editor: fldYN, renderer: clmnYN},
 		{header: this.clmnDHide, id: 'deep_hide', dataIndex: 'deep_hide', sortable: true, width: 50, editor: fldYN, renderer: clmnYN},
 		{header: this.clmnUIName, id: 'human_name', dataIndex: 'human_name', sortable: true, width: 150},
 		{header: this.clmnUICall, id: 'ui_call', dataIndex: 'ui_call', sortable: true, width: 100},
@@ -136,6 +137,7 @@ Ext.extend(ui.structure.page_view_points, Ext.grid.EditorGridPanel, {
 	clmnUICall: "Вызов",
 	clmnCache: "Исп. кэш",
 	clmnCacheTime: "Кэш время",
+	clmnHasStrc: "Струк.",
 
 	cnfrmTitle: "Подтверждение",
 	cnfrmMsg: "Вы действительно хотите удалить этот ViewPoint?",

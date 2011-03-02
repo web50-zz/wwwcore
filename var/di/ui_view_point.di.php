@@ -32,6 +32,7 @@ class di_ui_view_point extends data_interface
 		'page_id' => array('type' => 'integer', 'alias' => 'pid'),
 		'order' => array('type' => 'integer'),		// Порядок отображения ViewPoint`а
 		'deep_hide' => array('type' => 'integer'),	// Скрывать ViewPoint на подстраницах
+		'has_structure' => array('type' => 'integer'),	// Имеет собственную структуру
 		'view_point' => array('type' => 'integer'),
 		'title' => array('type' => 'string'),
 		'ui_name' => array('type' => 'string'),
@@ -74,7 +75,7 @@ class di_ui_view_point extends data_interface
 		$this->set_order('order');
 		$this->set_order('human_name', 'ASC', $in);
 		$this->set_args(array('_stype' => 'ui'), true);
-		$this->extjs_grid_json(array('id', 'view_point', 'title', 'ui_name', 'ui_call', 'ui_configure', 'order', 'deep_hide', 'cache_enabled', 'cache_timeout',
+		$this->extjs_grid_json(array('id', 'view_point', 'title', 'ui_name', 'ui_call', 'ui_configure', 'order', 'has_structure', 'deep_hide', 'cache_enabled', 'cache_timeout',
 			array('di' => $in, 'name' => 'human_name')
 		));
 	}

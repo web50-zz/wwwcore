@@ -102,6 +102,10 @@ ui.structure.page_view_point_form = function(config){
 			diEP,
 			new Ext.form.TriggerField({fieldLabel: this.labelParams, name: 'ui_configure', triggerClass: 'x-form-edit-trigger', onTriggerClick: moduleCfg}),
 			{fieldLabel: this.labelViewPoint, name: 'view_point', xtype: 'numberfield', width: 50, anchor: null},
+			{fieldLabel: this.labelHasStructure, hiddenName: 'has_structure', value: 0, xtype: 'combo', width: 50, anchor: null,
+				store: new Ext.data.SimpleStore({ fields: ['value', 'title'], data: [[0, 'Нет'], [1, 'Да']] }),
+				valueField: 'value', displayField: 'title', mode: 'local', triggerAction: 'all', selectOnFocus: true, editable: false
+			},
 			{fieldLabel: this.labelDeepHide, hiddenName: 'deep_hide', value: 0, xtype: 'combo', width: 50, anchor: null,
 				store: new Ext.data.SimpleStore({ fields: ['value', 'title'], data: [[0, 'Нет'], [1, 'Да']] }),
 				valueField: 'value', displayField: 'title', mode: 'local', triggerAction: 'all', selectOnFocus: true, editable: false
@@ -133,6 +137,7 @@ ui.structure.page_view_point_form = function(config){
 Ext.extend(ui.structure.page_view_point_form, Ext.form.FormPanel, {
 	labelViewPoint: 'Точка вывода',
 	labelTitle: 'Наименование',
+	labelHasStructure: 'Имеет структуру',
 	labelDeepHide: 'Скрывать на подстраницах',
 	labelCache: 'Кэшировать',
 	labelCacheTime: 'Хранить кэш (сек)',

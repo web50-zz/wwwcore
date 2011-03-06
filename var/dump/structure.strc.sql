@@ -1,0 +1,22 @@
+CREATE TABLE `structure` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `hidden` tinyint(1) unsigned NOT NULL default '0' COMMENT 'скрыть',
+  `title` varchar(255) NOT NULL default '',
+  `name` varchar(16) NOT NULL default '',
+  `uri` varchar(255) NOT NULL default '',
+  `redirect` varchar(255) NOT NULL default '',
+  `module` varchar(100) NOT NULL default '',
+  `params` varchar(255) NOT NULL default '',
+  `template` varchar(64) NOT NULL default 'default',
+  `private` tinyint(1) unsigned NOT NULL default '0',
+  `auth_module` varchar(32) NOT NULL default '',
+  `left` mediumint(8) unsigned NOT NULL default '0',
+  `right` mediumint(8) unsigned NOT NULL default '0',
+  `level` mediumint(8) unsigned NOT NULL default '0',
+  `mtitle` varchar(255) NOT NULL default '',
+  `mkeywords` varchar(255) NOT NULL default '',
+  `mdescr` varchar(255) NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  KEY `site_part_id` (`left`,`right`,`level`),
+  KEY `uri` (`uri`)
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8

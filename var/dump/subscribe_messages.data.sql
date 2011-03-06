@@ -1,0 +1,5 @@
+LOCK TABLES `subscribe_messages` WRITE;
+/*!40000 ALTER TABLE `subscribe_messages` DISABLE KEYS */;
+INSERT INTO `subscribe_messages` VALUES (34,'2010-08-02 06:08:59','2010-08-05 19:51:00',NULL,0,0,1,'тестовая рассылка','это тест и на него не надо отвечать<br><br><br>-------------------<br><br>',1,0,NULL,1),(35,'2010-08-02 06:08:21','2010-08-05 19:38:00',NULL,0,0,1,' qweeqw','',1,0,NULL,1),(36,'2010-08-02 06:08:53',NULL,NULL,0,0,0,' rwqr','rrrrrr',1,0,NULL,0),(37,'2010-08-02 06:08:58',NULL,NULL,0,0,0,' rwqr',NULL,1,0,NULL,0),(39,'2010-08-02 06:08:14',NULL,NULL,0,0,0,' zxc',NULL,2,0,NULL,0),(40,'2010-08-02 06:08:12',NULL,NULL,0,0,0,' asd',NULL,2,0,NULL,0),(41,'2010-08-02 06:08:08',NULL,NULL,0,0,0,' qweqwe',NULL,2,0,NULL,0),(42,'2010-08-02 06:08:02',NULL,NULL,0,0,0,' werwer',NULL,2,0,NULL,0),(43,'2010-08-02 06:08:27',NULL,NULL,0,0,0,' werwer',NULL,2,0,NULL,0),(44,'2010-08-02 06:08:32',NULL,NULL,0,0,0,' werwer',NULL,2,0,NULL,0),(46,'2010-08-03 17:16:00','2010-08-03 17:16:00',NULL,0,1,1,'23123123','123123123',2,0,NULL,0);
+/*!40000 ALTER TABLE `subscribe_messages` ENABLE KEYS */;
+UNLOCK TABLES;

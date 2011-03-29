@@ -17,14 +17,23 @@ class ui_navigation extends user_interface
 	}
 
 	/**
-	*	main menu
+	*	main menu  tracks  'template' variable to set more templates then default
 	*/
 	protected function pub_top_menu()
 	{
+		$template = 'main_menu.html';
+		if($this->args['template'])//9* если задан шаблон то будем брать заданный
+		{
+			$template = $this->args['template'];
+		}
+		if($this->args['parent']) //9* если в аргументах задан парент то берем срез чайлдов заданного
+		{
+			$parent = $this->args['parent'];
+		}
 		$st = data_interface::get_instance('structure');
-		$data = $st->get_main_menu();
+		$data['records'] = $st->get_main_menu($parent);
 		$data['page_id'] = PAGE_ID;
-		return $this->parse_tmpl('main_menu.html',$data);
+		return $this->parse_tmpl($template,$data);
 	}
 	
 	/**

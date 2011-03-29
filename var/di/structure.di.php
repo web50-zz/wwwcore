@@ -69,11 +69,15 @@ class di_structure extends data_interface
 		return $result[0];
 	}
 
-	public function get_main_menu()
+	public function get_main_menu($parent = '1')
 	{
+		if(!$parent)
+		{
+			$parent = '1';
+		}
 		$this->where = '`sp1`.`hidden` = 0';
 		$ns = new nested_sets($this);
-		$branch = $ns->get_childs(1, 1);
+		$branch = $ns->get_childs($parent, 1);
 		return $branch;
 	}
 	

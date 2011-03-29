@@ -22,11 +22,15 @@ class ui_news extends user_interface
 	}
         
 	/**
-        *       Отрисовка контента для внешней части
+        *       Отрисовка контента для внешней части  имеет парамтер limit определяющий лимит записей для вывода
         */
         public function pub_content()
         {
 		$limit = 10;
+		if($this->args['limit']>0)
+		{
+			$limit = $this->args['limit'];
+		}
 		$page = request::get('page', 1);
                 $di = data_interface::get_instance('news');
 		$di->set_args($this->args);

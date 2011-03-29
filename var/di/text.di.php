@@ -51,8 +51,8 @@ class di_text extends data_interface
 		#$sc = $this->join_with_di('structure_content', array('id' => 'cid'), array('pid' => 'pid'));
 		#return $this->_get();
 		$this->_flush();
-		$this->connector->fetchMethod = PDO::FETCH_ASSOC;
-		return $this->_get();
+		$data =	$this->extjs_form_json(false,false);
+		return $data['data'];
 	}
 
 	/**

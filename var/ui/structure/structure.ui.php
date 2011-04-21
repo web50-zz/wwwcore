@@ -56,6 +56,19 @@ class ui_structure extends user_interface
 		$title_words[] = SITE_TITLE;
 		$description[] = SITE_DESCRIPTION;
 
+		// 9* include and mask some js  depes for current theme.
+		$js_deps_file = BASE_PATH.CURRENT_THEME_PATH.'/js_deps.php';
+		if(file_exists($js_deps_file))
+		{
+			include_once($js_deps_file);
+			foreach($js_deps as $depk=>$depv)
+			{
+				$path = CURRENT_THEME_PATH.$depv;
+				$data['js_resources'][] = $path;
+			}
+		}
+		//9* end of js deps inclusion
+
 		foreach ($vps as $vp)
 		{
 			try
@@ -140,19 +153,6 @@ class ui_structure extends user_interface
 			$title_words[] =  $this->title_words;
 		
 		}
-
-		// 9* include and mask some js  depes for current theme.
-		$js_deps_file = BASE_PATH.CURRENT_THEME_PATH.'/js_deps.php';
-		if(file_exists($js_deps_file))
-		{
-			include_once($js_deps_file);
-			foreach($js_deps as $depk=>$depv)
-			{
-				$path = CURRENT_THEME_PATH.$depv;
-				$data['js_resources'][] = $path;
-			}
-		}
-		//9* end of js deps inclusion
 
 		if($this->key_words)
 		{

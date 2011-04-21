@@ -57,13 +57,13 @@ class ui_structure extends user_interface
 		$description[] = SITE_DESCRIPTION;
 
 		// 9* include and mask some js  depes for current theme.
-		$js_deps_file = BASE_PATH.CURRENT_THEME_PATH.'/js_deps.php';
+		$js_deps_file = BASE_PATH.$this->theme_path.'/js_deps.php';
 		if(file_exists($js_deps_file))
 		{
 			include_once($js_deps_file);
 			foreach($js_deps as $depk=>$depv)
 			{
-				$path = CURRENT_THEME_PATH.$depv;
+				$path = $this->theme_path.$depv;//9* note that $this->theme_path declared in user_interface prototype class by defults based on  theme init cfg
 				$data['js_resources'][] = $path;
 			}
 		}
@@ -75,7 +75,11 @@ class ui_structure extends user_interface
 			{
 				$ui = user_interface::get_instance($vp->ui_name);
 				$call = !empty($vp->ui_call) ? $vp->ui_call : 'content';
-					
+				/* 9* theme overload. If  exclusive theme declared for page we should overwrite theme_path variable for any ui we used on page */
+				if($page['theme_overload'] != '')
+				{
+					$ui->theme_path = THEMES_PATH.$page['theme_overload'].'/';
+				}
 				/* 9* some cache procs */
 				if ($vp->cache_enabled == 1)
 				{
@@ -172,7 +176,7 @@ class ui_structure extends user_interface
 		$data['title'] = join(',',$title_words);
 		$data['keywords'] = join(',',$key_words);
 		$data['description'] = join(',',$description);
-		$data['CURRENT_THEME_PATH'] = '/'.CURRENT_THEME_PATH;
+		$data['CURRENT_THEME_PATH'] = '/'.$this->theme_path;
 	
                 $template = (!empty($page['template'])) ? $page['template'] : pub_template;
 		$html = $this->parse_tmpl('main/'.$template, $data);

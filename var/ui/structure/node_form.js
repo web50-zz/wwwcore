@@ -73,6 +73,7 @@ ui.structure.node_form = function(config){
 		items: [
 			{name: '_sid', xtype: 'hidden'},
 			{name: 'pid', xtype: 'hidden'},
+			{name: 'id', xtype: 'displayfield',fieldLabel:'Id'},
 			{fieldLabel: this.labelTitle, name: 'title', allowBlank: false, blankText: this.blankText, maxLength: 64, maxLengthText: 'Не больше 64 символов'},
 			{fieldLabel: 'Видимый', hiddenName: 'hidden', value: 0, xtype: 'combo', width: 50, anchor: null,
 				store: new Ext.data.SimpleStore({ fields: ['value', 'title'], data: [[0, 'Да'], [1, 'Нет']] }),
@@ -82,6 +83,7 @@ ui.structure.node_form = function(config){
 			{fieldLabel: 'Имя', name: 'name'},
 			{fieldLabel: 'URI', name: 'uri', disabled: true},
 			{fieldLabel: 'Перенаправить', name: 'redirect'},
+			{fieldLabel: 'Тема', name: 'theme_overload'},
 			new Ext.form.ComboBox({
 				store: new Ext.data.JsonStore({
 					url: 'ui/structure/templates.do',
@@ -123,7 +125,7 @@ ui.structure.node_form = function(config){
 	);
 	this.on({
 		saved: function(isNew, formData, respData){
-			this.getForm().setValues([{id: '_sid', value: respData.id}, {id: 'uri', value: respData.uri}]);
+			this.getForm().setValues([{id: '_sid', value: respData.id}, {id: 'uri', value: respData.uri},{id: 'id', value: respData.id}]);
 		},
 		scope: this
 	});

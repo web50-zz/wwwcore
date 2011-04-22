@@ -36,6 +36,7 @@ class di_structure extends data_interface
 			'module' => array('type' => 'string'),
 			'params' => array('type' => 'string'),
 			'template' => array('type' => 'string'),
+			'theme_overload' => array('type' => 'string'),
 			'private' => array('type' => 'boolean'),
 			'auth_module' => array('type' => 'string'),
 			'left' => array('type' => 'integer', 'protected' => 1),
@@ -298,7 +299,7 @@ class di_structure extends data_interface
 	protected function sys_slice()
 	{
                 $pid = intval($this->args['node']);
-                $fields = array('id', 'title' => 'text', 'module' => 'ui', 'params');
+                $fields = array('id', 'title' => 'text', 'module' => 'ui', 'params','concat("id: ",`'.$this->name.'`.`id`,"<br>URI: ",`'.$this->name.'`.`uri`)'=>'qtip');
 		$this->mode = 'NESTED_SETS_SLICE';
                 if ($pid > 0)
                 {

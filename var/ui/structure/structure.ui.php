@@ -56,6 +56,11 @@ class ui_structure extends user_interface
 		$title_words[] = SITE_TITLE;
 		$description[] = SITE_DESCRIPTION;
 
+		/* 9* theme overload */
+		if($page['theme_overload'] != '')
+		{
+			$this->theme_path = THEMES_PATH.$page['theme_overload'].'/';
+		}
 		// 9* include and mask some js  depes for current theme.
 		$js_deps_file = BASE_PATH.$this->theme_path.'/js_deps.php';
 		if(file_exists($js_deps_file))

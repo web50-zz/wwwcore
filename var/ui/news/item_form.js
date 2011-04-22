@@ -47,6 +47,11 @@ ui.news.item_form = function(config){
 		defaults: {xtype: 'textfield', width: 200, anchor: '100%'},
 		items: [
 			{name: '_sid', inputType: 'hidden'},
+			{fieldLabel:'Категория', hiddenName: 'category', value: 1, xtype: 'combo', anchor: null,
+					store: new Ext.data.SimpleStore({ fields: ['value', 'title'], data: [[0, 'Не определена'],[1, '1'], [2, '2']]}),
+					valueField: 'value', displayField: 'title', mode: 'local',
+					triggerAction: 'all', selectOnFocus: true, editable: false
+			},
 			{fieldLabel: this.fldTitle, name: 'title', maxLength: 255, maxLengthText: 'Не больше 255 символов'},
 			{fieldLabel: this.fldRlsDate, name: 'release_date', anchor: null, format: 'Y-m-d', allowBlank: false, xtype: 'datefield'},
 			{fieldLabel: this.fldSource, name: 'source', maxLength: 64, maxLengthText: 'Не больше 64 символов'},

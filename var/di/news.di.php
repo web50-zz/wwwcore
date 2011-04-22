@@ -29,6 +29,7 @@ class di_news extends data_interface
 	*/
 	public $fields = array(
 		'id' => array('type' => 'integer', 'serial' => 1),
+		'category' => array('type' => 'integer'),
 		'release_date' => array('type' => 'date'),
 		'title' => array('type' => 'string'),
 		'source' => array('type' => 'string'),

@@ -20,17 +20,46 @@ class ui_news extends user_interface
 		parent::__construct((func_num_args() > 0) ? func_get_arg(0) : __CLASS__);
 		$this->files_path = dirname(__FILE__).'/'; 
 	}
-        
+ 	/**
+	*	Вывод списка новостей
+	*/
+	public function pub_content()
+	{
+		$di = data_interface::get_instance('news');
+		$id = request::get('id', false);
+		if ($id)
+		{
+			$di->set_args(array('_sid' => $id));
+			$di->_flush();
+			$di->_get();
+			return $this->parse_tmpl('page.html', $di->get_results(0));
+		}
+		else
+		{
+			$limit = $this->get_args('limit', 10);
+			$page = request::get('page', 1);
+			$di->set_args($this->args);
+			$di->set_args(array(
+				'sort' => 'release_date',
+				'dir' => 'DESC',
+				'start' => ($page - 1) * $limit,
+				'limit' => $limit,
+			));
+			$data = $di->extjs_grid_json(false, false);
+			$pager = user_interface::get_instance('pager');
+			$data['page'] = $page;
+			$data['limit'] = $limit;
+			$data['pager'] = $pager->get_pager(array('page' => $page, 'total' => $data['total'], 'limit' => $limit, 'prefix' => $_SERVER['QUERY_STRING']));
+			return $this->parse_tmpl('default.html', $data);
+		}
+	}
+       
 	/**
         *       Отрисовка контента для внешней части  имеет парамтер limit определяющий лимит записей для вывода
         */
-        public function pub_content()
+        public function pub_top()
         {
-		$limit = 10;
-		if($this->args['limit']>0)
-		{
-			$limit = $this->args['limit'];
-		}
+		$limit = $this->get_args('limit', 10);
 		$page = request::get('page', 1);
                 $di = data_interface::get_instance('news');
 		$di->set_args($this->args);
@@ -45,7 +74,7 @@ class ui_news extends user_interface
 		$data['page'] = $page;
 		$data['limit'] = $limit;
 		$data['pager'] = $pager->get_pager(array('page' => $page, 'total' => $data['total'], 'limit' => $limit, 'prefix' => $_SERVER['QUERY_STRING']));
-		return $this->parse_tmpl('default.html',$data);
+		return $this->parse_tmpl('top.html',$data);
         }
 	
 	/**

@@ -69,15 +69,34 @@ class di_ui_view_point extends data_interface
 	*/
 	protected function sys_list()
 	{
+		$data = $this->get_list_data();
+		response::send($data, 'json');
+	}
+
+
+	public function get_list_data()
+	{
 		$this->_flush(true);
 		$in = $this->join_with_di('interface', array('ui_name' => 'name'), array('type' => 'type'));
 		$this->set_order('view_point');
 		$this->set_order('order');
 		$this->set_order('human_name', 'ASC', $in);
 		$this->set_args(array('_stype' => 'ui'), true);
-		$this->extjs_grid_json(array('id', 'view_point', 'title', 'ui_name', 'ui_call', 'ui_configure', 'order', 'has_structure', 'deep_hide', 'cache_enabled', 'cache_timeout',
-			array('di' => $in, 'name' => 'human_name')
-		));
+		return $this->extjs_grid_json(array('id', 
+							'view_point', 
+							'title', 
+							'ui_name',
+							'page_id', 
+							'ui_call', 
+							'ui_configure', 
+							'order', 
+							'has_structure', 
+							'deep_hide', 
+							'cache_enabled', 
+							'cache_timeout',
+							array('di' => $in, 'name' => 'human_name')
+							),
+						false);
 	}
 
 	/**
@@ -156,6 +175,14 @@ class di_ui_view_point extends data_interface
 	{
 		$this->_flush();
 		$this->extjs_unset_json();
+	}
+	public function drop_by_page_id($page_id = 0)
+	{
+		if($page_id>0)
+		{
+			$sql = 'DELETE FROM '.$this->name." WHERE page_id = $page_id";
+			$this->connector->query($sql);
+		}
 	}
 }
 ?>

@@ -16,7 +16,8 @@ CREATE TABLE `structure` (
   `mtitle` varchar(255) NOT NULL default '',
   `mkeywords` varchar(255) NOT NULL default '',
   `mdescr` varchar(255) NOT NULL default '',
+  `theme_overload` varchar(50) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `site_part_id` (`left`,`right`,`level`),
   KEY `uri` (`uri`)
-) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8
+) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8

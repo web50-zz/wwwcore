@@ -14,6 +14,7 @@ class ui_structure extends user_interface
 		'main' => array(
 			'structure.site_tree',
 			'structure.page_view_points',
+			'structure_presets.main',
 		),
 		'site_tree' => array(
 			'structure.node_form',

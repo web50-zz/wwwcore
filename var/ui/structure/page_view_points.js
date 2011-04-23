@@ -34,6 +34,9 @@ ui.structure.page_view_points = function(config){
 		writer: writer
 	});
 	this.applyStore = function(data){
+		if(data._spid>0){
+			Ext.each(this.getTopToolbar().find('disabled', true), function(el){el.enable()});
+		}
 		Ext.apply(store.baseParams, data);
 		store.load();
 	}
@@ -103,6 +106,29 @@ ui.structure.page_view_points = function(config){
 	var reload = function(){
 		store.load({params: {start: 0, limit: this.limit}});
 	}.createDelegate(this);
+
+	var SaveCfg = function(){
+		var pid = store.baseParams._spid;
+		var f = new ui.structure_presets.main({pid:pid});
+		f.AddSingle();
+	}.createDelegate(this);
+	var LoadCfg = function(){
+		var pid = store.baseParams._spid;
+		var f = new ui.structure_presets.main({pid:pid});
+		f.store.load();
+		var w = new Ext.Window({title: this.addTitle, maximizable: true, modal: true, layout: 'fit', 
+					width:600, 
+					height:500, 
+					items: f});
+		f.on({
+			saved: function(){this.store.reload()},
+			vploaded:function(){this.store.reload()},
+			cancelled: function(){w.destroy()},
+			scope: this
+		});
+		w.show();
+	}.createDelegate(this);
+
 	ui.structure.page_view_points.superclass.constructor.call(this, {
 		store: store,
 		columns: columns,
@@ -113,6 +139,8 @@ ui.structure.page_view_points = function(config){
 		selModel: new Ext.grid.RowSelectionModel({singleSelect: true}),
 		tbar: [
 			{iconCls: 'layout_add', text: 'Добавить', handler: Add},
+			{iconCls: 'layout_add', text: 'Сохранить сет', handler: SaveCfg, disabled:true},
+			{iconCls: 'layout_add', text: 'Загрузить сет', handler: LoadCfg, disabled:true},
 			'->', {iconCls: 'help', handler: function(){showHelp('view-points')}}
 		]
 	});

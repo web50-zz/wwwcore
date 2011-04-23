@@ -13,4 +13,4 @@ CREATE TABLE `ui_view_point` (
   `cache_timeout` varchar(6) default NULL,
   PRIMARY KEY  (`id`),
   KEY `page_id` (`page_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=176 DEFAULT CHARSET=utf8
+) ENGINE=MyISAM AUTO_INCREMENT=409 DEFAULT CHARSET=utf8

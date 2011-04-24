@@ -45,6 +45,11 @@ class ui_news extends user_interface
 				'start' => ($page - 1) * $limit,
 				'limit' => $limit,
 			));
+			$category = $this->get_args('category',0);
+			if($category>0)//9* если задана категория в конфиге
+			{
+				$di->set_args(array('_scategory'=>$category),true);
+			}
 			$data = $di->extjs_grid_json(false, false);
 			$pager = user_interface::get_instance('pager');
 			$data['page'] = $page;
@@ -69,6 +74,11 @@ class ui_news extends user_interface
 				'start' => ($page - 1) * $limit,
 				'limit' => $limit,
 			));
+			$category = $this->get_args('category',0);
+		if($category>0)//9* если задана категория в конфиге
+		{
+			$di->set_args(array('_scategory'=>$category),true);
+		}
 		$data = $di->extjs_grid_json(false,false);
 		$pager = user_interface::get_instance('pager');
 		$data['page'] = $page;

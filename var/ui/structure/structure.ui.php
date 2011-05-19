@@ -186,7 +186,10 @@ class ui_structure extends user_interface
 	
                 $template = (!empty($page['template'])) ? $page['template'] : pub_template;
 		$html = $this->parse_tmpl('main/'.$template, $data);
-		response::send($html, 'html');
+		$out =  preg_replace('/\r/','',$html);//9* для пущего ужатия лишнее коцаем
+		$out =  preg_replace('/\n/','',$out);
+		$out =  preg_replace('/\s+/',' ',$out);
+		response::send($out, 'html');
         }
 	
 	/**

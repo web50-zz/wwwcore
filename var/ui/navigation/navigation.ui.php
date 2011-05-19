@@ -21,6 +21,7 @@ class ui_navigation extends user_interface
 	*/
 	protected function pub_top_menu()
 	{
+		$level_down = 1;//9* по дефолту 
 		$template = 'main_menu.html';
 		if($this->args['template'])//9* если задан шаблон то будем брать заданный
 		{
@@ -30,19 +31,28 @@ class ui_navigation extends user_interface
 		{
 			$parent = $this->args['parent'];
 		}
+		if($this->args['level_down']) //9* если задано берем вплоть до заданногоуровня  ниже верхнего уровня нод по дефолту берем первый левел
+		{
+			$level_down = $this->args['level_down'];
+		}
 		$st = data_interface::get_instance('structure');
-		$data['records'] = $st->get_main_menu($parent);
+		$data['records'] = $st->get_main_menu($parent,$level_down);
 		$data['page_id'] = PAGE_ID;
 		return $this->parse_tmpl($template,$data);
 	}
 	
 	/**
-	*	Sub menu
+	*	Sub menu level down nodes for current node
 	*/
 	protected function pub_sub_menu()
 	{
+		$page = 0;
+		if($this->args['page']>0)
+		{
+			$page = $this->args['page'];//9* принудительно задать парента для выбранного вью поинта
+		}
 		$st = data_interface::get_instance('structure');
-		return $this->parse_tmpl('sub_menu.html',$st->get_sub_menu());
+		return $this->parse_tmpl('sub_menu.html',$st->get_sub_menu($page));
 	}
 	
 	/**
@@ -61,7 +71,20 @@ class ui_navigation extends user_interface
 		$this->description = $data[count($data)-1]['title'];
 		return $this->parse_tmpl('trunc_menu.html',$data);
 	}
-	
+
+	/*9* берем первый левел и чайлдов для каждого из топов *. Итогом Будут столбцы топ и его чайлды */	
+	protected function pub_top_and_1_down(){
+		$parent = 1;
+		$level_down = 1;
+		$st = data_interface::get_instance('structure');
+		$data['records'] = $st->get_main_menu($parent,$level_down);
+		foreach($data['records'] as $key=>$value)
+		{
+			$tmp = $st->get_main_menu($value['id'],2);
+			$data['records'][$key]['childs'] = $tmp;
+		}
+		return $this->parse_tmpl('top_and_1_down.html',$data);
+	}
 	/**
 	*
 	*/

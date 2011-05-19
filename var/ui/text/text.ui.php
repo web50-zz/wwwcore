@@ -28,7 +28,9 @@ class ui_text extends user_interface
         {
                 $di = data_interface::get_instance('text');
 		$di->set_args($this->get_args());
-                return $this->parse_tmpl('content.html',$di->get());
+		$data = $di->get();
+		$data = array_merge($data,$this->args);
+                return $this->parse_tmpl('content.html',$data);
         }
 	
 	/**

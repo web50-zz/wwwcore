@@ -70,7 +70,7 @@ class di_structure extends data_interface
 		return $result[0];
 	}
 
-	public function get_main_menu($parent = '1')
+	public function get_main_menu($parent = '1',$level_down = 1)
 	{
 		if(!$parent)
 		{
@@ -78,16 +78,28 @@ class di_structure extends data_interface
 		}
 		$this->where = '`sp1`.`hidden` = 0';
 		$ns = new nested_sets($this);
-		$branch = $ns->get_childs($parent, 1);
+		$branch = $ns->get_childs($parent, $level_down);
+		$top_parent = $ns->get_parent(PAGE_ID, 2);//9* вот то что ниже надо что бы если мы рисуем топ менюдля  страниц нижних уровней индицировать в топ уровне выбранную ветку
+		foreach($branch as $key=>$value)
+		{
+			if($value['id'] == $top_parent['id'])
+			{
+				$branch[$key]['top_parent'] = 'yes';
+			}
+		}
 		return $branch;
 	}
 	
-	public function get_sub_menu()
+	public function get_sub_menu($page = 0)
 	{
+		if($page == 0)
+		{
+			$page = PAGE_ID;
+		}
 		$this->where = '`sp1`.`hidden` = 0';
 		$ns = new nested_sets($this);
-		$data['root'] = $ns->get_parent(PAGE_ID, 2);
-		$data['page'] = $ns->get_node(PAGE_ID);
+		$data['root'] = $ns->get_parent($page, 2);
+		$data['page'] = $ns->get_node($page);
 		if (empty($data['root'])) $data['root'] = $data['page'];
 		$data['childs'] = $ns->get_childs($data['root']['id'], NULL);
 		return $data;;

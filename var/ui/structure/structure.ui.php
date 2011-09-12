@@ -86,41 +86,39 @@ class ui_structure extends user_interface
 				if($page['theme_overload'] != '')
 				{
 					$ui->theme_path = THEMES_PATH.$page['theme_overload'].'/';
+					$ui->theme = $page['theme_overload'];
 				}
-				if($vp->deep_hide !=1)//9* if vp is nt hided then show it
+				/* 9* some cache procs */
+				if ($vp->cache_enabled == 1)
 				{
-					/* 9* some cache procs */
-					if ($vp->cache_enabled == 1)
-					{
-						$di = data_interface::get_instance('cache');
-						$i = array(
-							'ui' => $vp->ui_name,
-							'call' => $call,
-							'timeout' => $vp->cache_timeout
-						);
-						$e = json_decode($vp->ui_configure, true);
-		
-						if (is_array($e))
-							$i = array_merge($i, $e);
-		
-						$di->set_args($i);
+					$di = data_interface::get_instance('cache');
+					$i = array(
+						'ui' => $vp->ui_name,
+						'call' => $call,
+						'timeout' => $vp->cache_timeout
+					);
+					$e = json_decode($vp->ui_configure, true);
 
-						if ($di->cached() == true)
-						{
-							$data["view_point_{$vp->view_point}"][] = $di->get_cached();
-						}
-						else
-						{
-							$data["view_point_{$vp->view_point}"][] = $ui->call($call, json_decode($vp->ui_configure, true));
-							$di->cache_it($data["view_point_{$vp->view_point}"][count($data["view_point_{$vp->view_point}"])-1]);
-						}
+					if (is_array($e))
+						$i = array_merge($i, $e);
+
+					$di->set_args($i);
+
+					if ($di->cached() == true)
+					{
+						$data["view_point_{$vp->view_point}"][] = $di->get_cached();
 					}
 					else
 					{
 						$data["view_point_{$vp->view_point}"][] = $ui->call($call, json_decode($vp->ui_configure, true));
+						$di->cache_it($data["view_point_{$vp->view_point}"][count($data["view_point_{$vp->view_point}"])-1]);
 					}
-					/* end of cache shit */
 				}
+				else
+				{
+					$data["view_point_{$vp->view_point}"][] = $ui->call($call, json_decode($vp->ui_configure, true));
+				}
+				/* end of cache shit */
 				/* 9* title and keywords builder */
 				if($ui->title_words)
 				{
@@ -189,10 +187,10 @@ class ui_structure extends user_interface
 		$data['CURRENT_THEME_PATH'] = '/'.$this->theme_path;
 	
                 $template = (!empty($page['template'])) ? $page['template'] : pub_template;
-		$html = $this->parse_tmpl('main/'.$template, $data);
-		$out =  preg_replace('/\r/','',$html);//9* для пущего ужатия лишнее коцаем
-		$out =  preg_replace('/\n/','',$out);
-		$out =  preg_replace('/\s+/',' ',$out);
+		$out = $this->parse_tmpl('main/'.$template, $data);
+//		$out =  preg_replace('/\r/','',$out);//9* для пущего ужатия лишнее коцаем
+//		$out =  preg_replace('/\n/','',$out);
+//		$out =  preg_replace('/\s+/',' ',$out);
 		response::send($out, 'html');
         }
 	

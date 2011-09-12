@@ -98,10 +98,11 @@ class di_structure extends data_interface
 		}
 		$this->where = '`sp1`.`hidden` = 0';
 		$ns = new nested_sets($this);
-		$data['root'] = $ns->get_parent($page, 2);
+//		$data['root'] = $ns->get_parent($page, 2); //9* pathc 15082011 problems with submenu
 		$data['page'] = $ns->get_node($page);
 		if (empty($data['root'])) $data['root'] = $data['page'];
 		$data['childs'] = $ns->get_childs($data['root']['id'], NULL);
+		$data['page_id'] = PAGE_ID;
 		return $data;;
 	}
 	

@@ -21,10 +21,6 @@ ui.faq = function(conf){
 }
 
 Ext.onReady(function(){
-	FRONTLOADER.load('/js/ux/alertbox/js/Ext.ux.AlertBox.js','alertbox');
-	FRONTLOADER.loadCss('/js/ux/alertbox/alertbox.css','alertboxcss');
-	FRONTLOADER.load('/js/ux/splform/Ext.ux.SplForm.js','splform');
-	FRONTLOADER.loadCss('/js/ux/splform/splform.css','splformcss');
 	var faq = new ui.faq();
 	faq.collectButtons();
 });

@@ -31,10 +31,12 @@ ui.text.main = function(config){
 	var store = new Ext.data.Store({
 		proxy: proxy,
 		reader: reader,
-		writer: writer
+		writer: writer,
+		remoteSort: true,
+		sortInfo: {field: 'id', direction: 'DESC'}
 	});
 	columns = [
-		{header: 'ID', id: 'id', dataIndex: 'id'},
+		{header: 'ID', id: 'id', dataIndex: 'id',sortable:true},
 		{header: this.clmnTitle, id: 'title', dataIndex: 'title', sortable: true, editor: new fm.TextField({maxLength: 255, maxLengthText: 'Не больше 255 символов'})}
 	];
 	var Add = function(){

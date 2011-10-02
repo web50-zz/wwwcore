@@ -1,0 +1,28 @@
+<div class="site_map_container">
+<div class="site_map_title">Карта сайта</div>
+<ul class="site_map" id="site_map">
+{__(apply(/records)__}
+	<li>	
+		<a href="{__uri__}" title="{__title__}" {__(if($level == 2)__}class="site_map_link"{__else__} class="sie_map_sub"{__if)__}><div>{__title__}</div></a>
+		{__(if(count($childs)>0)__}
+		{__apply childs($childs)__}
+		{__if)__}
+	</li>
+{__apply)__}
+</ul>
+</div>
+{__(template childs(param)__}
+	{__(if(count(@param)>0)__}
+		{__set(#cnt = count(@param))__}
+	<ul>
+	{__(apply(@param)__}
+			<li {__(if(@position == 1)__}class="site_map_top"{__if)__} {__(if(@position == #cnt)__} class="bottom"{__if)__}>
+				<a title="{__title__}" href="{__uri__}" {__(if($level == 2)__}class="site_map_link"{__else__} class="sie_map_sub"{__if)__}><div>{__title__}</div></a>
+				{__(if(count($childs)>0)__}
+				{__apply childs($childs)__}
+				{__if)__}
+			</li>
+	{__apply)__}
+	</ul>
+	{__if)__}
+{__template)__}

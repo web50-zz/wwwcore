@@ -186,6 +186,10 @@ class ui_structure extends user_interface
 		$data['description'] = join(',',$description);
 		$data['CURRENT_THEME_PATH'] = '/'.$this->theme_path;
 	
+		if (authenticate::is_logged())
+		{
+			$data['IS_LOGGED'] = 'yes';
+		}
                 $template = (!empty($page['template'])) ? $page['template'] : pub_template;
 		$out = $this->parse_tmpl('main/'.$template, $data);
 //		$out =  preg_replace('/\r/','',$out);//9* для пущего ужатия лишнее коцаем

@@ -31,7 +31,7 @@ Ext.ux.AlertBox = Ext.extend(Ext.util.Observable, {
      *
      * @type {String}
      */
-    closeText: 'X',
+    closeText: 'x',
 
     /**
      * Location of the sceen where AlertBox will be docked to.
@@ -197,7 +197,10 @@ Ext.ux.AlertBox = Ext.extend(Ext.util.Observable, {
     show: function(title, message, icon, options)
     {
         options = options || {};
-
+	if(this.inProgress == true){
+		return;
+	}
+	this.inProgress = true;//9* patch to prevent doubleclick bug
         var o = {
             title: title || this.title,
             message: message || this.message,
@@ -223,6 +226,7 @@ Ext.ux.AlertBox = Ext.extend(Ext.util.Observable, {
         Ext.fly(this.el).slideOut(this.currentDock[0], {
             remove: true
         });
+	delete this.inProgress;
     },
 
     /**

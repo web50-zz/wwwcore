@@ -1,6 +1,6 @@
 ui.structure.site_tree = function(config){
-	var frmW = 400;
-	var frmH = 300;
+	var frmW = 500;
+	var frmH = 500;
 	this.pid = 0;
 	this.loader = new Ext.tree.TreeLoader({url: 'di/structure/slice.json'});
 	this.root = new Ext.tree.AsyncTreeNode({id: '0', draggable: false, expanded: true});

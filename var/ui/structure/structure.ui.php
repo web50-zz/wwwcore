@@ -41,7 +41,6 @@ class ui_structure extends user_interface
                 $data = array(
                         'args' => request::get(),
 		);
-
 		$divp = data_interface::get_instance('ui_view_point');
 		$divp->_flush();
 		$divp->set_args(array('_spid' => $page['id']));
@@ -53,6 +52,16 @@ class ui_structure extends user_interface
 		$js_resources = array();
 		$key_words = array();
 		$title_words = array();
+		//9* мета на страницу итмеет приоритет перед глобальной мета
+		if($page['mkeywords'] != '')
+		{
+			$key_words[] = $page['mkeywords'];
+		}
+		if($page['mdescr'] != '')
+		{
+			$description[] = $page['mdescr'];
+		}
+		//9* суем глобальное META
 		$key_words[] = SITE_KEYWORDS;
 		$title_words[] = SITE_TITLE;
 		$description[] = SITE_DESCRIPTION;

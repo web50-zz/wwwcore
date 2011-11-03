@@ -68,7 +68,7 @@ ui.structure.node_form = function(config){
 	}.createDelegate(this);
 	ui.structure.node_form.superclass.constructor.call(this,{
 		frame: true, 
-		labelWidth: 120,
+		labelWidth: 180,
 		defaults: {xtype: 'textfield', width: 100, anchor: '100%'},
 		items: [
 			{name: '_sid', xtype: 'hidden'},
@@ -84,6 +84,8 @@ ui.structure.node_form = function(config){
 			{fieldLabel: 'URI', name: 'uri', disabled: true},
 			{fieldLabel: 'Перенаправить', name: 'redirect'},
 			{fieldLabel: 'Тема', name: 'theme_overload'},
+			{fieldLabel: 'META Ключевые слова',xtype:'textarea',name: 'mkeywords'},
+			{fieldLabel: 'META Описание', xtype:'textarea',name: 'mdescr'},
 			new Ext.form.ComboBox({
 				store: new Ext.data.JsonStore({
 					url: 'ui/structure/templates.do',

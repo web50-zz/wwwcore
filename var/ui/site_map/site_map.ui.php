@@ -22,7 +22,6 @@ class ui_site_map extends user_interface
 		$di = data_interface::get_instance('site_map');
 		$data_r = $di->get_all();
 		$data['records'] = $data_r['childs'];
-		array_shift($data['records']);
 		return $this->parse_tmpl('default.html',$data);
 	}
 	

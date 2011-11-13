@@ -55,6 +55,10 @@ class di_site_map extends data_interface
 	public function get_all()
 	{
 		$this->_flush();
+		$this->set_args(array(
+				'sort'=>'left',
+				'dir'=>'ASC',
+				));
 		$this->data =  $this->extjs_grid_json(false,false);
 		$level = 1;
 		$this->get_childs(0);

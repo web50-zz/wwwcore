@@ -61,10 +61,23 @@ class ui_structure extends user_interface
 		{
 			$description[] = $page['mdescr'];
 		}
+		if($page['title'] != '')
+		{
+			$title_words[] = $page['title'];
+		}
 		//9* суем глобальное META
-		$key_words[] = SITE_KEYWORDS;
-		$title_words[] = SITE_TITLE;
-		$description[] = SITE_DESCRIPTION;
+		if(SITE_KEYWORDS != '')
+		{
+			$key_words[] = SITE_KEYWORDS;
+		}
+		if(SITE_TITLE != '')
+		{
+			$title_words[] = SITE_TITLE;
+		}
+		if(SITE_DESCRIPTION !='')
+		{
+			$description[] = SITE_DESCRIPTION;
+		}
 
 		/* 9* theme overload */
 		if($page['theme_overload'] != '')

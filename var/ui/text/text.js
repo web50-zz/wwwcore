@@ -1,6 +1,6 @@
 ui.text.main = function(config){
 	var frmW = 800;
-	var frmH = 480;
+	var frmH = 680;
 	var fm = Ext.form;
 	Ext.apply(this, config);
 	var proxy = new Ext.data.HttpProxy({

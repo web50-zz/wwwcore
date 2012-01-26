@@ -49,7 +49,7 @@ ui.text.item_form = function(config){
 			{name: '_sid', inputType: 'hidden'},
 			{fieldLabel: this.fldTitle, name: 'title', allowBlank: false},
 			{hideLabel: true, name: 'content', xtype: 'ckeditor', CKConfig: {
-				height: 200,
+				height: 350,
 				filebrowserImageBrowseUrl: 'ui/file_manager/browser.html'
 			}}
 		],

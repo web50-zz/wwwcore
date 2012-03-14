@@ -11,7 +11,7 @@ class ui_text extends user_interface
 
 	protected $deps = array(
 		'main' => array(
-			'text.item_form',
+			'text.grid',
 		)
 	);
 	
@@ -39,6 +39,15 @@ class ui_text extends user_interface
 	public function sys_main()
 	{
 		$tmpl = new tmpl($this->pwd() . 'text.js');
+		response::send($tmpl->parse($this), 'js');
+	}
+	
+	/**
+	*       Управляющий JS админки
+	*/
+	public function sys_grid()
+	{
+		$tmpl = new tmpl($this->pwd() . 'grid.js');
 		response::send($tmpl->parse($this), 'js');
 	}
 	

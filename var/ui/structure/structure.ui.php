@@ -14,19 +14,6 @@ class ui_structure extends user_interface
 		'main' => array(
 			'structure.site_tree',
 			'structure.page_view_points',
-			'structure_presets.main',
-		),
-		'site_tree' => array(
-			'structure.node_form',
-		),
-		'page_view' => array(
-			'structure.page_view_point',
-		),
-		'page_view_points' => array(
-			'structure.page_view_point_form',
-		),
-		'page_view_point' => array(
-			'structure.page_view_point_form',
 		)
 	);
 	
@@ -253,24 +240,6 @@ class ui_structure extends user_interface
 	protected function sys_page_view_points()
 	{
 		$tmpl = new tmpl($this->pwd() . 'page_view_points.js');
-		response::send($tmpl->parse($this), 'js');
-	}
-
-	/**
-	*	ExtJS UI Site Tree
-	*/
-	protected function sys_page_view()
-	{
-		$tmpl = new tmpl($this->pwd() . 'page_view.js');
-		response::send($tmpl->parse($this), 'js');
-	}
-
-	/**
-	*	ExtJS UI Site Tree
-	*/
-	protected function sys_page_view_point()
-	{
-		$tmpl = new tmpl($this->pwd() . 'page_view_point.js');
 		response::send($tmpl->parse($this), 'js');
 	}
 

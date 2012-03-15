@@ -1,16 +1,21 @@
-ui.structure.node_form = function(config){
-	Ext.apply(this, config);
-	this.Load = function(id, pid){
+ui.structure.node_form = Ext.extend(Ext.form.FormPanel, {
+	Load: function(data){
 		var f = this.getForm();
 		f.load({
 			url: 'di/structure/get.json',
-			params: {_sid: id, pid: pid},
-			waitMsg: this.loadText
+			params: {_sid: data.id},
+			waitMsg: this.loadText,
+			success: function(frm, act){
+				var d = Ext.util.JSON.decode(act.response.responseText);
+				f.setValues([{id: '_sid', value: data.id}]);
+				this.fireEvent("data_loaded", d.data, data.id);
+			},
+			scope:this
 		});
-		if (id > 0) f.setValues([{id: '_sid', value: id}]);
-		if (pid > 0) f.setValues([{id: 'pid', value: pid}]);
-	}
-	var Save = function(){
+		f.setValues(data);
+	},
+
+	Save: function(){
 		var f = this.getForm();
 		if (f.isValid()){
 			f.submit({
@@ -19,7 +24,7 @@ ui.structure.node_form = function(config){
 				success: function(form, action){
 					var d = Ext.util.JSON.decode(action.response.responseText);
 					if (d.success)
-						this.fireEvent('saved', !(f.findField('_sid').getValue() > 0), f.getValues(), d.data);
+						this.fireEvent('data_saved', !(f.findField('_sid').getValue() > 0), f.getValues(), d.data);
 					else
 						showError(d.errors);
 				},
@@ -38,117 +43,102 @@ ui.structure.node_form = function(config){
 				scope: this
 			});
 		}
-	}.createDelegate(this);
-	var Cancel = function(){
+	},
+	
+	Cancel: function(){
 		this.fireEvent('cancelled');
-	}.createDelegate(this);
-	var moduleCfg = function(){
-		var appName = this.getForm().findField('module').getValue()
-		var appFace = 'configure_form';
-		if (Ext.isEmpty(appName)) return;
-                var appClass = 'ui.'+appName+'.'+appFace;
-		var app = new App();
-		app.on('apploaded', function(){
-			var f = eval('new '+appClass+'()');
-			var w = new Ext.Window({title: 'Настройка страницы', modal: true, layout: 'fit', width: 480, height: 320, items: f});
-			f.on({
-				saved: function(data){
-					this.getForm().findField('params').setValue(Ext.encode(data));
-					w.destroy();
-				},
-				cancelled: function(){w.destroy()},
-				scope: this
-			});
-			w.show(null, function(){
-				f.Load(this.getForm().findField('params').getValue());
-			}, this);
-		}, this);
-		app.Load(appName, appFace);
-		
-	}.createDelegate(this);
-	ui.structure.node_form.superclass.constructor.call(this,{
-		frame: true, 
-		labelWidth: 180,
-		defaults: {xtype: 'textfield', width: 100, anchor: '100%'},
-		items: [
-			{name: '_sid', xtype: 'hidden'},
-			{name: 'pid', xtype: 'hidden'},
-			{name: 'id', xtype: 'displayfield',fieldLabel:'Id'},
-			{fieldLabel: this.labelTitle, name: 'title', allowBlank: false, blankText: this.blankText, maxLength: 64, maxLengthText: 'Не больше 64 символов'},
-			{fieldLabel: 'Видимый', hiddenName: 'hidden', value: 0, xtype: 'combo', width: 50, anchor: null,
-				store: new Ext.data.SimpleStore({ fields: ['value', 'title'], data: [[0, 'Да'], [1, 'Нет']] }),
-				valueField: 'value', displayField: 'title',
-				mode: 'local', triggerAction: 'all', selectOnFocus: true, editable: false
-			},
-			{fieldLabel: 'Имя', name: 'name'},
-			{fieldLabel: 'URI', name: 'uri', disabled: true},
-			{fieldLabel: 'Перенаправить', name: 'redirect'},
-			{fieldLabel: 'Тема', name: 'theme_overload'},
-			{fieldLabel: 'META Ключевые слова',xtype:'textarea',name: 'mkeywords'},
-			{fieldLabel: 'META Описание', xtype:'textarea',name: 'mdescr'},
-			new Ext.form.ComboBox({
-				store: new Ext.data.JsonStore({
-					url: 'ui/structure/templates.do',
-					fields: ['template']
-				}),
-				fieldLabel: 'Шаблон',
-				hiddenName: 'template',
-				valueField: 'template',
-				displayField: 'template',
-				emptyText: 'Выберите шаблон...',
-				typeAhead: true,
-				triggerAction: 'all',
-				selectOnFocus: true,
-				editable: false
-			})
-			//new Ext.form.ComboBox({
-			//	store: new Ext.data.SimpleStore({ fields: ['value', 'title'], data: [[0, 'Нет'], [1, 'Да']]}),
-			//	fieldLabel: 'Требует авторизацию',
-			//	hiddenName: 'private',
-			//	valueField: 'value',
-			//	displayField: 'title',
-			//	mode: 'local',
-			//	triggerAction: 'all',
-			//	selectOnFocus: true,
-			//	editable: false,
-			//	value: 0
-			//}),
-			//{fieldLabel: 'Модуль авторизации', name: 'auth_module'}
-		],
-		buttonAlign: 'right',
-		buttons: [
-			{iconCls: 'disk', text: this.bttSave, handler: Save},
-			{iconCls: 'cancel', text: this.bttCancel, handler: Cancel}
-		]
-	});
-	this.addEvents(
-		"saved",
-		"cancelled"
-	);
-	this.on({
-		saved: function(isNew, formData, respData){
-			this.getForm().setValues([{id: '_sid', value: respData.id}, {id: 'uri', value: respData.uri},{id: 'id', value: respData.id}]);
-		},
-		scope: this
-	});
-}
-Ext.extend(ui.structure.node_form, Ext.form.FormPanel, {
-	labelTitle: 'Наименование',
-	labelLogin: 'Login',
-	labelEMail: 'e-mail',
-	labelLang: 'Язык',
-	labelPassw: 'Пароль',
-	lebelRePassw: 'Пароль контр.',
+	},
+
+	formWidth: 640,
+	formHeight: 480,
+	lblTitle: 'Наименование',
+	lblVisible: 'Видимый',
+	lblName: 'Имя',
+	lblURI: 'uri',
+	lblRedirect: 'Перенаправить',
+	lblTheme: 'Тема',
+	lblKeyw: 'META Ключевые слова',
+	lblDescr: 'META Описание',
+	lblTmpl: 'Шаблон',
 
 	loadText: 'Загрузка данных формы',
 	saveText: 'Сохранение...',
-	blankText: 'Необходимо заполнить',
-	maxLengthText: 'Не больше 256 символов',
-
 	bttSave: 'Сохранить',
 	bttCancel: 'Отмена',
-
 	errSaveText: 'Ошибка во время сохранения',
 	errInputText: 'Корректно заполните все необходимые поля',
-	errConnectionText: "Ошибка связи с сервером"
+	errConnectionText: "Ошибка связи с сервером",
+
+	/**
+	 * @constructor
+	 */
+	constructor: function(config){
+		config = config || {};
+		Ext.apply(this, {
+			labelAlign: 'right', 
+			labelWidth: 150,
+			border: false, 
+			frame: true,
+			defaults: {xtype: 'textfield', width: 100, anchor: '100%'},
+			items: [
+				{name: '_sid', xtype: 'hidden'},
+				{name: 'pid', xtype: 'hidden'},
+				{name: 'id', xtype: 'displayfield',fieldLabel:'Id'},
+				{fieldLabel: this.lblTitle, name: 'title', allowBlank: false, maxLength: 64},
+				{fieldLabel: this.lblVisible, hiddenName: 'hidden', value: 0, xtype: 'combo', width: 50, anchor: null,
+					store: new Ext.data.SimpleStore({ fields: ['value', 'title'], data: [[0, 'Да'], [1, 'Нет']] }),
+					valueField: 'value', displayField: 'title',
+					mode: 'local', triggerAction: 'all', selectOnFocus: true, editable: false
+				},
+				{fieldLabel: this.lblName, name: 'name'},
+				{fieldLabel: this.lblURI, name: 'uri', disabled: true},
+				{fieldLabel: this.lblRedirect, name: 'redirect'},
+				{fieldLabel: this.lblTheme, name: 'theme_overload'},
+				{fieldLabel: this.lblKeyw, name: 'mkeywords', xtype:'textarea'},
+				{fieldLabel: this.lblDescr, xtype:'textarea',name: 'mdescr'},
+				{fieldLabel: this.lblTmpl, xtype: 'combo', hiddenName: 'template', value: 'default.html',
+					store: new Ext.data.JsonStore({url: 'ui/structure/templates.do', fields: ['template']}),
+					valueField: 'template', displayField: 'template',
+					emptyText: 'Выберите шаблон...', typeAhead: true, triggerAction: 'all', selectOnFocus: true, editable: false
+				}
+			],
+			buttonAlign: 'right',
+			buttons: [
+				{iconCls: 'disk', text: this.bttSave, handler: this.Save, scope: this},
+				{iconCls: 'cancel', text: this.bttCancel, handler: this.Cancel, scope: this}
+			],
+			keys: [
+				{key: [Ext.EventObject.ENTER], handler: this.Save, scope: this}
+			]
+		});
+		Ext.apply(this, config);
+		ui.structure.node_form.superclass.constructor.call(this, config);
+		this.on({
+			data_saved: function(isNew, formData, respData){
+				this.getForm().setValues([{id: '_sid', value: respData.id}, {id: 'uri', value: respData.uri},{id: 'id', value: respData.id}]);
+			},
+			data_loaded: function(data, id){
+			},
+			scope: this
+		})
+	},
+
+	/**
+	 * To manually set default properties.
+	 * 
+	 * @param {Object} config Object containing all config options.
+	 */
+	configure: function(config){
+		config = config || {};
+		Ext.apply(this, config, config);
+	},
+
+	/**
+	 * @private
+	 * @param {Object} o Object containing all options.
+	 *
+	 * Initializes the box by inserting into DOM.
+	 */
+	init: function(o){
+	}
 });

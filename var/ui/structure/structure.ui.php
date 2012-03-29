@@ -28,6 +28,8 @@ class ui_structure extends user_interface
                 $data = array(
                         'args' => request::get(),
 		);
+
+		// Get view points
 		$divp = data_interface::get_instance('ui_view_point');
 		$divp->_flush();
 		$divp->set_args(array('_spid' => $page['id']));
@@ -35,10 +37,13 @@ class ui_structure extends user_interface
 		$divp->set_order('view_point');
 		$divp->set_order('order');
 		$vps = $divp->_get();
-		$css_resources = array();
-		$js_resources = array();
+
+		// Prepare variables
+		$this->css_resources = array();
+		$this->js_resources = array();
 		$key_words = array();
 		$title_words = array();
+
 		//9* мета на страницу итмеет приоритет перед глобальной мета
 		if($page['mkeywords'] != '')
 		{
@@ -128,33 +133,16 @@ class ui_structure extends user_interface
 					$data["view_point_{$vp->view_point}"][] = $ui->call($call, json_decode($vp->ui_configure, true));
 				}
 				/* end of cache shit */
+
 				/* 9* title and keywords builder */
 				if($ui->title_words)
-				{
 					$title_words[] =  $ui->title_words;
-				}
+
 				if($ui->key_words)
-				{
 					$key_words[] =  $ui->key_words;
-				}
-				// 9*  css output
-				if(!$css_resource[$vp->ui_name])
-				{
-					if($path = $ui->get_resource_path($vp->ui_name.'.css'))
-						$data['css_resources'][] = $path;
 
-					$css_resource[$vp->ui_name] = true;
-				}
-
-				//9* js output
-				if(!$js_resource[$vp->ui_name])
-				{
-					if($path = $ui->get_resource_path($vp->ui_name.'.res.js'))
-						$data['js_resources'][] = $path;
-
-					$js_resource[$vp->ui_name] = true;
-				}
-
+				// Collect VP resources
+				$this->collect_resources($ui, $vp->ui_name);
 			}
 			catch(exception $e)
 			{
@@ -162,50 +150,54 @@ class ui_structure extends user_interface
 				dbg::write($vp->ui_name);
 			}
 		}
-		// 9* adding structure css resource to css output
-		if($path = $this->get_resource_path($this->interfaceName.'.css'))
-			$data['css_resources'][] = $path;
 
-		if($path = $this->get_resource_path($this->interfaceName.'.res.js'))
-			$data['js_resources'][] = $path;
+		// Collect Structure resources
+		$this->collect_resources($this, $this->interfaceName);
 
-		if($this->title_words)
-		{
-			$title_words[] =  $this->title_words;
-		
-		}
+		if($this->title_words) $title_words[] =  $this->title_words;
+		if($this->key_words) $key_words[] =  $this->key_words;
 
-		if($this->key_words)
-		{
-			$key_words[] =  $this->key_words;
-		}
-		$css_full = '/'.join(',/',$data['css_resources']);
-		$css_hash =  md5($css_full);
-		$data['css_hash'] = $css_hash;
+		// Заменяем в шаблоне маркер {__css_hash__} на такой-же {__css_hash__}, для того, чтобы после сбора всех CSS, сгенерировать правильный MD5
+		$data['css_hash'] = '{__css_hash__}';
+		// Заменяем в шаблоне маркер {__js_hash__} на такой-же {__js_hash__}, для того, чтобы после сбора всех JS, сгенерировать правильный MD5
+		$data['js_hash'] = '{__js_hash__}';
+		$data['title'] = join(',', $title_words);
+		$data['keywords'] = join(',', $key_words);
+		$data['description'] = join(',', $description);
+		$data['CURRENT_THEME_PATH'] = "/{$this->theme_path}";
+	
+		if (authenticate::is_logged())
+			$data['IS_LOGGED'] = 'yes';
 
-		$js_full = '/'.join(',/',$data['js_resources']);
-		$js_hash =  md5($js_full);
-		$data['js_hash'] = $js_hash;
+                $template = (!empty($page['template'])) ? $page['template'] : pub_template;
+		$out = $this->parse_tmpl("main/{$template}", $data, array('ui' => array($this, 'collect_resources')));
+
+		// Окончательный сбор данных по ресурсам
+		$css_full = '/' . join(',/', $this->css_resources);
+		$css_hash = md5($css_full);
+
+		$js_full = '/' . join(',/', $this->js_resources);
+		$js_hash = md5($js_full);
 
 		$_SESSION['paths'][$js_hash] = $js_full;
 		$_SESSION['paths'][$css_hash] = $css_full;
 
-		$data['title'] = join(',',$title_words);
-		$data['keywords'] = join(',',$key_words);
-		$data['description'] = join(',',$description);
-		$data['CURRENT_THEME_PATH'] = '/'.$this->theme_path;
-	
-		if (authenticate::is_logged())
-		{
-			$data['IS_LOGGED'] = 'yes';
-		}
-                $template = (!empty($page['template'])) ? $page['template'] : pub_template;
-		$out = $this->parse_tmpl('main/'.$template, $data);
-//		$out =  preg_replace('/\r/','',$out);//9* для пущего ужатия лишнее коцаем
-//		$out =  preg_replace('/\n/','',$out);
-//		$out =  preg_replace('/\s+/',' ',$out);
+		// Загоняем в шаблон окончательный набор ресурсов CSS и JS
+		$tmpl = new tmpl($out, 'TEXT');
+		$out = $tmpl->parse(array('css_hash' => $css_hash, 'js_hash' => $js_hash));
 		response::send($out, 'html');
         }
+
+	public function collect_resources($ui, $name)
+	{
+		// 9* CSS output
+		if (empty($this->css_resources[$name]) && $path = $ui->get_resource_path("{$name}.css"))
+			$this->css_resources[$name] = $path;
+
+		// 9* JS output
+		if(empty($this->js_resources[$name]) && $path = $ui->get_resource_path("{$name}.res.js"))
+			$this->js_resources[$name] = $path;
+	}
 	
 	/**
 	*       ExtJS UI for adm part

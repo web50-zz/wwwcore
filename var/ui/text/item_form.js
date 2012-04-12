@@ -74,7 +74,7 @@ ui.text.item_form = Ext.extend(Ext.form.FormPanel, {
 			defaults: {xtype: 'textfield', width: 150, anchor: '100%'},
 			items: [
 				{name: '_sid', inputType: 'hidden'},
-				{fieldLabel: this.lblTitle, name: 'title', allowBlank: false},
+				{fieldLabel: this.lblTitle, name: 'title', allowBlank: false, maxLength:255},
 				{hideLabel: true, name: 'content', xtype: 'ckeditor', CKConfig: {
 					height: 350,
 					filebrowserImageBrowseUrl: 'ui/file_manager/browser.html'

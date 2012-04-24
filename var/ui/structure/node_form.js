@@ -60,6 +60,7 @@ ui.structure.node_form = Ext.extend(Ext.form.FormPanel, {
 	lblKeyw: 'META Ключевые слова',
 	lblDescr: 'META Описание',
 	lblTmpl: 'Шаблон',
+	lblMttl: 'МETA тайтл',
 
 	loadText: 'Загрузка данных формы',
 	saveText: 'Сохранение...',
@@ -94,6 +95,7 @@ ui.structure.node_form = Ext.extend(Ext.form.FormPanel, {
 				{fieldLabel: this.lblURI, name: 'uri', disabled: true},
 				{fieldLabel: this.lblRedirect, name: 'redirect'},
 				{fieldLabel: this.lblTheme, name: 'theme_overload'},
+				{fieldLabel: this.lblMttl, name: 'mtitle'},
 				{fieldLabel: this.lblKeyw, name: 'mkeywords', xtype:'textarea'},
 				{fieldLabel: this.lblDescr, xtype:'textarea',name: 'mdescr'},
 				{fieldLabel: this.lblTmpl, xtype: 'combo', hiddenName: 'template', value: 'default.html',

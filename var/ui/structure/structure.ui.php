@@ -9,6 +9,9 @@
 class ui_structure extends user_interface
 {
 	public $title = 'Структура';
+	protected $key_words =  array();
+	protected $title_words =  array();
+	protected $description =  array();
 
 	protected $deps = array(
 		'main' => array(
@@ -47,34 +50,31 @@ class ui_structure extends user_interface
 		// Prepare variables
 		$this->css_resources = array();
 		$this->js_resources = array();
-		$key_words = array();
-		$title_words = array();
-
 		//9* мета на страницу итмеет приоритет перед глобальной мета
 		if($page['mkeywords'] != '')
 		{
-			$key_words[] = $page['mkeywords'];
+			$this->key_words[] = $page['mkeywords'];
 		}
 		if($page['mdescr'] != '')
 		{
-			$description[] = $page['mdescr'];
+			$this->description[] = $page['mdescr'];
 		}
 		if($page['title'] != '')
 		{
-			$title_words[] = $page['title'];
+			$this->title_words[] = $page['mtitle'];
 		}
 		//9* суем глобальное META
 		if(SITE_KEYWORDS != '')
 		{
-			$key_words[] = SITE_KEYWORDS;
+			$this->key_words[] = SITE_KEYWORDS;
 		}
 		if(SITE_TITLE != '')
 		{
-			$title_words[] = SITE_TITLE;
+			$this->title_words[] = SITE_TITLE;
 		}
 		if(SITE_DESCRIPTION !='')
 		{
-			$description[] = SITE_DESCRIPTION;
+			$this->description[] = SITE_DESCRIPTION;
 		}
 
 		/* 9* theme overload */
@@ -142,10 +142,10 @@ class ui_structure extends user_interface
 
 				/* 9* title and keywords builder */
 				if($ui->title_words)
-					$title_words[] =  $ui->title_words;
+					$this->title_words[] =  $ui->title_words;
 
 				if($ui->key_words)
-					$key_words[] =  $ui->key_words;
+					$this->key_words[] =  $ui->key_words;
 
 				// Collect VP resources
 				$this->collect_resources($ui, $vp->ui_name);
@@ -160,16 +160,16 @@ class ui_structure extends user_interface
 		// Collect Structure resources
 		$this->collect_resources($this, $this->interfaceName);
 
-		if($this->title_words) $title_words[] =  $this->title_words;
-		if($this->key_words) $key_words[] =  $this->key_words;
+//		if($this->title_words) $title_words[] =  $this->title_words;
+//		if($this->key_words) $key_words[] =  $this->key_words;
 
 		// Заменяем в шаблоне маркер {__css_hash__} на такой-же {__css_hash__}, для того, чтобы после сбора всех CSS, сгенерировать правильный MD5
 		$data['css_hash'] = '{__css_hash__}';
 		// Заменяем в шаблоне маркер {__js_hash__} на такой-же {__js_hash__}, для того, чтобы после сбора всех JS, сгенерировать правильный MD5
 		$data['js_hash'] = '{__js_hash__}';
-		$data['title'] = join(',', (array)$title_words);
-		$data['keywords'] = join(',', (array)$key_words);
-		$data['description'] = join(',', (array)$description);
+		$data['title'] = join(',', $this->title_words);
+		$data['keywords'] = join(',', $this->key_words);
+		$data['description'] = join(',', $this->description);
 		$data['CURRENT_THEME_PATH'] = "/{$this->theme_path}";
 	
 		if (authenticate::is_logged())
@@ -207,7 +207,39 @@ class ui_structure extends user_interface
 		if(empty($this->js_resources[$name]) && $path = $ui->get_resource_path("{$name}.res.js"))
 			$this->js_resources[$name] = $path;
 	}
+//9* метод для добавления внешними модулями в массив ключевых слов на вывод в META keywords
+	public function add_keyword($text)
+	{
+		if($text != '')
+		{
+			$this->key_words[] = $text;
+			return true;
+		}
+		return false;
+	}
 	
+//9* метод для добавления внешними модулями в title  слов на вывод в Title страницы 
+	public function add_title($text)
+	{
+		if($text != '')
+		{
+			$this->title_words[] = $text;
+			return true;
+		}
+		return false;
+	}
+
+//9* метод для добавления внешними модулями в массив decsription слов на вывод в META description 
+	public function add_description($text)
+	{
+		if($text != '')
+		{
+			$this->description[] = $text;
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	*       ExtJS UI for adm part
 	*/

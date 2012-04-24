@@ -134,7 +134,7 @@ ui.text.main = Ext.extend(ui.text.grid, {
 				var cmenu = new Ext.menu.Menu({items: [
 					{iconCls: 'note_edit', text: this.bttEdit, handler: this.Edit, scope: this},
 					{iconCls: 'note_delete', text: this.bttDelete, handler: this.Delete, scope: this},
-					'-',
+					'-'
 				]});
 				e.stopEvent();  
 				cmenu.showAt(e.getXY());

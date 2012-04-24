@@ -23,7 +23,13 @@ class ui_structure extends user_interface
 		$this->files_path = dirname(__FILE__).'/'; 
 	}
 
-        public function process_page($page)
+	/**
+	*	Парсинг контента страницы
+	* @access	public
+	* @param	array	$page	Массив с описанием страницы
+	* @param	boolean	$output	Вывод страницы на экран (true - Да, false - возвращает результат парсинга через return)
+	*/
+        public function process_page($page, $output = true)
         {
                 $data = array(
                         'args' => request::get(),
@@ -161,9 +167,9 @@ class ui_structure extends user_interface
 		$data['css_hash'] = '{__css_hash__}';
 		// Заменяем в шаблоне маркер {__js_hash__} на такой-же {__js_hash__}, для того, чтобы после сбора всех JS, сгенерировать правильный MD5
 		$data['js_hash'] = '{__js_hash__}';
-		$data['title'] = join(',', $title_words);
-		$data['keywords'] = join(',', $key_words);
-		$data['description'] = join(',', $description);
+		$data['title'] = join(',', (array)$title_words);
+		$data['keywords'] = join(',', (array)$key_words);
+		$data['description'] = join(',', (array)$description);
 		$data['CURRENT_THEME_PATH'] = "/{$this->theme_path}";
 	
 		if (authenticate::is_logged())
@@ -185,7 +191,10 @@ class ui_structure extends user_interface
 		// Загоняем в шаблон окончательный набор ресурсов CSS и JS
 		$tmpl = new tmpl($out, 'TEXT');
 		$out = $tmpl->parse(array('css_hash' => $css_hash, 'js_hash' => $js_hash));
-		response::send($out, 'html');
+		if ($output)
+			response::send($out, 'html');
+		else
+			return $out;
         }
 
 	public function collect_resources($ui, $name)

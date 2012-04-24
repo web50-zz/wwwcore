@@ -21,6 +21,7 @@ ui.structure_presets.main = Ext.extend(ui.structure_presets.grid, {
 		ui.structure_presets.main.superclass.constructor.call(this, config);
 		this.on({
 			rowcontextmenu: this.rowCmenu, 
+			dblclick: this.Load,
 			render: this.initGrid,
 			scope: this
 		});

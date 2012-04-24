@@ -45,18 +45,42 @@ class ui_news extends user_interface
 				'start' => ($page - 1) * $limit,
 				'limit' => $limit,
 			));
-			$category = $this->get_args('category',0);
-			if($category>0)//9* если задана категория в конфиге
-			{
-				$di->set_args(array('_scategory'=>$category),true);
-			}
-			$data = $di->extjs_grid_json(false, false);
+
+			//9* если задана категория в конфиге
+			if (($category = $this->get_args('category', 0)) > 0)
+				$di->set_args(array('_scategory' => $category), true);
+
+			$data = $di->extjs_grid_json(array(
+				'id',
+				'release_date',
+				"CONCAT('/{$di->path_to_storage}', `image`)" => 'image',
+				'title',
+				'author',
+				'source',
+				'content'
+			), false);
+			// Создаём аннотации для новостей
+			foreach ($data['records'] as $n => $record)
+				$data['records'][$n]['_annotation'] = $this->substr_by_words($record['content']);
+
 			$pager = user_interface::get_instance('pager');
 			$data['page'] = $page;
 			$data['limit'] = $limit;
 			$data['pager'] = $pager->get_pager(array('page' => $page, 'total' => $data['total'], 'limit' => $limit, 'prefix' => $_SERVER['QUERY_STRING']));
 			return $this->parse_tmpl('default.html', $data);
 		}
+	}
+
+	/**
+	*	Обрезание строк по словам, с избеганием проблемы substr и UTF-8
+	*/
+	public function substr_by_words($content, $length = 50, $s = ' ')
+	{
+		$content = strip_tags($content);
+		$words = split($s, $content);
+		if (count($words) > $length)
+			$content = join(stripslashes($s), array_slice($words, 0, $length));
+		return $content;
 	}
        
 	/**
@@ -80,6 +104,9 @@ class ui_news extends user_interface
 			$di->set_args(array('_scategory'=>$category),true);
 		}
 		$data = $di->extjs_grid_json(false,false);
+		// Создаём аннотации для новостей
+		foreach ($data['records'] as $n => $record)
+			$data['records'][$n]['_annotation'] = $this->substr_by_words($record['content'], 15);
 		$pager = user_interface::get_instance('pager');
 		$data['page'] = $page;
 		$data['limit'] = $limit;

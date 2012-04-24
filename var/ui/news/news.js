@@ -1,6 +1,6 @@
 ui.news.main = function(config){
 	var frmW = 800;
-	var frmH = 480;
+	var frmH = 680;
 	var fm = Ext.form;
 	Ext.apply(this, config);
 	var proxy = new Ext.data.HttpProxy({
@@ -19,7 +19,7 @@ ui.news.main = function(config){
 			root: 'records',
 			messageProperty: 'errors'
 		},
-		[{name: 'id', type: 'int'}, {name: 'release_date', type: 'date', dateFormat: 'Y-m-d'}, 'title', 'author', 'source']
+		[{name: 'id', type: 'int'}, {name: 'release_date', type: 'date', dateFormat: 'Y-m-d'}, 'title', 'image', 'author', 'source']
 	);
 	// Typical JsonWriter
 	var writer = new Ext.data.JsonWriter({
@@ -34,11 +34,14 @@ ui.news.main = function(config){
 		writer: writer,
 		remoteSort: true
 	});
+	var image = new Ext.XTemplate('<img src="{image}" border="0" width="100"/>');
+	image.compile();
 	columns = [
 		{id: 'id', dataIndex: 'id', hidden: true, sortable: true},
 		{header: this.clmnDate, id: 'release_date', dataIndex: 'release_date', width: 150, sortable: true, renderer: formatDate, editor: new fm.DateField({allowBlank: false, format: 'Y-m-d'}), sortable: true},
-		{header: this.clmnAuthor, id: 'author', dataIndex: 'author', width: 150, sortable: true, editor: new fm.TextField({maxLength: 255, maxLengthText: 'Не больше 255 символов'}), sortable: true},
+		{header: this.clmnImage, dataIndex: 'image', width: 120, xtype: 'templatecolumn', tpl: image},
 		{header: this.clmnTitle, id: 'title', dataIndex: 'title', sortable: true, editor: new fm.TextField({maxLength: 255, maxLengthText: 'Не больше 255 символов'}), sortable: true},
+		{header: this.clmnAuthor, id: 'author', dataIndex: 'author', width: 150, sortable: true, editor: new fm.TextField({maxLength: 255, maxLengthText: 'Не больше 255 символов'}), sortable: true},
 		{header: this.clmnSource, id: 'source', dataIndex: 'source', width: 150, sortable: true, editor: new fm.TextField({maxLength: 64, maxLengthText: 'Не больше 64 символов'}), sortable: true}
 	];
 	var Add = function(){
@@ -154,6 +157,7 @@ Ext.extend(ui.news.main, Ext.grid.EditorGridPanel, {
 
 	clmnDate: "Дата",
 	clmnTitle: "Заголовок",
+	clmnImage: "Изображение",
 	clmnAuthor: "Автор",
 	clmnSource: "Источник",
 

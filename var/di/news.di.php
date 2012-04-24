@@ -23,6 +23,11 @@ class di_news extends data_interface
 	* @var	string	$name	Имя таблицы
 	*/
 	protected $name = 'news';
+
+	/**
+	* @var	string	$path_to_storage	Путь к хранилищу файлов каталога
+	*/
+	public $path_to_storage = 'filestorage/';
 	
 	/**
 	* @var	array	$fields	Конфигурация таблицы
@@ -30,6 +35,7 @@ class di_news extends data_interface
 	public $fields = array(
 		'id' => array('type' => 'integer', 'serial' => 1),
 		'category' => array('type' => 'integer'),
+		'image' => array('type' => 'string'),
 		'release_date' => array('type' => 'date'),
 		'title' => array('type' => 'string'),
 		'source' => array('type' => 'string'),
@@ -41,6 +47,14 @@ class di_news extends data_interface
             // Call Base Constructor
             parent::__construct(__CLASS__);
         }
+
+	/**
+	*	Получить путь к хранилищу файлов на файловой системе
+	*/
+	public function get_path_to_storage()
+	{
+		return BASE_PATH . $this->path_to_storage;
+	}
 	
 	/**
 	*	Получить JSON-пакет данных для ExtJS-грида
@@ -55,7 +69,14 @@ class di_news extends data_interface
 		{
 			$this->args["_s{$this->args['field']}"] = "%{$this->args['query']}%";
 		}
-		$this->extjs_grid_json(array('id', 'release_date', 'title', 'author', 'source'));
+		$this->extjs_grid_json(array(
+			'id',
+			'release_date',
+			"CONCAT('/{$this->path_to_storage}', `image`)" => 'image',
+			'title',
+			'author',
+			'source'
+		));
 	}
 	
 	/**
@@ -74,15 +95,44 @@ class di_news extends data_interface
 	*/
 	protected function sys_set()
 	{
+		$id = $this->get_args('_sid');
+
+		if ($id > 0)
+		{
+			$this->_flush();
+			$this->_get();
+			$image = $this->get_results(0);
+			$old_image_name = $image->image;
+		}
+
+		$image = (!empty($old_image_name)) ? file_system::replace_file('file', $old_image_name, $this->get_path_to_storage()) : file_system::upload_file('file', $this->get_path_to_storage());
+		if (!empty($image['real_name'])) $this->set_args(array('image' => $image['real_name']), true);
+		$this->resize_original($image);
+		
 		$this->_flush();
 		$this->insert_on_empty = true;
 		$data = $this->extjs_set_json(false);
-		if ($this->args['_sid'] == 0)
+		if ($id == 0)
 		{
 			$sc = data_interface::get_instance('structure_content');
-			$sc->save_link($this->args['pid'], $data['data']['id'], $this->name);
+			$sc->save_link($this->get_args('pid'), $data['data']['id'], $this->get_name());
 		}
-		response::send($data, 'json');
+		response::send(response::to_json($data), 'html');
+	}
+
+	/**
+	*	Уменьшить изображение
+	*/
+	private function resize_original($file)
+	{
+		if (!empty($file) && $file['real_name'])
+		{			
+			require_once INSTANCES_PATH .'krat/lib/ThumbLib.inc.php';
+			// regular image
+			$thumb = PhpThumbFactory::create($this->get_path_to_storage() . $file['real_name']);
+			$thumb->adaptiveResize(99, 75);
+			$thumb->save($this->get_path_to_storage() . $file['real_name']);
+		}
 	}
 
 	/**
@@ -114,6 +164,9 @@ class di_news extends data_interface
 	protected function sys_unset()
 	{
 		$this->_flush();
+		$images = $this->_get();
+
+		$this->_flush();
 		$data = $this->extjs_unset_json(false);
 		$ids = $this->get_lastChangedId();
 		
@@ -121,6 +174,14 @@ class di_news extends data_interface
 		{
 			$sc = data_interface::get_instance('structure_content');
 			$sc->remove_link($this->args['_spid'], $ids, $this->name);
+		}
+		
+		if (!empty($images))
+		{
+			foreach ($images as $image)
+			{
+				file_system::remove_file($image->image, $this->get_path_to_storage());
+			}
 		}
 
 		response::send($data, 'json');

@@ -70,6 +70,27 @@ class di_structure extends data_interface
 		return $result[0];
 	}
 
+	/**
+	*	Получить полное дерево и описание корневой ноды для отрисовки сложных шаблонов с подменю
+	* @access	public
+	* @param	integer	$parent		Идентификатор корневой ноды, если не указан, то будет браться корневая нода по id=1
+	* @param	integer	$level_down	Глубина погружения
+	* @return	array	массив со структурой по ключу `data` и описание корневой ноды по ключу `root`
+	*/
+	public function get_menu($parent = false, $level_down = null)
+	{
+		$this->_flush();
+		if (!$parent) $parent = 1;
+		$this->where = '`sp1`.`hidden` = 0';
+
+		$ns = new nested_sets($this);
+		return array(
+			'root' => $ns->get_node($parent),
+			'page' => $ns->get_node(PAGE_ID),
+			'data' => $ns->get_childs($parent, $level_down),
+		);
+	}
+
 	public function get_main_menu($parent = '1',$level_down = 1)
 	{
 		if(!$parent)
@@ -98,10 +119,13 @@ class di_structure extends data_interface
 		}
 		$this->where = '`sp1`.`hidden` = 0';
 		$ns = new nested_sets($this);
-//		$data['root'] = $ns->get_parent($page, 2); //9* pathc 15082011 problems with submenu
+		$data['parent'] = $ns->get_parent($page, 2); //9* pathc 15082011 problems with submenu
 		$data['page'] = $ns->get_node($page);
 		if (empty($data['root'])) $data['root'] = $data['page'];
-		$data['childs'] = $ns->get_childs($data['root']['id'], NULL);
+		if ($data['parent']['id'] > 0)
+			$data['childs'] = $ns->get_childs($data['parent']['id'], NULL);
+		else
+			$data['childs'] = $ns->get_childs($data['root']['id'], NULL);
 		$data['page_id'] = PAGE_ID;
 		return $data;;
 	}

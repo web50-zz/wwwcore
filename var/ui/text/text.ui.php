@@ -26,11 +26,12 @@ class ui_text extends user_interface
         */
         public function pub_content()
         {
+		$template = $this->get_args('tmpl', 'content.html');
                 $di = data_interface::get_instance('text');
 		$di->set_args($this->get_args());
 		$data = $di->get();
-		$data = array_merge($data,$this->args);
-                return $this->parse_tmpl('content.html',$data);
+		$data = array_merge($data, $this->args);
+                return $this->parse_tmpl($template, $data);
         }
 	
 	/**

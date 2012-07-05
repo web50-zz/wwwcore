@@ -51,7 +51,23 @@ class di_structure extends data_interface
 		// Call Base Constructor
 		parent::__construct(__CLASS__);
 	}
-	
+
+	/**
+	*	Вычислить родителя на определённом согласно текущей странице
+	* @param	integer	$level		Уровень родителя (по умолчанию = 2)
+	* @param	integer	$default	ID родителя по умолчанию (по умолчанию = 1)
+	*/
+	public function calc_parent($level = 2, $default = 1)
+	{
+		$ns = new nested_sets($this);
+		$node = $ns->get_parent(PAGE_ID, $level, true);
+		if (empty($node) && !($node['id'] > 0))
+			$parent = $default;
+		else
+			$parent = $node['id'];
+		return $parent;
+	}
+
 	public function get_page_by_uri($uri)
 	{
 		$this->connector->fetchMethod = PDO::FETCH_ASSOC;

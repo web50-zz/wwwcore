@@ -1,31 +1,118 @@
 <?php
 /**
-*	ПИ "Статьи"
+*	ПИ "Новости"
 *
-* @author	Litvinenko S. Anthon <crazyfluger@gmail.com>
-* @version	1.0
-* @access	public
-* @package	CFsCMS2(PE)
-* @since	2008-12-13
+* @author   9* 9@u9.ru  cloned  news ui 06072012
+* @package	SBIN Diesel
 */
 class ui_article extends user_interface
 {
 	public $title = 'Статьи';
+
+	protected $deps = array(
+		'main' => array(
+			'article.item_form',
+		)
+	);
 	
-	public function __construct ()
+	public function __construct()
 	{
-		parent::__construct(__CLASS__);
+		parent::__construct((func_num_args() > 0) ? func_get_arg(0) : __CLASS__);
+		$this->files_path = dirname(__FILE__).'/'; 
 	}
-        
-        /**
-        *       Отрисовка контента для внешней части
+ 	/**
+	*	Вывод списка новостей
+	*/
+	public function pub_content()
+	{
+		$di = data_interface::get_instance('article');
+		$id = request::get('id', false);
+		if ($id)
+		{
+			$di->set_args(array('_sid' => $id));
+			$di->_flush();
+			$di->_get();
+			$data =  $di->get_results(0);
+			return $this->parse_tmpl('page.html', $data);
+		}
+		else
+		{
+			$limit = $this->get_args('limit', 10);
+			$page = request::get('page', 1);
+			$di->set_args($this->args);
+			$di->set_args(array(
+				'sort' => 'release_date',
+				'dir' => 'DESC',
+				'start' => ($page - 1) * $limit,
+				'limit' => $limit,
+			));
+
+			//9* если задана категория в конфиге
+			if (($category = $this->get_args('category', 0)) > 0)
+				$di->set_args(array('_scategory' => $category), true);
+
+			$data = $di->extjs_grid_json(array(
+				'id',
+				'release_date',
+				"CONCAT('/{$di->path_to_storage}', `image`)" => 'image',
+				'title',
+				'author',
+				'source',
+				'content'
+			), false);
+			// Создаём аннотации для новостей
+			foreach ($data['records'] as $n => $record)
+				$data['records'][$n]['_annotation'] = $this->substr_by_words($record['content']);
+
+			$pager = user_interface::get_instance('pager');
+			$data['page'] = $page;
+			$data['limit'] = $limit;
+			$data['pager'] = $pager->get_pager(array('page' => $page, 'total' => $data['total'], 'limit' => $limit, 'prefix' => $_SERVER['QUERY_STRING']));
+			return $this->parse_tmpl('default.html', $data);
+		}
+	}
+
+	/**
+	*	Обрезание строк по словам, с избеганием проблемы substr и UTF-8
+	*/
+	public function substr_by_words($content, $length = 50, $s = ' ')
+	{
+		$content = strip_tags($content);
+		$words = explode($s, $content);
+		if (count($words) > $length)
+			$content = join(stripslashes($s), array_slice($words, 0, $length));
+		return $content;
+	}
+       
+	/**
+        *       Отрисовка контента для внешней части  имеет парамтер limit определяющий лимит записей для вывода
         */
-        public function pub_content()
+        public function pub_top()
         {
-		$tmpl = new tmpl($this->pwd() . 'content.html');
+		$limit = $this->get_args('limit', 10);
+		$page = request::get('page', 1);
                 $di = data_interface::get_instance('article');
 		$di->set_args($this->args);
-                return $tmpl->parse($di->get());
+			$di->set_args(array(
+				'sort' => 'release_date',
+				'dir' => 'DESC',
+				'start' => ($page - 1) * $limit,
+				'limit' => $limit,
+			));
+			$category = $this->get_args('category',0);
+		if($category>0)//9* если задана категория в конфиге
+		{
+			$di->set_args(array('_scategory'=>$category),true);
+		}
+		$data = $di->extjs_grid_json(false,false);
+		// Создаём аннотации
+		foreach ($data['records'] as $n => $record)
+			$data['records'][$n]['_annotation'] = $this->substr_by_words($record['content'], 15);
+		$pager = user_interface::get_instance('pager');
+		$data['page'] = $page;
+		$data['limit'] = $limit;
+		$data['pager'] = $pager->get_pager(array('page' => $page, 'total' => $data['total'], 'limit' => $limit, 'prefix' => $_SERVER['QUERY_STRING']));
+		return $this->parse_tmpl('top.html',$data);
         }
 	
 	/**
@@ -34,6 +121,15 @@ class ui_article extends user_interface
 	public function sys_main()
 	{
 		$tmpl = new tmpl($this->pwd() . 'article.js');
+		response::send($tmpl->parse($this), 'js');
+	}
+	
+	/**
+	*       ExtJS - Форма редактирования
+	*/
+	public function sys_item_form()
+	{
+		$tmpl = new tmpl($this->pwd() . 'item_form.js');
 		response::send($tmpl->parse($this), 'js');
 	}
 }

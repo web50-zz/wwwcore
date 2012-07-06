@@ -1,5 +1,5 @@
 ui.news.main = function(config){
-	var frmW = 800;
+	var frmW = 900;
 	var frmH = 680;
 	var fm = Ext.form;
 	Ext.apply(this, config);

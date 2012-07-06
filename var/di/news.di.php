@@ -4,6 +4,7 @@
 *
 * @author	Anthon S. Litvinenko <a.litvinenko@web50.ru>
 * @package	SBIN Diesel
+* 9* if in registry exists key - 'news_thumb_size' for example  90x20,  then this size will be applied on thumb over current news defaults 
 */
 class di_news extends data_interface
 {
@@ -128,12 +129,24 @@ class di_news extends data_interface
 	*/
 	private function resize_original($file)
 	{
+		$width = 99;
+		$height = 75;
 		if (!empty($file) && $file['real_name'])
 		{			
 			require_once INSTANCES_PATH .'wwwcore/lib/thumb/ThumbLib.inc.php';
 			// regular image
 			$thumb = PhpThumbFactory::create($this->get_path_to_storage() . $file['real_name']);
-			$thumb->adaptiveResize(99, 75);
+			$res =  registry::get('news_thumb_size');
+			if($res != '')
+			{
+				$size = explode('x',$res);
+				if($size[0]>0 && $size[1]>0)
+				{
+					$width = $size[0];
+					$height = $size[1];
+				}
+			}
+			$thumb->adaptiveResize($width, $height);
 			$thumb->save($this->get_path_to_storage() . $file['real_name']);
 		}
 	}

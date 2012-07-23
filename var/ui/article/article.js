@@ -63,6 +63,16 @@ ui.article.main = function(config){
 		});
 		w.show(null, function(){f.Load(id)});
 	}.createDelegate(this);
+	var Types = function(){
+		var f = new ui.article_type.main();
+		var w = new Ext.Window({title: this.labelAticleTypes, maximizable: true, modal: true, layout: 'fit', width: 400, height: 300, items: f});
+		f.on({
+			saved: function(){store.reload()},
+			cancelled: function(){w.destroy()}
+		});
+		w.show();
+	}.createDelegate(this);
+
 	var multiSave = function(){
 		this.store.save();
 	}.createDelegate(this);
@@ -128,6 +138,7 @@ ui.article.main = function(config){
 		autoScroll: true,
 		selModel: new Ext.grid.RowSelectionModel({singleSelect: true}),
 		tbar: [
+			{iconCls: 'newspaper_add', text: 'Типы статей', handler: Types},
 			{iconCls: 'newspaper_add', text: 'Добавить', handler: Add},
 			'-', new Ext.Toolbar.TextItem ("Найти:"),
 			srchType, srchField, srchBttOk, srchBttCancel,
@@ -152,8 +163,9 @@ ui.article.main = function(config){
 Ext.extend(ui.article.main, Ext.grid.EditorGridPanel, {
 	limit: 10,
 
-	addTitle: "Добавление новости",
-	editTitle: "Редактирование новости",
+	addTitle: "Добавление статьи",
+	editTitle: "Редактирование статьи",
+	labelArticleTypes: '',
 
 	clmnDate: "Дата",
 	clmnTitle: "Заголовок",

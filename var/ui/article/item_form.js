@@ -49,15 +49,25 @@ ui.article.item_form = function(config){
 		items: [
 			{name: '_sid', inputType: 'hidden'},
 			{fieldLabel: this.lblFile, name: 'file', xtype: 'fileuploadfield', buttonCfg: {text: '', iconCls: 'folder'}},
-			{fieldLabel:'Категория', hiddenName: 'category', value: 1, xtype: 'combo', anchor: null,
-					store: new Ext.data.SimpleStore({ fields: ['value', 'title'], data: [[0, 'Не определена'],[1, '1'], [2, '2']]}),
-					valueField: 'value', displayField: 'title', mode: 'local',
-					triggerAction: 'all', selectOnFocus: true, editable: false
+			{fieldLabel: 'Категория', hiddenName: 'category', value: '', xtype: 'combo', emptyText: '',
+							store: new Ext.data.JsonStore({url: 'di/article_type/type_list.json', root: 'records', fields: ['id', 'title'], autoLoad: true,
+								listeners: {
+										beforeload:function(store,ops){
+										},
+										scope: this}
+							}),
+							valueField: 'id', 
+							displayField: 'title', 
+							mode: 'local', 
+							triggerAction: 'all', 
+							selectOnFocus: true, 
+							editable: false
 			},
 			{fieldLabel: this.lblTitle, name: 'title', maxLength: 255, maxLengthText: 'Не больше 255 символов'},
 			{fieldLabel: this.lblRlsDate, name: 'release_date', anchor: null, format: 'Y-m-d', allowBlank: false, xtype: 'datefield'},
 			{fieldLabel: this.lblSource, name: 'source', maxLength: 64, maxLengthText: 'Не больше 64 символов'},
 			{fieldLabel: this.lblAuthor, name: 'author', maxLength: 255, maxLengthText: 'Не больше 255 символов'},
+			{fieldLabel: this.lblURI, name: 'uri', maxLength: 255, maxLengthText: 'Не больше 255 символов',allowBlank:false},
 			{hideLabel: true, name: 'content', xtype: 'ckeditor', CKConfig: {
 				height: 260,
 				filebrowserImageBrowseUrl: 'ui/file_manager/browser.html'
@@ -87,6 +97,7 @@ Ext.extend(ui.article.item_form , Ext.form.FormPanel, {
 	lblSource: 'Источник',
 	lblAuthor: 'Автор',
 	loadText: 'Загрузка данных формы',
+	lblURI: 'URI',
 
 	saveText: 'Сохранение...',
 

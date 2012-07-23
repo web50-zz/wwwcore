@@ -41,6 +41,7 @@ class di_article extends data_interface
 		'title' => array('type' => 'string'),
 		'source' => array('type' => 'string'),
 		'author' => array('type' => 'string'),
+		'uri' => array('type' => 'string'),
 		'content' => array('type' => 'text')
 	);
 	
@@ -97,31 +98,35 @@ class di_article extends data_interface
 	protected function sys_set()
 	{
 		$id = $this->get_args('_sid');
-
-		if ($id > 0)
-		{
+		try{
+			$this->check_input();
+			$this->check_uniq_uri();
+			if ($id > 0)
+			{
+				$this->_flush();
+				$this->_get();
+				$image = $this->get_results(0);
+				$old_image_name = $image->image;
+			}
+			if(!is_dir($this->get_path_to_storage()))
+			{
+				mkdir($this->get_path_to_storage());
+			}
+			$image = (!empty($old_image_name)) ? file_system::replace_file('file', $old_image_name, $this->get_path_to_storage()) : file_system::upload_file('file', $this->get_path_to_storage());
+			if (!empty($image['real_name'])) $this->set_args(array('image' => $image['real_name']), true);
+			$this->resize_original($image);
+			
 			$this->_flush();
-			$this->_get();
-			$image = $this->get_results(0);
-			$old_image_name = $image->image;
+			$this->insert_on_empty = true;
+			$data = $this->extjs_set_json(false);
+			response::send(response::to_json($data), 'html');
 		}
-		if(!is_dir($this->get_path_to_storage()))
+		catch(Exception $e)
 		{
-			mkdir($this->get_path_to_storage());
+			$data['success'] = false;
+			$data['errors'] =  $e->getMessage();
+			response::send(response::to_json($data),'html');
 		}
-		$image = (!empty($old_image_name)) ? file_system::replace_file('file', $old_image_name, $this->get_path_to_storage()) : file_system::upload_file('file', $this->get_path_to_storage());
-		if (!empty($image['real_name'])) $this->set_args(array('image' => $image['real_name']), true);
-		$this->resize_original($image);
-		
-		$this->_flush();
-		$this->insert_on_empty = true;
-		$data = $this->extjs_set_json(false);
-		if ($id == 0)
-		{
-			$sc = data_interface::get_instance('structure_content');
-			$sc->save_link($this->get_args('pid'), $data['data']['id'], $this->get_name());
-		}
-		response::send(response::to_json($data), 'html');
 	}
 
 	/**
@@ -201,6 +206,55 @@ class di_article extends data_interface
 		}
 
 		response::send($data, 'json');
+	}
+
+	public function search_by_uri($uri = '',$cat_uri = '')
+	{
+		if($uri == '')
+		{
+			return false;
+		}
+		$this->_flush();
+		$this->set_args(array('_suri'=>$uri));
+		$di2 = $this->join_with_di('article_type',array('category'=>'id'),array('uri'=>'cat_uri'));
+		if($cat_uri != '')
+		{
+			$this->where = $di2->get_alias().".uri = '/{$cat_uri}/'";
+		}
+		$fld = array(
+			'id',
+			'uri',
+			array('di'=>$di2,'name'=>'uri')
+		);
+		$res = $this->extjs_grid_json($fld,false);
+		if($res['total'] == 1)
+		{
+			return $res['records'][0]['id'];
+		}
+		return false;
+	}
+	
+	// 9* 23072012 проверяем наличие  узла с именем в аргументах на уникальность
+	public function check_uniq_uri()
+	{
+		if($this->args['_sid']>0)
+		{
+			$where = " AND  id != {$this->args['_sid']} ";
+		}
+		$sql = "SELECT count(*) AS cnt FROM {$this->name} WHERE uri = '{$this->args['uri']}' $where";
+		$res = $this->_get($sql);
+		if($res[0]->cnt>0)
+		{
+			throw new Exception('Используйте другой URI для узла. Текущий не уникален.');
+		}
+	}
+	public function check_input()
+	{
+		$args = $this->args;
+		if(!preg_match('/^[a-zA-Z1-90\-_]+$/',$args['uri']))
+		{
+			throw new Exception('URI может содержать только латинские буквы, цифры  и символы _ -. Пробелы не допустимы');
+		}
 	}
 
 }

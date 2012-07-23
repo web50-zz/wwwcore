@@ -1,9 +1,9 @@
 <div id="news" class="news">
-<h1>Новости</h1>
+<h1>Статьи</h1>
 {__(apply(/records)__}
 <div class="news_div">
 	<h1>{__php::date('d.m.Y',strtotime($release_date))__} : {__title__}</h1>
-	{__php::substr(strip_tags($content), 0, strpos(strip_tags($content), '.', 250))__} [<a href="/news/?id={__id__}">далее</a>]
+	{__php::substr(strip_tags($content), 0, strpos(strip_tags($content), '.', 250))__} [<a href="/{__/root__}/{__/unique__}{__cat_uri__}{__uri__}.html">далее</a>]
 </div>
 {__apply)__}
 {__pager__}

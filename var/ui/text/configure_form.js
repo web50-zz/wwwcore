@@ -23,6 +23,7 @@ ui.text.configure_form = Ext.extend(Ext.form.FormPanel, {
 
 	lblContent: 'Контент',
 	lblTitleHide: 'Скрыть заголовок',
+	lblTmpl: 'Шаблон',
 	bttSave: 'Применить',
 	bttCancel: 'Отмена',
 	errInputText: 'Корректно заполните все необходимые поля',
@@ -53,7 +54,8 @@ ui.text.configure_form = Ext.extend(Ext.form.FormPanel, {
 					store: new Ext.data.SimpleStore({fields: ['value', 'title'], data: [[0, 'Нет'], [1, 'Да']]}),
 					valueField: 'value', displayField: 'title', value: 0,
 					mode: 'local', triggerAction: 'all', selectOnFocus: true, editable: false
-				}
+				},
+				{fieldLabel: this.lblTmpl, name: 'tmpl'}
 			],
 			buttonAlign: 'right',
 			buttons: [

@@ -167,7 +167,7 @@ class ui_structure extends user_interface
 		$data['css_hash'] = '{__css_hash__}';
 		// Заменяем в шаблоне маркер {__js_hash__} на такой-же {__js_hash__}, для того, чтобы после сбора всех JS, сгенерировать правильный MD5
 		$data['js_hash'] = '{__js_hash__}';
-		$data['title'] = join(',', $this->title_words);
+		$data['title'] = join(' ', $this->title_words);
 		$data['keywords'] = join(',', $this->key_words);
 		$data['description'] = join(',', $this->description);
 		$data['CURRENT_THEME_PATH'] = "/{$this->theme_path}";

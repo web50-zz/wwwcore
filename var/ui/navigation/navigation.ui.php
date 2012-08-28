@@ -25,13 +25,10 @@ class ui_navigation extends user_interface
 		$template = $this->get_args('template', 'main_menu.html');
 		//9* если в аргументах задан парент то берем срез чайлдов заданного
 		$parent = $this->get_args('parent', FALSE);
-		//9* если задано берем вплоть до заданногоуровня  ниже верхнего уровня нод по дефолту берем первый левел
+		//9* если задано, берём вплоть до заданного уровня, ниже верхнего уровня нод. По дефолту берем первый левел.
 		$level_down = (int)$this->get_args('level_down', 1);
 
-		$st = data_interface::get_instance('structure');
-		$data['records'] = $st->get_main_menu($parent, $level_down);
-		$data['page_id'] = PAGE_ID;
-		return $this->parse_tmpl($template, $data);
+		return $this->parse_tmpl($template, data_interface::get_instance('structure')->get_menu($parent, $level_down));
 	}
 	
 	/**

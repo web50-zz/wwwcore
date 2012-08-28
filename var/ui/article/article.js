@@ -1,114 +1,181 @@
 ui.article.main = function(config){
-	var self = this;
-	this.cid = 0;
-	this.pid = 0;
-	this.autoScroll = true;
+	var frmW = 900;
+	var frmH = 680;
+	var fm = Ext.form;
 	Ext.apply(this, config);
-	var Save = function(data){
-		Ext.Ajax.request({
-			url: 'di/article/set.do',
-			params: data,
-			disableCaching: true,
-			callback: function(options, success, response){
-				if (success)
-					self.fireEvent('saved');
-				else
-					showError("Ошибка сохранения");
-			}
-		});
-	}
-	var Submit = function(f){
-		f.submit({
-			url: 'di/article/set.do',
-			waitMsg: 'Сохранение...',
-			success: function(form, action){
-				var d = Ext.util.JSON.decode(action.response.responseText);
-				if (d.success){
-					self.cid = d.data.id;
-					self.fireEvent('saved');
-				}else
-					showError(d.errors);
-			},
-			failure: function(form, response){
-				showError('Ошибка сохранения.');
-			}
-		});
-	}
-	var getForm = function(data){
-		return new Ext.FormPanel({
-			frame: true, 
-			defaults: {xtype: 'textfield'},
-			buttonAlign: 'right',
-			items: [
-				{name: '_sid', inputType: 'hidden', value: self.cid},
-				{name: 'pid', inputType: 'hidden', value: self.pid},
-				{fieldLabel: 'Название', name: 'title', width: '98%', maxLength: 255, maxLengthText: 'Не больше 255 символов'},
-				{fieldLabel: 'Дата', name: 'release_date', format: 'Y-m-d', allowBlank: false, xtype: 'datefield'},
-				{fieldLabel: 'Источник', name: 'source', width: '98%', maxLength: 64, maxLengthText: 'Не больше 64 символов'},
-				{fieldLabel: 'Автор', name: 'author', width: '98%', maxLength: 255, maxLengthText: 'Не больше 255 символов'},
-				{hideLabel: true, name: 'content', xtype: 'ckeditor', CKConfig: {
-					height: 260,
-					filebrowserImageBrowseUrl: 'ui/file_manager/browser.html'
-				}}
-			]
-		});
-		
-	}
-	this.editPage = function(){
-		var fp = getForm();
-		var w = new Ext.Window({title: 'Редактирование', modal: true, layout: 'form', width: 800, height: 620, items: fp});
-		var submit = function(){
-			var f = fp.getForm();
-			if (f.isValid()) Submit(f);
+	var proxy = new Ext.data.HttpProxy({
+		api: {
+			read: 'di/article/list.js',
+			create: 'di/article/set.js',
+			update: 'di/article/mset.js',
+			destroy: 'di/article/unset.js'
 		}
-		fp.addButton({iconCls: 'disk', text: 'Сохранить', handler: submit, scope: this});
-		fp.addButton({iconCls: 'cancel', text: 'Отмена', handler: function(){w.destroy()}});
-		this.on('saved', function(){w.destroy()}, this, {single: true});
-		w.show(null, function(){
-			fp.getForm().load({
-				url: 'di/article/item.json',
-				params: {_sid: this.cid},
-				waitMsg: 'Загрузка...'
-			});
-		}, this);
-	}
-	this.savePage = function(data){
-		Save(data);
-	}
-	this.loadPage = function(){
-		Ext.Ajax.request({
-			url: 'di/article/get.json',
-			params: {_spid: this.pid},
-			disableCaching: true,
-			callback: function(options, success, response){
-				var d = Ext.util.JSON.decode(response.responseText);
-				if (success && d.success){
-					if (d.data){
-						this.cid = d.data.id;
-						this.body.update(d.data.content, false, function(){
-							this.syncSize();
-							this.fireEvent('loaded');
-						}.createDelegate(this));
-					}
-				}else
-					showError("Ошибка во время загрузки данных");
-			},
-			scope: this
+	});
+	// Typical JsonReader.  Notice additional meta-data params for defining the core attributes of your json-response
+	var reader = new Ext.data.JsonReader({
+			totalProperty: 'total',
+			successProperty: 'success',
+			idProperty: 'id',
+			root: 'records',
+			messageProperty: 'errors'
+		},
+		[{name: 'id', type: 'int'}, {name: 'release_date', type: 'date', dateFormat: 'Y-m-d'}, 'title', 'image', 'author', 'source']
+	);
+	// Typical JsonWriter
+	var writer = new Ext.data.JsonWriter({
+		encode: true,
+		listful: true,
+		writeAllFields: false
+	});
+	// The data store
+	var store = new Ext.data.Store({
+		proxy: proxy,
+		reader: reader,
+		writer: writer,
+		remoteSort: true
+	});
+	var image = new Ext.XTemplate('<img src="{image}" border="0" width="100"/>');
+	image.compile();
+	columns = [
+		{id: 'id', dataIndex: 'id', hidden: true, sortable: true},
+		{header: this.clmnDate, id: 'release_date', dataIndex: 'release_date', width: 150, sortable: true, renderer: formatDate, editor: new fm.DateField({allowBlank: false, format: 'Y-m-d'}), sortable: true},
+		{header: this.clmnImage, dataIndex: 'image', width: 120, xtype: 'templatecolumn', tpl: image},
+		{header: this.clmnTitle, id: 'title', dataIndex: 'title', sortable: true, editor: new fm.TextField({maxLength: 255, maxLengthText: 'Не больше 255 символов'}), sortable: true},
+		{header: this.clmnAuthor, id: 'author', dataIndex: 'author', width: 150, sortable: true, editor: new fm.TextField({maxLength: 255, maxLengthText: 'Не больше 255 символов'}), sortable: true},
+		{header: this.clmnSource, id: 'source', dataIndex: 'source', width: 150, sortable: true, editor: new fm.TextField({maxLength: 64, maxLengthText: 'Не больше 64 символов'}), sortable: true}
+	];
+	var Add = function(){
+		var f = new ui.article.item_form();
+		var w = new Ext.Window({title: this.addTitle, maximizable: true, modal: true, layout: 'fit', width: frmW, height: frmH, items: f});
+		f.on({
+			saved: function(){store.reload()},
+			cancelled: function(){w.destroy()}
 		});
+		w.show();
+	}.createDelegate(this);
+	var Edit = function(){
+		var id = this.getSelectionModel().getSelected().get('id');
+		var f = new ui.article.item_form();
+		var w = new Ext.Window({title: this.editTitle, maximizable: true, modal: true, layout: 'fit', width: frmW, height: frmH, items: f});
+		f.on({
+			saved: function(){store.reload()},
+			cancelled: function(){w.destroy()}
+		});
+		w.show(null, function(){f.Load(id)});
+	}.createDelegate(this);
+	var Types = function(){
+		var f = new ui.article_type.main();
+		var w = new Ext.Window({title: this.labelAticleTypes, maximizable: true, modal: true, layout: 'fit', width: 400, height: 300, items: f});
+		f.on({
+			saved: function(){store.reload()},
+			cancelled: function(){w.destroy()}
+		});
+		w.show();
+	}.createDelegate(this);
+
+	var multiSave = function(){
+		this.store.save();
+	}.createDelegate(this);
+	var Delete = function(){
+		var record = this.getSelectionModel().getSelections();
+		if (!record) return false;
+
+		Ext.Msg.confirm(this.cnfrmTitle, this.cnfrmMsg, function(btn){
+			if (btn == "yes"){
+				this.store.remove(record);
+			}
+		}, this);
+	}.createDelegate(this);
+	var onCmenu = function(grid, rowIndex, e){
+		grid.getSelectionModel().selectRow(rowIndex);
+		var row = grid.getSelectionModel().getSelected();
+		var id = row.get('id');
+		var cmenu = new Ext.menu.Menu({items: [
+			{iconCls: 'newspaper_go', text: 'Редактировать', handler: Edit},
+			{iconCls: 'newspaper_delete', text: 'Удалить', handler: Delete}
+		]});
+		e.stopEvent();  
+		cmenu.showAt(e.getXY());
 	}
+	var reload = function(){
+		store.load({params: {start: 0, limit: this.limit}});
+	}.createDelegate(this);
+	var srchField = new Ext.form.TextField();
+	var srchType = new Ext.form.ComboBox({
+		width: 100,
+		store: new Ext.data.SimpleStore({fields: ['value', 'title'], data: [
+			['title', 'Заголовок'],
+			['author', 'Автор'],
+			['source', 'Источник']
+		]}), value: 'title',
+		valueField: 'value', displayField: 'title', triggerAction: 'all', mode: 'local', editable: false
+	});
+	var srchBttOk = new Ext.Toolbar.Button({
+		text: 'Найти',
+		iconCls:'find',
+		handler: function search_submit(){
+			Ext.apply(store.baseParams, {field: srchType.getValue(), query: srchField.getValue()});
+			store.load({params: {start: 0, limit: this.limit}});
+		},
+		scope: this
+	})
+	var srchBttCancel = new Ext.Toolbar.Button({
+		text: 'Сбросить',
+		iconCls:'cancel',
+		handler: function search_submit(){
+			srchField.setValue('');
+			Ext.apply(store.baseParams, {field: '', query: ''});
+			store.load({params: {start: 0, limit: this.limit}});
+		},
+		scope: this
+	})
 	ui.article.main.superclass.constructor.call(this, {
-		tbar: new Ext.Toolbar({items:[
-			{iconCls: 'page_edit', text: 'Изменить', handler: this.editPage, scope: this}
-		]}),
+		store: store,
+		columns: columns,
+		loadMask: true,
+		autoExpandColumn: 'title',
+		stripeRows: true,
+		autoScroll: true,
+		selModel: new Ext.grid.RowSelectionModel({singleSelect: true}),
+		tbar: [
+			{iconCls: 'newspaper_add', text: 'Типы статей', handler: Types},
+			{iconCls: 'newspaper_add', text: 'Добавить', handler: Add},
+			'-', new Ext.Toolbar.TextItem ("Найти:"),
+			srchType, srchField, srchBttOk, srchBttCancel,
+			'->', {iconCls: 'help', handler: function(){showHelp('article')}}
+		],
+		bbar: new Ext.PagingToolbar({
+			pageSize: this.limit,
+			store: store,
+			displayInfo: true,
+			displayMsg: this.pagerDisplayMsg,
+			emptyMsg: this.pagerEmptyMsg
+		})
 	});
 	this.addEvents({
-		loaded: true,
-		saved: true
 	});
 	this.on({
-		render: this.loadPage,
-		saved: this.loadPage,
+		rowcontextmenu: onCmenu,
+		render: function(){store.load({params:{start:0, limit: this.limit}})},
 		scope: this
 	});
 };
-Ext.extend(ui.article.main, Ext.Panel, {});
+Ext.extend(ui.article.main, Ext.grid.EditorGridPanel, {
+	limit: 10,
+
+	addTitle: "Добавление статьи",
+	editTitle: "Редактирование статьи",
+	labelArticleTypes: '',
+
+	clmnDate: "Дата",
+	clmnTitle: "Заголовок",
+	clmnImage: "Изображение",
+	clmnAuthor: "Автор",
+	clmnSource: "Источник",
+
+	cnfrmTitle: "Подтверждение",
+	cnfrmMsg: "Вы действительно хотите удалить эту новость?",
+
+	pagerEmptyMsg: 'Нет записей',
+	pagerDisplayMsg: 'Записи с {0} по {1}. Всего: {2}'
+});

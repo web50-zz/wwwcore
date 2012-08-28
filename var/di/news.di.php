@@ -4,6 +4,7 @@
 *
 * @author	Anthon S. Litvinenko <a.litvinenko@web50.ru>
 * @package	SBIN Diesel
+* 9* if in registry exists key - 'news_thumb_size' for example  90x20,  then this size will be applied on thumb over current news defaults 
 */
 class di_news extends data_interface
 {
@@ -27,7 +28,7 @@ class di_news extends data_interface
 	/**
 	* @var	string	$path_to_storage	Путь к хранилищу файлов каталога
 	*/
-	public $path_to_storage = 'filestorage/';
+	public $path_to_storage = 'filestorage/news/';
 	
 	/**
 	* @var	array	$fields	Конфигурация таблицы
@@ -104,7 +105,10 @@ class di_news extends data_interface
 			$image = $this->get_results(0);
 			$old_image_name = $image->image;
 		}
-
+		if(!is_dir($this->get_path_to_storage()))
+		{
+			mkdir($this->get_path_to_storage());
+		}
 		$image = (!empty($old_image_name)) ? file_system::replace_file('file', $old_image_name, $this->get_path_to_storage()) : file_system::upload_file('file', $this->get_path_to_storage());
 		if (!empty($image['real_name'])) $this->set_args(array('image' => $image['real_name']), true);
 		$this->resize_original($image);
@@ -125,12 +129,24 @@ class di_news extends data_interface
 	*/
 	private function resize_original($file)
 	{
+		$width = 99;
+		$height = 75;
 		if (!empty($file) && $file['real_name'])
 		{			
-			require_once INSTANCES_PATH .'krat/lib/ThumbLib.inc.php';
+			require_once INSTANCES_PATH .'wwwcore/lib/thumb/ThumbLib.inc.php';
 			// regular image
 			$thumb = PhpThumbFactory::create($this->get_path_to_storage() . $file['real_name']);
-			$thumb->adaptiveResize(99, 75);
+			$res =  registry::get('news_thumb_size');
+			if($res != '')
+			{
+				$size = explode('x',$res);
+				if($size[0]>0 && $size[1]>0)
+				{
+					$width = $size[0];
+					$height = $size[1];
+				}
+			}
+			$thumb->adaptiveResize($width, $height);
 			$thumb->save($this->get_path_to_storage() . $file['real_name']);
 		}
 	}
@@ -186,5 +202,6 @@ class di_news extends data_interface
 
 		response::send($data, 'json');
 	}
+
 }
 ?>

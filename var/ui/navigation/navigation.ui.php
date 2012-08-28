@@ -64,7 +64,7 @@ class ui_navigation extends user_interface
 
 	/*9* берем первый левел и чайлдов для каждого из топов *. Итогом Будут столбцы топ и его чайлды */	
 	protected function pub_top_and_1_down(){
-		$parent = 1;
+		$parent = $this->get_args('parent', 1);//9* parent 1 by default. Get from args otherwise
 		$level_down = 1;
 		$st = data_interface::get_instance('structure');
 		$data['records'] = $st->get_main_menu($parent,$level_down);

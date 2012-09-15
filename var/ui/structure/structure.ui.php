@@ -141,12 +141,13 @@ class ui_structure extends user_interface
 				/* end of cache shit */
 
 				/* 9* title and keywords builder */
+				/* 9* 15092012  not needed yet
 				if($ui->title_words)
 					$this->title_words[] =  $ui->title_words;
 
 				if($ui->key_words)
 					$this->key_words[] =  $ui->key_words;
-
+				*/
 				// Collect VP resources
 				$this->collect_resources($ui, $vp->ui_name);
 			}

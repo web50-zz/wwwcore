@@ -27,7 +27,7 @@ class di_banner extends data_interface
 	/**
 	* @var	string	$path_to_storage	Путь к хранилищу файлов каталога
 	*/
-	public $path_to_storage = 'filestorage/';
+	public $path_to_storage = 'filestorage/bnr/';
 	
 	/**
 	* @var	array	$fields	Конфигурация таблицы
@@ -129,6 +129,10 @@ class di_banner extends data_interface
 			$this->_get();
 			$file = $this->get_results(0);
 			$old_file_name = $file->real_name;
+		}
+		if(!is_dir($this->get_path_to_storage()))
+		{
+			mkdir($this->get_path_to_storage());
 		}
 
 		$file = (!empty($old_file_name)) ? file_system::replace_file('file', $old_file_name, $this->get_path_to_storage()) : file_system::upload_file('file', $this->get_path_to_storage());

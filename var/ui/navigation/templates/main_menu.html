@@ -4,3 +4,8 @@
 <a href="{__uri__}" >{__php::strtoupper($title)__} {__(if(@position < @last)__}<span> | </span>{__if)__}</a>
 {__apply)__}
 </div>
+<!--  
+NOTE
+construction below indicates current page or parent of current 
+{__(if($id == /page_id || $top_parent == 'yes')__}class="active"{__if)__} 
+-->

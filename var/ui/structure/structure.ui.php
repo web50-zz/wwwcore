@@ -34,6 +34,7 @@ class ui_structure extends user_interface
 	*/
         public function process_page($page, $output = true)
         {
+		$page = $this->before_process_page($page);
                 $data = array(
                         'args' => request::get(),
 		);
@@ -332,6 +333,12 @@ class ui_structure extends user_interface
 				}
 			}
 		return $data;
+	}
+
+	//9* for overloads in descendants
+	public function before_process_page($page)
+	{
+		return $page;
 	}
 }
 ?>

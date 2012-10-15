@@ -2,9 +2,9 @@
 /**
 *	UI The structure of site
 *
-* @author	Litvinenko S. Anthon <crazyfluger@gmail.com>
+* @author	Litvinenko S. Anthon <crazyfluger@gmail.com> Fedot B Pozdnyakov <9@u9.ru>
 * @access	public
-* @package	FlugerCMS
+* @package	SBIN DIESEL	
 */
 class ui_structure extends user_interface
 {

@@ -46,7 +46,7 @@ class ui_structure extends user_interface
 		if (SRCH_URI != "") $divp->set_args(array('_sdeep_hide' => 0), true);
 		$divp->set_order('view_point');
 		$divp->set_order('order');
-		$vps = $divp->_get();
+		$vps = $divp->_get()->get_results();
 
 		// Prepare variables
 		$this->css_resources = array();

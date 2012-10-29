@@ -75,8 +75,11 @@ class di_structure extends data_interface
 		array_pop($x);
 		$y = array();
 		for ($i = 1; $i <= count($x); $i++)
+		{
 			$y[] = '"' . join('/', array_slice($x, 0, $i)) . '/"';
-		$result = $this->_get("SELECT * FROM `{$this->name}` WHERE `uri` IN (" . join(', ', $y) . ") ORDER BY `left` DESC LIMIT 1");
+		}
+		$sql = "SELECT * FROM `{$this->name}` WHERE `uri` IN (" . join(', ', $y) . ") ORDER BY `left` DESC LIMIT 1";
+		$result = $this->_get($sql)->get_results();
 
 		if (empty($result))
 		{

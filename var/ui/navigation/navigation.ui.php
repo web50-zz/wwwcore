@@ -73,6 +73,14 @@ class ui_navigation extends user_interface
 			$tmp = $st->get_main_menu($value['id'],2);
 			$data['records'][$key]['childs'] = $tmp;
 		}
+		foreach($data['records'] as $key=>$value){
+			foreach($value['childs'] as $key2=>$value2){
+				if($value2['id'] == PAGE_ID){
+					$data['records'][$key]['top_parent'] = 'yes';
+					$data['records'][$key]['childs'][$key2]['active'] = 'yes';
+				}
+			}
+		}
 		return $this->parse_tmpl('top_and_1_down.html',$data);
 	}
 	/**

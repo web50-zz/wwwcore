@@ -110,13 +110,17 @@ class di_structure extends data_interface
 		);
 	}
 
-	public function get_main_menu($parent = '1',$level_down = 1)
+	public function get_main_menu($parent = '1',$level_down = 1,$ignore_hidden = false)
 	{
 		if(!$parent)
 		{
 			$parent = '1';
 		}
-		$this->where = '`sp1`.`hidden` = 0';
+		if($ignore_hidden == false){
+			$this->where = '`sp1`.`hidden` = 0';
+		}else{
+			$this->where = '`sp1`.`hidden` in(1,0)';
+		}
 		$ns = new nested_sets($this);
 		$branch = $ns->get_childs($parent, $level_down);
 		$top_parent = $ns->get_parent(PAGE_ID, 2);//9* вот то что ниже надо что бы если мы рисуем топ менюдля  страниц нижних уровней индицировать в топ уровне выбранную ветку

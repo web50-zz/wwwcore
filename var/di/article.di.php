@@ -134,8 +134,15 @@ class di_article extends data_interface
 	*/
 	private function resize_original($file)
 	{
-		$width = 99;
-		$height = 75;
+		$width = registry::get('article_preview_width');
+		$height = registry::get('article_preview_height');
+		if(!($width>0)){
+			$width = 99;
+		}
+		if(!($height)>0){
+			$height = 75;
+		}
+
 		if (!empty($file) && $file['real_name'])
 		{			
 			require_once INSTANCES_PATH .'wwwcore/lib/thumb/ThumbLib.inc.php';
@@ -185,7 +192,8 @@ class di_article extends data_interface
 	protected function sys_unset()
 	{
 		$this->_flush();
-		$images = $this->_get();
+		$this->_get();
+		$images = $this->get_results();
 
 		$this->_flush();
 		$data = $this->extjs_unset_json(false);
@@ -242,7 +250,8 @@ class di_article extends data_interface
 			$where = " AND  id != {$this->args['_sid']} ";
 		}
 		$sql = "SELECT count(*) AS cnt FROM {$this->name} WHERE uri = '{$this->args['uri']}' $where";
-		$res = $this->_get($sql);
+		$this->_get($sql);
+		$res =  $this->get_results();
 		if($res[0]->cnt>0)
 		{
 			throw new Exception('Используйте другой URI для узла. Текущий не уникален.');

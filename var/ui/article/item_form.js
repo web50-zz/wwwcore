@@ -41,6 +41,39 @@ ui.article.item_form = function(config){
 	var Cancel = function(){
 		this.fireEvent('cancelled');
 	}.createDelegate(this);
+
+	
+	var  filesList = function(b,d){
+		var fm = this.getForm();
+		var vals = fm.getValues();
+		if(!(vals._sid>0)){
+			showError(this.msgNotDefined);
+			return;
+		}
+		var app = new App({waitMsg: 'Загрузка формы'});
+		app.on({
+			apploaded: function(){
+				var f = new ui.article_files.main();
+				f.setParams({'_sarticle_id':vals._sid});
+				var w = new Ext.Window({iconCls: b.iconCls, title: b.text, maximizable: true, modal: true, layout: 'fit', width: 500, height: 400, items: f});
+				f.on({
+					cancelled: function(){w.destroy()},
+					scope: this
+				});
+				w.show(null, function(){});
+			},
+			apperror: showError,
+			scope: this
+		});
+		app.Load('article_files', 'main');
+	}.createDelegate(this);
+	
+	var tb = new Ext.Toolbar({
+		style:{marginBottom: '10px'},
+		items: [
+			{iconCls: 'application_view_tile', text: this.bttFiles, handler: filesList, scope: this}
+	]});
+
 	ui.article.item_form.superclass.constructor.call(this, {
 		frame: true, 
 		fileUpload: true,
@@ -52,6 +85,10 @@ ui.article.item_form = function(config){
 			{fieldLabel: 'Категория', hiddenName: 'category', value: '', xtype: 'combo', emptyText: '',
 							store: new Ext.data.JsonStore({url: 'di/article_type/type_list.json', root: 'records', fields: ['id', 'title'], autoLoad: true,
 								listeners: {
+										load: function(store,ops){
+										var f = this.getForm().findField('category');
+										f.setValue(f.getValue());
+										}, 
 										beforeload:function(store,ops){
 										},
 										scope: this}
@@ -74,6 +111,7 @@ ui.article.item_form = function(config){
 			}}
 		],
 		buttonAlign: 'right',
+		tbar: tb,
 		buttons: [
 			{iconCls: 'disk', text: this.bttSave, handler: Save},
 			{iconCls: 'cancel', text: this.bttCancel, handler: Cancel}
@@ -103,6 +141,8 @@ Ext.extend(ui.article.item_form , Ext.form.FormPanel, {
 
 	bttSave: 'Сохранить',
 	bttCancel: 'Отмена',
+	bttFiles: 'Файлы',
+	msgNotDefined:'Сохраните статью для начала',
 
 	errSaveText: 'Ошибка во время сохранения',
 	errInputText: 'Корректно заполните все необходимые поля',

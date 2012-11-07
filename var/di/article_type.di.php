@@ -48,7 +48,8 @@ class di_article_type extends data_interface
 	{
 		$this->connector->fetchMethod = PDO::FETCH_ASSOC;
 		$sql = "SELECT * FROM `{$this->name}` WHERE `uri` = '/{$uri}'ORDER BY `left` DESC LIMIT 1";
-		$result = $this->_get($sql);
+		$this->_get($sql);
+		$result = $this->get_results();
 		if (empty($result))
 		{
 			return array();
@@ -439,7 +440,8 @@ class di_article_type extends data_interface
 			$where = " AND  id != {$this->args['_sid']} ";
 		}
 		$sql = "SELECT count(*) AS cnt FROM {$this->name} WHERE name = '{$this->args['name']}' $where";
-		$res = $this->_get($sql);
+		$this->_get($sql);
+		$res = $this->get_results();
 		if($res[0]->cnt>0)
 		{
 			throw new Exception('Используйте другой тэг для узла. Текущий не уникален.');

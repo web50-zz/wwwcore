@@ -160,6 +160,20 @@ class ui_structure extends user_interface
 		}
 
 		// Collect Structure resources
+		/* 9* 08112012
+			Заново восстанавливаем глобальную тему по 
+			странице на случай если в каком то уи дергали этот метод и глобалы  
+			в синглетоне поменялись 
+		*/
+		if($page['theme_overload'] != '')
+		{
+			$this->theme_path = THEMES_PATH.$page['theme_overload'].'/';
+			$this->theme = $page['theme_overload'];
+		}else{
+			$this->theme_path = CURRENT_THEME_PATH;
+			$this->theme = '';
+		}
+		// собираем ресурсы для structure ui
 		$this->collect_resources($this, $this->interfaceName);
 
 //		if($this->title_words) $title_words[] =  $this->title_words;

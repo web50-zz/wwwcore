@@ -191,6 +191,10 @@ class di_article extends data_interface
 	*/
 	protected function sys_unset()
 	{
+		if ($this->args['records'] && !$this->args['_sid'])
+		{
+			$this->args['_sid'] = request::json2int($this->args['records']);
+		}
 		$this->_flush();
 		$this->_get();
 		$images = $this->get_results();

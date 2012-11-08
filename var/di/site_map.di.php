@@ -54,7 +54,19 @@ class di_site_map extends data_interface
 
 	public function get_all()
 	{
+		$parent = 1;
+		$hidden = 0;
 		$this->_flush();
+		if($this->args['hidden'] == 1){
+			$hidden = 1;
+		}
+		if($this->args['parent']>0){
+			$parent = $this->args['parent'];
+		}
+		if($hidden == 0)
+		{
+			$this->where.= 'hidden = 0';
+		}
 		$this->set_args(array(
 				'sort'=>'left',
 				'dir'=>'ASC',
@@ -62,6 +74,10 @@ class di_site_map extends data_interface
 		$this->data =  $this->extjs_grid_json(false,false);
 		$level = 1;
 		$this->get_childs(0);
+		if($parent != 1){
+			$this->search_parent($this->data['records'],$parent);
+			return $this->result;
+		}
 		return $this->data['records'][0];
 	}
 
@@ -74,12 +90,26 @@ class di_site_map extends data_interface
 			{
 				if($value['left']>$this->data['records'][$index]['left'] && $value['right']<$this->data['records'][$index]['right'])
 				{
-					$this->get_childs($key);
-					array_push($this->data['records'][$index]['childs'],$this->data['records'][$key]);
+						$this->get_childs($key);
+						array_push($this->data['records'][$index]['childs'],$this->data['records'][$key]);
 				}
 			}
 		}
 	}
 
+	public function search_parent($array_in,$parent)
+	{
+		foreach($array_in as $key=>$value)
+		{
+			if($value['id'] == $parent)
+			{
+				$this->result = $value;
+				return;
+			}
+			else{
+				$this->search_parent($value['childs'],$parent);
+			}
+		}
+	}
 }
 ?>

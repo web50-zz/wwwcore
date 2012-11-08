@@ -20,6 +20,12 @@ class ui_site_map extends user_interface
 	{
 		$data =  array();
 		$di = data_interface::get_instance('site_map');
+		$parent = $this->get_args('parent','1');
+		$hidden = $this->get_args('hidden',0);
+		$di->set_args(array(
+				'parent'=>$parent,
+				'hidden'=>$hidden,
+				));
 		$data_r = $di->get_all();
 		$data['records'] = $data_r['childs'];
 		return $this->parse_tmpl('default.html',$data);

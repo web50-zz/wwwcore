@@ -90,6 +90,8 @@ class di_search extends data_interface
 		{
 			// Формируем страницу
 			$content = $strcUI->process_page($page, false);
+			// Убираем <!--(SKIP_SEARCH--> чтото <!--SKIP_SEARCH-->
+			$content = preg_replace('/\<\!--\(SKIP_SEARCH--\>(.+?)\<\!--SKIP_SEARCH\)--\>(?:\n|\r|)+/ms','',$content);
 			// Убираем все тэги
 			$content = strip_tags($content);
 			//$content = preg_replace("/<[\/]?[^>]*>/", " ", $content);

@@ -38,7 +38,6 @@ class ui_structure extends user_interface
                 $data = array(
                         'args' => request::get(),
 		);
-
 		// Get view points
 		$divp = data_interface::get_instance('ui_view_point');
 		$divp->_flush();
@@ -49,6 +48,9 @@ class ui_structure extends user_interface
 		$vps = $divp->_get()->get_results();
 
 		// Prepare variables
+		$this->key_words = array();
+		$this->title_words = array();
+		$this->description = array();
 		$this->css_resources = array();
 		$this->js_resources = array();
 		//9* мета на страницу итмеет приоритет перед глобальной мета
@@ -83,6 +85,11 @@ class ui_structure extends user_interface
 		{
 			$this->theme_path = THEMES_PATH.$page['theme_overload'].'/';
 			$this->theme = $page['theme_overload'];
+		}
+		else
+		{
+			$this->theme_path = CURRENT_THEME_PATH;
+			$this->theme = '';
 		}
 		// 9* include and mask some js  depes for current theme.
 		$js_deps_file = BASE_PATH.$this->theme_path.'/js_deps.php';

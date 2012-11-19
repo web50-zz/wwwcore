@@ -50,7 +50,7 @@ ui.structure.node_form = Ext.extend(Ext.form.FormPanel, {
 	},
 
 	formWidth: 640,
-	formHeight: 480,
+	formHeight: 600,
 	lblTitle: 'Наименование',
 	lblVisible: 'Видимый',
 	lblName: 'Имя',
@@ -61,6 +61,7 @@ ui.structure.node_form = Ext.extend(Ext.form.FormPanel, {
 	lblDescr: 'META Описание',
 	lblTmpl: 'Шаблон',
 	lblMttl: 'МETA тайтл',
+	lblParams:'аргументы(JSON)',
 
 	loadText: 'Загрузка данных формы',
 	saveText: 'Сохранение...',
@@ -102,7 +103,8 @@ ui.structure.node_form = Ext.extend(Ext.form.FormPanel, {
 					store: new Ext.data.JsonStore({url: 'ui/structure/templates.do', fields: ['template']}),
 					valueField: 'template', displayField: 'template',
 					emptyText: 'Выберите шаблон...', typeAhead: true, triggerAction: 'all', selectOnFocus: true, editable: false
-				}
+				},
+				{fieldLabel: this.lblParams, xtype:"textarea",name: 'params_json'}
 			],
 			buttonAlign: 'right',
 			buttons: [
@@ -110,7 +112,7 @@ ui.structure.node_form = Ext.extend(Ext.form.FormPanel, {
 				{iconCls: 'cancel', text: this.bttCancel, handler: this.Cancel, scope: this}
 			],
 			keys: [
-				{key: [Ext.EventObject.ENTER], handler: this.Save, scope: this}
+			//	{key: [Ext.EventObject.ENTER], handler: this.Save, scope: this}
 			]
 		});
 		Ext.apply(this, config);

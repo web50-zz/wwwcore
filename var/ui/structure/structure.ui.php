@@ -12,6 +12,7 @@ class ui_structure extends user_interface
 	protected $key_words =  array();
 	protected $title_words =  array();
 	protected $description =  array();
+	protected $page_itself = '';
 
 	protected $deps = array(
 		'main' => array(
@@ -38,6 +39,15 @@ class ui_structure extends user_interface
                 $data = array(
                         'args' => request::get(),
 		);
+		//9* 20112012  decode and set some extra params in page config
+		if($page['params_json'] != '')
+		{
+			$temp = json_decode($page['params_json'],true);
+			$data['params_json'] = $temp;
+			$page['params_json'] = $temp;
+			unset($temp);
+		}
+		$this->page_itself = $page;
 		// Get view points
 		$divp = data_interface::get_instance('ui_view_point');
 		$divp->_flush();
@@ -196,7 +206,6 @@ class ui_structure extends user_interface
 		$data['description'] = join(',', $this->description);
 		$data['CURRENT_THEME_PATH'] = "/{$this->theme_path}";
 		$data['PAGE_ID'] = $page['id'];
-	
 		if (authenticate::is_logged())
 			$data['IS_LOGGED'] = 'yes';
 
@@ -264,7 +273,11 @@ class ui_structure extends user_interface
 		}
 		return false;
 	}
-
+//9* метод для получения внешними модулями  полной информации из структуры по странице 
+	public function get_page_info()
+	{
+		return $this->page_itself;
+	}
 	/**
 	*       ExtJS UI for adm part
 	*/

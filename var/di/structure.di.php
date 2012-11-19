@@ -44,7 +44,8 @@ class di_structure extends data_interface
 			'level' => array('type' => 'integer', 'readonly' => 1),
 			'mtitle' => array('type' => 'string'),
 			'mkeywords' => array('type' => 'string'),
-			'mdescr' => array('type' => 'string')
+			'mdescr' => array('type' => 'string'),
+			'params_json' => array('type' => 'string')
 		);
 	
 	public function __construct () {

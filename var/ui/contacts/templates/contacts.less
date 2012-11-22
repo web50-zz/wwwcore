@@ -1,0 +1,41 @@
+.ui-contacts{
+	&.default{
+		@padding:3px;
+		@average_width:350px;
+		.container{
+			width:(350px + (@padding * 2) + 2);
+			@radius:4px;
+			text-align:right;
+			.settings(){
+				border:1px solid #ccc;
+				margin-bottom:5px;
+				height:25px;
+				-webkit-border-radius: @radius;
+				-moz-border-radius: @radius;
+				border-radius: @radius;
+				font-family:Arial;
+				font-size:14px;
+				padding:@padding;
+			}
+			input[type=text]{
+				width:@average_width;
+				.settings;
+			}
+			textarea{
+				.settings;
+				width:@average_width;
+				height:250px;
+			}
+			.btn{
+				.settings;
+				cursor:pointer;
+				color:#666666;
+				margin:0px;
+				&:hover{
+					background:#FFFFFF;
+				}
+
+			}
+		}
+	}
+}

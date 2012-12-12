@@ -211,11 +211,9 @@ class di_www_person extends data_interface
 			$this->prepare_preview_params();
 			foreach ($files as $file)
 			{
-				dbg::write("{$dir}{$file->real_name}");
 				file_system::remove_file($file->real_name, $dir);
 				foreach ($this->_preview as $pref => $params)
 				{
-					dbg::write("{$dir}{$pref}-{$file->real_name}");
 					file_system::remove_file("{$pref}-{$file->real_name}", $dir);
 				}
 			}

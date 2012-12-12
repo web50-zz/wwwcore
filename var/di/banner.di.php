@@ -182,7 +182,14 @@ class di_banner extends data_interface
 	protected function sys_unset()
 	{
 		$this->_flush();
-		$files = $this->_get();
+		$records = (array)json_decode($this->get_args('records'), true);
+		if(count($records)>0)
+		{
+			$rr =  implode(',',$records);
+			$this->push_args(array('_sid' => $rr));
+			$files = $this->_get();
+			$this->pop_args();
+		}
 		$this->_flush();
 		$data = $this->extjs_unset_json(false);
 		

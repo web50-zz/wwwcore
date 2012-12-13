@@ -32,7 +32,7 @@ class ui_article extends user_interface
 		{
 			return $this->get_list();
 		}
-		if(preg_match('/'.$this->unique_marker.'\/$/',SRCH_URI))
+		if(preg_match('/'.$this->unique_marker.'\/$',SRCH_URI))
 		{
 			return $this->get_list();
 		}
@@ -54,7 +54,7 @@ class ui_article extends user_interface
 				$out['types_list'] = $this->types_list();
 				return $this->parse_tmpl('page.html', $out);
 			}
-			response::redirect('/articles/');
+			response::redirect(PAGE_URI);
 		}
 	}
 
@@ -63,7 +63,7 @@ class ui_article extends user_interface
 			$category = $this->search_category_id($category_uri);
 			if($category_uri != '' && !($category >0))
 			{
-				response::redirect('/articles/');
+				response::redirect(PAGE_URI);
 			}
 			$di = data_interface::get_instance('article');
 			$di->_flush();
@@ -100,6 +100,8 @@ class ui_article extends user_interface
 				$data['records'][$n]['_annotation'] = $this->substr_by_words($record['content']);
 			}
 			$pager = user_interface::get_instance('pager');
+			$st=user_interface::get_instance('structure');
+			$st->collect_resources($pager,'pager');
 			$data['unique'] = $this->unique_marker;
 			$data['root'] = $this->default_root;
 			$data['page'] = $page;
@@ -131,10 +133,21 @@ class ui_article extends user_interface
 
 	public function types_list($current = '')
 	{
+		$di2 = data_interface::get_instance('article');
+		$sql = "select category,count(*) as cnt from ".$di2->get_name().' group by category';
+		$di2->_get($sql);
+		$res =  $di2->get_results();
+		$t =  array();
+		foreach($res as $key=>$value){
+			$t[] = $value['category'];
+		}
+		$t[] = '1487';
+		$where  = implode(',',$t);
 		$di = data_interface::get_instance('article_type');
 		$di->_flush();
 		$di->set_args(array());
 		$di->set_order('left','ASC');
+		$di->where.= "id in (${where}) ";
 		$data = $di->extjs_grid_json(array('id','title','uri','name'),false);
 		$data['current'] = $current;
 		return $this->parse_tmpl('types_list.html',$data);

@@ -1,14 +1,13 @@
 <?php
 /**
-*	Интерфейс данных "Новости"
 *
-* @author       9*  9@u9.ru cloned news.di.php
+* @author       9*  9@u9.ru 
 * @package	SBIN Diesel
 * 9* if in registry exists key - 'article_thumb_size' for example  90x20,  then this size will be applied on thumb over current article defaults 
 */
 class di_article extends data_interface
 {
-	public $title = 'Лента новостей';
+	public $title = 'Статьи';
 	
 	/**
 	* @var	string	$cfg	Имя конфигурации БД

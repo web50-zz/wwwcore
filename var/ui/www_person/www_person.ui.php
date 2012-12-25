@@ -26,11 +26,9 @@ class ui_www_person extends user_interface
         */
         public function pub_content()
         {
-		$data = array(
-			'persons' => $this->get_persons(),
-			'path' => data_interface::get_instance('www_person')->path_to_storage,
-		);
-
+		$data = array();
+		$data['persons'] =  $this->get_persons();
+		$data['path']  = data_interface::get_instance('www_person')->path_to_storage;
                 return $this->parse_tmpl('content.html', $data);
         }
 

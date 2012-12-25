@@ -34,10 +34,19 @@ class ui_contacts extends user_interface
 		try
 		{
 			$args = request::get();
-			if($args['email'] == '' || $args['message'] == '')
+			if($args['message'] == '')
 			{
-				throw new Exception('Заполните как минимум поля "E-mail" и "Сообщение"');
+				throw new Exception('Заполните поле "Сообщение"');
 			}
+			if(array_key_exists('email',$args) && $args['email'] == '')
+			{
+				throw new Exception('Заполните поле "E-mail"');
+			}
+			if(array_key_exists('subject',$args) && $args['subject'] == '')
+			{
+				throw new Exception('Заполните поле "Тема"');
+			}
+
 			$this->send_email($args);
 			$msg = 'Спасибо, сообщение отправлено';
 			$resp = array('success'=>true,'message'=>$msg);

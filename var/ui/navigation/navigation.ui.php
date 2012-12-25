@@ -31,6 +31,8 @@ class ui_navigation extends user_interface
 		$st = data_interface::get_instance('structure');
 		$data['records'] = $st->get_main_menu($parent, $level_down);
 		$data['page_id'] = PAGE_ID;
+		$data['srch_uri'] = SRCH_URI;
+		$data['page_uri'] = PAGE_URI;
 		return $this->parse_tmpl($template, $data);
 	}
 	

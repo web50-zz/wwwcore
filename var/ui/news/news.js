@@ -1,6 +1,6 @@
 ui.news.main = function(config){
 	var frmW = 900;
-	var frmH = 680;
+	var frmH = 700;
 	var fm = Ext.form;
 	Ext.apply(this, config);
 	var proxy = new Ext.data.HttpProxy({

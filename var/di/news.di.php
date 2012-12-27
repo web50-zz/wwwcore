@@ -41,6 +41,7 @@ class di_news extends data_interface
 		'title' => array('type' => 'string'),
 		'source' => array('type' => 'string'),
 		'author' => array('type' => 'string'),
+		'anounce' => array('type' => 'string'),
 		'content' => array('type' => 'text')
 	);
 	

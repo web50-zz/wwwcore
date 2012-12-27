@@ -5,6 +5,7 @@ CREATE TABLE `news` (
   `title` varchar(64) collate utf8_unicode_ci NOT NULL,
   `image` varchar(255) collate utf8_unicode_ci NOT NULL,
   `source` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `anounce` varchar(255) collate utf8_unicode_ci NOT NULL,
   `author` varchar(64) collate utf8_unicode_ci NOT NULL,
   `content` mediumtext collate utf8_unicode_ci NOT NULL,
   PRIMARY KEY  (`id`)

@@ -45,7 +45,8 @@ ui.news.item_form = function(config){
 		frame: true, 
 		fileUpload: true,
 		labelWidth: 100, 
-		defaults: {xtype: 'textfield', width: 100, anchor: '100%'},
+		autoScroll: true,
+		defaults: {xtype: 'textfield', width: 100, anchor: '98%'},
 		items: [
 			{name: '_sid', inputType: 'hidden'},
 			{fieldLabel: this.lblFile, name: 'file', xtype: 'fileuploadfield', buttonCfg: {text: '', iconCls: 'folder'}},
@@ -58,6 +59,7 @@ ui.news.item_form = function(config){
 			{fieldLabel: this.lblRlsDate, name: 'release_date', anchor: null, format: 'Y-m-d', allowBlank: false, xtype: 'datefield'},
 			{fieldLabel: this.lblSource, name: 'source', maxLength: 64, maxLengthText: 'Не больше 64 символов'},
 			{fieldLabel: this.lblAuthor, name: 'author', maxLength: 255, maxLengthText: 'Не больше 255 символов'},
+			{fieldLabel: this.lblAnounce, name: 'anounce', maxLength: 255, maxLengthText: 'Не больше 255 символов',xtype: 'htmleditor'},
 			{hideLabel: true, name: 'content', xtype: 'ckeditor', CKConfig: {
 				height: 260,
 				filebrowserImageBrowseUrl: 'ui/file_manager/browser.html'
@@ -86,6 +88,7 @@ Ext.extend(ui.news.item_form , Ext.form.FormPanel, {
 	lblRlsDate: 'Дата релиза',
 	lblSource: 'Источник',
 	lblAuthor: 'Автор',
+	lblAnounce: 'Преамбула',
 	loadText: 'Загрузка данных формы',
 
 	saveText: 'Сохранение...',

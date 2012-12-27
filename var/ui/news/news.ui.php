@@ -57,7 +57,7 @@ class ui_news extends user_interface
 				'title',
 				'author',
 				'source',
-				'content'
+				'anounce',
 			), false);
 			// Создаём аннотации для новостей
 			foreach ($data['records'] as $n => $record)

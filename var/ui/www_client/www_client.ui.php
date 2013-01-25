@@ -2,12 +2,12 @@
 /**
 *	ПИ "WWW: Персоны"
 *
-* @author	Anthon S. Litvinenko <a.litvinenko@web50.ru>
+* @author	Anthon S. Litvinenko <a.litvinenko@web50.ru> 25012013
 * @package	SBIN Diesel
 */
 class ui_www_client extends user_interface
 {
-	public $title = 'WWW: Персоны';
+	public $title = 'WWW: Клиенты';
 
 	protected $deps = array(
 		'main' => array(

@@ -61,12 +61,16 @@ class ui_news extends user_interface
 			), false);
 			// Создаём аннотации для новостей
 			foreach ($data['records'] as $n => $record)
+			{
 				$data['records'][$n]['_annotation'] = $this->substr_by_words($record['content']);
-
-			$pager = user_interface::get_instance('pager');
-			$data['page'] = $page;
-			$data['limit'] = $limit;
-			$data['pager'] = $pager->get_pager(array('page' => $page, 'total' => $data['total'], 'limit' => $limit, 'prefix' => $_SERVER['QUERY_STRING']));
+			}
+			if($this->get_args('pager') != 'false')
+			{
+				$pager = user_interface::get_instance('pager');
+				$data['page'] = $page;
+				$data['limit'] = $limit;
+				$data['pager'] = $pager->get_pager(array('page' => $page, 'total' => $data['total'], 'limit' => $limit, 'prefix' => $_SERVER['QUERY_STRING']));
+			}
 			return $this->parse_tmpl('default.html', $data);
 		}
 	}

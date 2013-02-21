@@ -121,6 +121,10 @@ class ui_structure extends user_interface
 			{
 				$ui = user_interface::get_instance($vp->ui_name);
 				$call = !empty($vp->ui_call) ? $vp->ui_call : 'content';
+
+				// Collect VP resources FIRST
+				$this->collect_resources($ui, $vp->ui_name);
+
 				/* 9* theme overload. If  exclusive theme declared for page we should overwrite theme_path variable for any ui we used on page */
 				if($page['theme_overload'] != '')
 				{
@@ -213,10 +217,16 @@ class ui_structure extends user_interface
 		$out = $this->parse_tmpl("main/{$template}", $data, array('ui' => array($this, 'collect_resources')));
 
 		// Окончательный сбор данных по ресурсам
-		$css_full = '/' . join(',/', $this->css_resources);
+		$css_res = array();
+		foreach ($this->css_resources as $a) $css_res = array_merge($css_res, $a);
+		$css_full = '/' . join(',/', $css_res);
+		//$css_full = '/' . join(',/', $this->css_resources);
 		$css_hash = md5($css_full);
 
-		$js_full = '/' . join(',/', $this->js_resources);
+		$js_res = array();
+		foreach ($this->js_resources as $a) $js_res = array_merge($js_res, $a);
+		$js_full = '/' . join(',/', $js_res);
+		//$js_full = '/' . join(',/', $this->js_resources);
 		$js_hash = md5($js_full);
 
 		$_SESSION['paths'][$js_hash] = $js_full;
@@ -233,6 +243,7 @@ class ui_structure extends user_interface
 
 	public function collect_resources($ui, $name)
 	{
+		/*
 		// 9* CSS output
 		if (empty($this->css_resources[$name]) && $path = $ui->get_resource_path("{$name}.css"))
 			$this->css_resources[$name] = $path;
@@ -240,7 +251,32 @@ class ui_structure extends user_interface
 		// 9* JS output
 		if(empty($this->js_resources[$name]) && $path = $ui->get_resource_path("{$name}.res.js"))
 			$this->js_resources[$name] = $path;
+		*/
+
+		$this->add_res_css($ui, $name, $name);
+		$this->add_res_js($ui, $name, $name, '.res.js');
 	}
+	
+	/**
+	*	Добавить стиль
+	*/
+	public function add_res_css($ui, $name, $style, $ext = '.css')
+	{
+		if (($path = $ui->get_resource_path("{$style}{$ext}")) && !in_array($path, (array)$this->css_resources[$name]))
+			$this->css_resources[$name][] = $path;
+		return $this;
+	}
+	
+	/**
+	*	Добавить JS
+	*/
+	public function add_res_js($ui, $name, $style, $ext = '.js')
+	{
+		if (($path = $ui->get_resource_path("{$style}{$ext}")) && !in_array($path, (array)$this->js_resources[$name]))
+			$this->js_resources[$name][] = $path;
+		return $this;
+	}
+
 //9* метод для добавления внешними модулями в массив ключевых слов на вывод в META keywords
 	public function add_keyword($text)
 	{

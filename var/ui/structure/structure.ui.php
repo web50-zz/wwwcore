@@ -264,6 +264,7 @@ class ui_structure extends user_interface
 	*/
 	public function add_res_css($ui, $name, $style, $ext = '.css')
 	{
+		$ui->theme_path = $this->theme_path;
 		if (($path = $ui->get_resource_path("{$style}{$ext}")) && !in_array($path, (array)$this->css_resources[$name]))
 			$this->css_resources[$name][] = $path;
 		return $this;
@@ -274,6 +275,7 @@ class ui_structure extends user_interface
 	*/
 	public function add_res_js($ui, $name, $style, $ext = '.js')
 	{
+		$ui->theme_path = $this->theme_path;
 		if (($path = $ui->get_resource_path("{$style}{$ext}")) && !in_array($path, (array)$this->js_resources[$name]))
 			$this->js_resources[$name][] = $path;
 		return $this;

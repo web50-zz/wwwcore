@@ -122,8 +122,6 @@ class ui_structure extends user_interface
 				$ui = user_interface::get_instance($vp->ui_name);
 				$call = !empty($vp->ui_call) ? $vp->ui_call : 'content';
 
-				// Collect VP resources FIRST
-				$this->collect_resources($ui, $vp->ui_name);
 
 				/* 9* theme overload. If  exclusive theme declared for page we should overwrite theme_path variable for any ui we used on page */
 				if($page['theme_overload'] != '')
@@ -131,6 +129,10 @@ class ui_structure extends user_interface
 					$ui->theme_path = THEMES_PATH.$page['theme_overload'].'/';
 					$ui->theme = $page['theme_overload'];
 				}
+				
+				// Collect VP resources 
+				$this->collect_resources($ui, $vp->ui_name);
+
 				/* 9* some cache procs */
 				if ($vp->cache_enabled == 1)
 				{

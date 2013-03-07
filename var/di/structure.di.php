@@ -311,9 +311,13 @@ class di_structure extends data_interface
 
 		$ns = new nested_sets($this);
 		if ($id > 0 && $ns->delete_node($id))
+		{
 			$data = array('success' => true);
+		}
 		else
+		{
 			$data = array('success' => false);
+		}
 		response::send($data, 'json');
 	}
 
@@ -326,13 +330,17 @@ class di_structure extends data_interface
 		$sc = data_interface::get_instance('structure_content');
 		$ns = new nested_sets($this);
 
-		$childs = $ns->get_childs($id);
+		$childs = $ns->get_childs($id,10000);// 9* 07032013 couse nested level must be given as second param we will give it up to 10000 for future :)
 		$ids = array($id);
 		foreach ($childs as $child)
+		{
 			$ids[] = $child['id'];
-
+		}
 		foreach ($ids as $pid)
+		{
 			$sc->remove_by_page($pid);
+		}
+		$this->fire_event('onUnsetRecursively', array($ids,$this->get_args()));
 	}
 	
 	/**

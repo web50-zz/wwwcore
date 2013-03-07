@@ -184,5 +184,26 @@ class di_ui_view_point extends data_interface
 			$this->connector->query($sql);
 		}
 	}
+
+	/* 
+		9* хэндлер на удаление  ноды или ветки  в структуре. Будем удалять все VP, которые на  указанные ноды повешены.
+	*/
+	public function remove_for_pages($obj, $ids =  array(),$args = array())
+	{
+		if(count($ids)>0)
+		{
+			$ids_list = implode(',',$ids);
+			$sql =  "DELETE FROM {$this->name} WHERE page_id in ($ids_list)";
+			$this->connector->query($sql);
+		}
+	}
+
+	public function _listeners()
+	{
+		return array(
+			array('di' => 'structure', 'event' => 'onUnsetRecursively', 'handler' => 'remove_for_pages'),
+		);
+	}
+
 }
 ?>

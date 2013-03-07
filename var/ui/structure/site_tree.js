@@ -1,30 +1,35 @@
 ui.structure.site_tree = Ext.extend(Ext.tree.TreePanel, {
 	titleAdd: "Добавление страницы",
 	titleEdit: "Изменение страницы",
+	titlePresets: 'Пресеты',
 
 	bttAdd: "Добавить",
 	bttEdit: "Изменить",
 	bttDelete: "Удалить",
-
+	bttSaveBranch:'Сохранить ветку',
+	bttLoadBranch:'Загрузить ветку',
+	bttMaster: 'Конфиги',
 	cnfrmTitle: "Подтверждение",
 	cnfrmMsg: "Вы действительно хотите удалить эту страницу?",
 
 	msgLoading: "Загрузка данных...",
 	msgDeleteError: "Во время удаления возникли ошибки.",
 	msgServerError: "Внутренняя ошибка сервера",
+	msgRestrictedError:'Страницу запрещено удалять',
 
 	operation: {
-		Reload: function(id){
+		Reload: function(s,id){
 			if (id){
-				var node = this.getNodeById(id);
+				var node = s.getNodeById(id);
+				node.reload();
 				if (node){
 					if (!node.expanded)
 						node.expand()
 					else
 						node.reload();
 				}
-			}else if (this.root.rendered == true)
-				this.root.reload();
+			}else if (s.root.rendered == true)
+				s.root.reload();
 		},
 		Saved: function(isNew, formData, respData){
 			if (isNew){
@@ -92,6 +97,10 @@ ui.structure.site_tree = Ext.extend(Ext.tree.TreePanel, {
 			});
 		},
 		Delete: function(id){
+			if(id == 1){
+				showError(this.msgRestrictedError);
+				return;
+			}
 			Ext.Msg.confirm(this.cnfrmTitle, this.cnfrmMsg, function(btn){
 				if (btn == "yes"){
 					Ext.Ajax.request({
@@ -108,7 +117,63 @@ ui.structure.site_tree = Ext.extend(Ext.tree.TreePanel, {
 					})
 				}
 			}, this);
+		},
+		Master: function(){
+			var app = new App({waitMsg: 'Presets grid loading'});
+			app.on({
+				apploaded: function(){
+					var f = new ui.structure_branch_master.main();
+					var w = new Ext.Window({iconCls: this.iconCls, title: this.titlePresets, maximizable: true, modal: true, layout: 'fit', width: f.formWidth, height: 500, items: f});
+					f.on({
+						cancelled: function(){w.destroy()},
+						scope: this
+					});
+					w.show(null, function(){});
+				},
+				apperror: showError,
+				scope: this
+			});
+			app.Load('structure_branch_master', 'main');
+		}, 
+		saveBranch: function(id){
+			var app = new App({waitMsg: 'Presets grid loading'});
+			app.on({
+				apploaded: function(){
+					var f = new ui.structure_branch_master.item_form();
+					var w = new Ext.Window({iconCls: this.iconCls, title: this.titlePresets, maximizable: true, modal: true, layout: 'fit', width: 400, height: 100, items: f});
+					f.on({
+						saved: function(){w.destroy()},
+						cancelled: function(){w.destroy()},
+						scope: this
+					});
+					w.show(null, function(){f.setPid(id)});
+				},
+				apperror: showError,
+				scope: this
+			});
+			app.Load('structure_branch_master', 'main');
+		}, 
+		loadBranch: function(id){
+			var app = new App({waitMsg: 'Presets grid loading'});
+			app.on({
+				apploaded: function(){
+					var f = new ui.structure_branch_master.selector();
+					f.attachToId = id;
+					var w = new Ext.Window({iconCls: this.iconCls, title: this.titlePresets, maximizable: true, modal: true, layout: 'fit', width: 400, height: 500, items: f});
+					f.on({
+						branchLoaded: function(){w.destroy();this.operation.Reload(this,id)},
+						cancelled: function(){w.destroy()},
+						scope: this
+					});
+					w.show(null, function(){});
+				},
+				apperror: showError,
+				scope: this
+			});
+			app.Load('structure_branch_master', 'selector');
 		} 
+
+
 	},
 	constructor: function(config){
 		config = config || {};
@@ -120,7 +185,8 @@ ui.structure.site_tree = Ext.extend(Ext.tree.TreePanel, {
 			loadMask: new Ext.LoadMask(Ext.getBody(), {msg: this.msgLoading}),
 			enableDD: true,
 			tbar: [
-				{id: 'add', iconCls: 'add', text: this.bttAdd, handler: this.operation.Add.createDelegate(this, [0])},
+			//	{id: 'add', iconCls: 'add', text: this.bttAdd, handler: this.operation.Add.createDelegate(this, [0])},
+				{id: 'master', iconCls: 'add', text: this.bttMaster, handler: this.operation.Master.createDelegate(this, [0])},
 				'->', {iconCls: 'help', handler: function(){showHelp('structure-tree')}}
 			]
 		});
@@ -153,6 +219,8 @@ ui.structure.site_tree = Ext.extend(Ext.tree.TreePanel, {
 				var cmenu = new Ext.menu.Menu({items: [
 					{iconCls: 'add', text: this.bttAdd, handler: this.operation.Add.createDelegate(this, [id])},
 					{iconCls: 'pencil', text: this.bttEdit, handler: this.operation.Edit.createDelegate(this, [id])},
+					{iconCls: 'pencil', text: this.bttSaveBranch, handler: this.operation.saveBranch.createDelegate(this, [id])},
+					{iconCls: 'pencil', text: this.bttLoadBranch, handler: this.operation.loadBranch.createDelegate(this, [id])},
 					{iconCls: 'delete', text: this.bttDelete, handler: this.operation.Delete.createDelegate(this, [id, node.text])}
 				]});
 				e.stopEvent();

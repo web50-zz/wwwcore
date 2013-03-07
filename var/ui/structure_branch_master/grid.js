@@ -1,11 +1,13 @@
-ui.structure_presets.grid = Ext.extend(Ext.grid.EditorGridPanel, {
+ui.structure_branch_master.grid = Ext.extend(Ext.grid.EditorGridPanel, {
 	lblName: 'Имя',
 	lblType: 'Тип',
 	lblValue: 'Значение',
 	lblCmmnt: 'Комментарий',
+	titleImport: 'Импорт',
+	addTitle: 'Редактировать',
 	cnfrmTitle:'',
 	cnfrmMsg:'Удалить?',
-	formWidth: 300,
+	formWidth: 500,
 	formHeight: 150 ,
 
 	loadMask: true,
@@ -16,10 +18,10 @@ ui.structure_presets.grid = Ext.extend(Ext.grid.EditorGridPanel, {
 	store: new Ext.data.Store({
 		proxy: new Ext.data.HttpProxy({
 			api: {
-				read: 'di/structure_presets/list.js',
-				create: 'di/structure_presets/set.js',
-				update: 'di/structure_presets/mset.js',
-				destroy: 'di/structure_presets/unset.js'
+				read: 'di/structure_branch_master/list.js',
+				create: 'di/structure_branch_master/set.js',
+				update: 'di/structure_branch_master/mset.js',
+				destroy: 'di/structure_branch_master/unset.js'
 			}
 		}),
 		reader: new Ext.data.JsonReader({
@@ -45,7 +47,7 @@ ui.structure_presets.grid = Ext.extend(Ext.grid.EditorGridPanel, {
 		sortInfo: {field: 'name', direction: 'ASC'}
 	}),
 	Add: function(){
-		var f = new ui.structure_presets.item_form({pid:this.pid});
+		var f = new ui.structure_branch_master.item_form({pid:this.pid});
 		var w = new Ext.Window({title: this.addTitle, maximizable: true, modal: true, layout: 'fit', width: this.formWidth, height: this.formHeight, items: f});
 		f.on({
 			saved: function(){this.store.reload()},
@@ -54,8 +56,44 @@ ui.structure_presets.grid = Ext.extend(Ext.grid.EditorGridPanel, {
 		});
 		w.show();
 	},
+	Import: function(){
+		var f = new ui.structure_branch_master.item_import_form({pid:this.pid});
+		var w = new Ext.Window({title: this.titleImport, maximizable: true, modal: true, layout: 'fit', width: this.formWidth, height: this.formHeight, items: f});
+		f.on({
+			saved: function(){this.store.reload()},
+			cancelled: function(){w.destroy()},
+			scope: this
+		});
+		w.show();
+	},
+	attachTo: function(){
+		var id = this.getSelectionModel().getSelected().get('id');
+		var toId =  this.attachToId;
+		var params = {sid: id,pid:toId};
+				Ext.Ajax.request({
+					url: 'di/structure_branch_master/attach.json',
+					success: function(r){
+							var d = Ext.util.JSON.decode(r.responseText);
+							if (d.success == true){
+								//this.store.reload();
+							}else{
+								showError(d.errors);
+							}
+						},
+					failure: function(){},
+					params: params,
+					scope:this
+					});
+			this.fireEvent('branchloaded');
+	},
+	Export: function(){
+		var id = this.getSelectionModel().getSelected().get('id');
+		if(id>0){
+			window.location.href = './di/structure_branch_master/export.do?_sid='+id;
+		}
+	},
 	AddSingle:function(){
-		var f = new ui.structure_presets.item_form({pid:this.pid});
+		var f = new ui.structure_branch_master.item_form({pid:this.pid});
 		var w = new Ext.Window({title: this.addTitle, maximizable: true, modal: true, layout: 'fit', width: this.formWidth, height: this.formHeight, items: f});
 		f.on({
 			cancelled: function(){w.destroy()},
@@ -65,7 +103,7 @@ ui.structure_presets.grid = Ext.extend(Ext.grid.EditorGridPanel, {
 	},
 	Edit: function(){
 		var id = this.getSelectionModel().getSelected().get('id');
-		var f = new ui.structure_presets.item_form({});
+		var f = new ui.structure_branch_master.item_form({});
 		var w = new Ext.Window({title: this.editTitle, maximizable: true, modal: true, layout: 'fit', width: this.formWidth, height: this.formHeight, items: f});
 		f.on({
 			saved: function(){this.getStore().reload()},
@@ -96,7 +134,7 @@ ui.structure_presets.grid = Ext.extend(Ext.grid.EditorGridPanel, {
 		if(pid>0 && id>0){
 			var params = {id: id,pid:this.pid,type:type};
 				Ext.Ajax.request({
-					url: 'di/structure_presets/load.json',
+					url: 'di/structure_branch_master/load.json',
 					success: function(r){
 							var d = Ext.util.JSON.decode(r.responseText);
 							if (d.success == true){
@@ -127,7 +165,7 @@ ui.structure_presets.grid = Ext.extend(Ext.grid.EditorGridPanel, {
 				{header:  'Наименование', id: 'title', dataIndex: 'title', sortable: true, width: 250}
 			]
 		});
-		ui.structure_presets.grid.superclass.constructor.call(this, config);
+		ui.structure_branch_master.grid.superclass.constructor.call(this, config);
 		
 		this.on({
 			vploaded:function(){},

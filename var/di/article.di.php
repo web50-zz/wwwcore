@@ -70,6 +70,7 @@ class di_article extends data_interface
 		{
 			$this->args["_s{$this->args['field']}"] = "%{$this->args['query']}%";
 		}
+		$this->set_order('id','DESC');
 		$this->extjs_grid_json(array(
 			'id',
 			'release_date',

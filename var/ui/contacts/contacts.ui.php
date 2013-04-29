@@ -11,7 +11,7 @@
 
 class ui_contacts extends user_interface
 {
-	public $title = 'Contacts';
+	public $title = 'Контактная форма';
 
 	
 	public function __construct()

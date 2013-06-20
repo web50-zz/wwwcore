@@ -85,9 +85,9 @@ class ui_contacts extends user_interface
 			$body = $this->parse_tmpl('message.html',$mail_data);
 			$title ='Получено сообщение с формы обратной связи';
 		}
-		$core_domain = 'localhost';
+		$core_domain = $_SERVER['HTTP_HOST'];
 		require_once LIB_PATH.'Swift/swift_required.php';
-		$transport = Swift_SendmailTransport::newInstance();
+		$transport = Swift_MailTransport::newInstance();
 		$mailer = Swift_Mailer::newInstance($transport);
 		$message = Swift_Message::newInstance($title)
 			->setFrom(array('no-reply@'.$core_domain => 'no-reply'))

@@ -1,0 +1,7 @@
+{__(apply(/records)__}
+<div class="news">
+	<div class="title">{__title__}</div>
+	<div class="date">{__php::date('d.m.Y', strtotime($release_date))__}</div>
+	<div class="content">{__php::substr($content,0,strpos($content,'.',250))__} <a class="link" href="/{__/root__}/{__/unique__}{__cat_uri__}{__uri__}.html">[далее]</a></div>
+</div>
+{__apply)__}		

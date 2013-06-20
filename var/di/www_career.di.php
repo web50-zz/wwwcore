@@ -1,13 +1,18 @@
 <?php
 /**
-*
-* @author       9*  9@u9.ru 
-* @package	SBIN Diesel
-* 9* if in registry exists key - 'article_thumb_size' for example  90x20,  then this size will be applied on thumb over current article defaults 
+
+ @author       9*  9@u9.ru cloned news.di.php
+ @package	SBIN Diesel
+
+	9* if in registry exists key - 'www_career_thumb_size' for example  90x20,  then this size will be applied on thumb over current www_career defaults 
+
+	also two variables available separately 
+		$width = registry::get('www_career_preview_width');
+		$height = registry::get('www_career_preview_height');
 */
-class di_article extends data_interface
+class di_www_career extends data_interface
 {
-	public $title = 'Статьи';
+	public $title = 'www: карьера';
 	
 	/**
 	* @var	string	$cfg	Имя конфигурации БД
@@ -22,26 +27,40 @@ class di_article extends data_interface
 	/**
 	* @var	string	$name	Имя таблицы
 	*/
-	protected $name = 'article';
+	protected $name = 'www_career';
 
 	/**
 	* @var	string	$path_to_storage	Путь к хранилищу файлов каталога
 	*/
-	public $path_to_storage = 'filestorage/article/';
+	public $path_to_storage = 'filestorage/www_career/';
 	
 	/**
 	* @var	array	$fields	Конфигурация таблицы
 	*/
 	public $fields = array(
 		'id' => array('type' => 'integer', 'serial' => 1),
-		'category' => array('type' => 'integer'),
 		'image' => array('type' => 'string'),
-		'release_date' => array('type' => 'date'),
 		'title' => array('type' => 'string'),
-		'source' => array('type' => 'string'),
-		'author' => array('type' => 'string'),
+		'title_eng' => array('type' => 'string'),
+		'position' => array('type' => 'string'),
+		'position_eng' => array('type' => 'string'),
 		'uri' => array('type' => 'string'),
-		'content' => array('type' => 'text')
+		'titles_eng' => array('type' => 'text'),
+		'titles' => array('type' => 'text'),
+		'practices_eng' => array('type' => 'text'),
+		'practices' => array('type' => 'text'),
+		'conditions' => array('type' => 'text'),
+		'conditions_eng' => array('type' => 'text'),
+		'site' => array('type' => 'text'),
+		'email' => array('type' => 'text'),
+		'phone_fax' => array('type' => 'text'),
+		'mobile_phone' => array('type' => 'text'),
+		'address' => array('type' => 'text'),
+		'address_eng' => array('type' => 'text'),
+		'requirements_eng' => array('type' => 'text'),
+		'requirements' => array('type' => 'text'),
+		'contact_person' => array('type' => 'text'),
+		'contact_person_eng' => array('type' => 'text'),
 	);
 	
         public function __construct () {
@@ -56,7 +75,10 @@ class di_article extends data_interface
 	{
 		return BASE_PATH . $this->path_to_storage;
 	}
-	
+
+	public function get_url(){
+		return '/'.$this->path_to_storage;
+	}
 	/**
 	*	Получить JSON-пакет данных для ExtJS-грида
 	* @access protected
@@ -70,14 +92,11 @@ class di_article extends data_interface
 		{
 			$this->args["_s{$this->args['field']}"] = "%{$this->args['query']}%";
 		}
-		$this->set_order('id','DESC');
 		$this->extjs_grid_json(array(
 			'id',
-			'release_date',
 			"CONCAT('/{$this->path_to_storage}', `image`)" => 'image',
 			'title',
-			'author',
-			'source'
+			'position'
 		));
 	}
 	
@@ -134,13 +153,13 @@ class di_article extends data_interface
 	*/
 	private function resize_original($file)
 	{
-		$width = registry::get('article_preview_width');
-		$height = registry::get('article_preview_height');
+		$width = registry::get('www_career_preview_width');
+		$height = registry::get('www_career_preview_height');
 		if(!($width>0)){
-			$width = 99;
+			$width = 113;
 		}
 		if(!($height)>0){
-			$height = 75;
+			$height = 100;
 		}
 
 		if (!empty($file) && $file['real_name'])
@@ -148,7 +167,7 @@ class di_article extends data_interface
 			require_once INSTANCES_PATH .'wwwcore/lib/thumb/ThumbLib.inc.php';
 			// regular image
 			$thumb = PhpThumbFactory::create($this->get_path_to_storage() . $file['real_name']);
-			$res =  registry::get('article_thumb_size');
+			$res =  registry::get('www_career_thumb_size');
 			if($res != '')
 			{
 				$size = explode('x',$res);
@@ -191,14 +210,15 @@ class di_article extends data_interface
 	*/
 	protected function sys_unset()
 	{
+	
 		if ($this->args['records'] && !$this->args['_sid'])
 		{
 			$this->args['_sid'] = request::json2int($this->args['records']);
 		}
+
 		$this->_flush();
 		$this->_get();
 		$images = $this->get_results();
-
 		$this->_flush();
 		$data = $this->extjs_unset_json(false);
 		$ids = $this->get_lastChangedId();
@@ -228,15 +248,9 @@ class di_article extends data_interface
 		}
 		$this->_flush();
 		$this->set_args(array('_suri'=>$uri));
-		$di2 = $this->join_with_di('article_type',array('category'=>'id'),array('uri'=>'cat_uri'));
-		if($cat_uri != '')
-		{
-			$this->where = $di2->get_alias().".uri = '/{$cat_uri}/'";
-		}
 		$fld = array(
 			'id',
 			'uri',
-			array('di'=>$di2,'name'=>'uri')
 		);
 		$res = $this->extjs_grid_json($fld,false);
 		if($res['total'] == 1)

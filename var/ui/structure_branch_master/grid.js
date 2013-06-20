@@ -66,26 +66,34 @@ ui.structure_branch_master.grid = Ext.extend(Ext.grid.EditorGridPanel, {
 		});
 		w.show();
 	},
-	attachTo: function(){
+	attachTo: function(mode){
 		var id = this.getSelectionModel().getSelected().get('id');
 		var toId =  this.attachToId;
-		var params = {sid: id,pid:toId};
-				Ext.Ajax.request({
-					url: 'di/structure_branch_master/attach.json',
-					success: function(r){
-							var d = Ext.util.JSON.decode(r.responseText);
-							if (d.success == true){
-								//this.store.reload();
-							}else{
-								showError(d.errors);
-							}
-						},
-					failure: function(){},
-					params: params,
-					scope:this
-					});
-			this.fireEvent('branchloaded');
+		var type = 0;
+		if(mode >0){
+			type = mode;
+		}
+		var params = {sid: id,pid:toId, type:type};
+		Ext.Ajax.request({
+			url: 'di/structure_branch_master/attach.json',
+			success: function(r){
+					var d = Ext.util.JSON.decode(r.responseText);
+					if (d.success == true){
+						//this.store.reload();
+						this.fireEvent('branchloaded',d);
+					}else{
+						showError(d.errors);
+					}
+				},
+			failure: function(){},
+			params: params,
+			scope:this
+		});
 	},
+	attachToFull: function(){
+		this.attachTo(1);
+	},
+
 	Export: function(){
 		var id = this.getSelectionModel().getSelected().get('id');
 		if(id>0){
@@ -159,7 +167,7 @@ ui.structure_branch_master.grid = Ext.extend(Ext.grid.EditorGridPanel, {
 		config = config || {};
 		Ext.apply(this, config, {
 			columns: [
-				{header:  'ID', id: 'id', dataIndex: 'id', sortable: true, width: 40},
+				{header:  'ID', id: 'id', dataIndex: 'id', sortable: true, width: 70},
 				{header:  'Добавлено', id: 'created_datetime', dataIndex: 'created_datetime', sortable: true, width: 120, xtype: 'datecolumn', format: 'd M Y H:i'},
 				{header:  'Добавил', id: 'str_creator_name', dataIndex: 'str_creator_name', sortable: true, width: 100},
 				{header:  'Наименование', id: 'title', dataIndex: 'title', sortable: true, width: 250}

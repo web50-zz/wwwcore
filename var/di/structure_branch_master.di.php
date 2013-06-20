@@ -183,21 +183,30 @@ class di_structure_branch_master extends data_interface
 	
 	protected function sys_attach()
 	{
-		$response['success'] = true;
-		$this->attach_preset();
-		response::send($response,'json');
+		$res = $this->attach_preset();
+		response::send($res,'json');
 	}
 		
 // присоединяем пресет $this->args['sid'] к узлу $this->args['pid'] 
 	public function attach_preset()
 	{
 		$this->_flush();
+		$this->args['_sid'] =  $this->args['sid'];
 		$data = $this->extjs_form_json(false,false);
 		if($data['success'] == true)
 		{
 			$preset_data =  unserialize($data['data']['preset_data']);
-			$this->attach_to($this->args['pid'],$preset_data);
+			if($this->args['type'] == 1)
+			{
+				$this->update_node($this->args['pid'],$preset_data);
+				$this->attach_to($this->args['pid'],$preset_data);
+			}
+			else
+			{
+				$this->attach_to($this->args['pid'],$preset_data);
+			}
 		}
+		return array('success'=>true,'root_title'=>$preset_data['title']);
 	}
 
 // сохраняем потомков узла $this->args['pid']  как новый пресет
@@ -315,15 +324,16 @@ class di_structure_branch_master extends data_interface
 // по структуре полченной в get_branch_data вытаскиваем  списки VP Для каждой ноды и добиваем  их в структуру
 	public function get_vp_for_branch($branch_data)
 	{
+		$this->prepare_vp_list($branch_data);//получаем вп для текущей ноды	
 		foreach($branch_data['childs'] as $key=>$value)
 		{
-			$this->prepare_vp_list($branch_data['childs'][$key]);
+			$this->prepare_vp_list($branch_data['childs'][$key]);//получаем  вп для потомков
 		}
 		return $branch_data;
 	}
 
 	private function prepare_vp_list(&$ref)
-	{
+	{	
 		$vp = data_interface::get_instance('ui_view_point');
 		$vp->_flush();
 		$vp->set_args(array('_spage_id'=>$ref['id']));
@@ -397,5 +407,39 @@ class di_structure_branch_master extends data_interface
 			}
 		}
 	}
+	private function update_node($current,&$node)
+	{
+		$di = data_interface::get_instance('structure');
+		$di->_flush();
+		$args = $node;
+		$args['_sid'] = $current;
+		unset($args['vp_list']);
+		unset($args['childs']);
+		unset($args['level']);
+		unset($args['left']);
+		unset($args['right']);
+		unset($args['uri']);
+		unset($args['id']);
+		$di->set_args($args);
+		$data = $di->node_set();
+		if($data['success'] == true)
+		{
+			$vp = data_interface::get_instance('ui_view_point');
+			$vp->drop_by_page_id($current);
+			if(count($node['vp_list'])>0)
+			{
+				foreach($node['vp_list'] as $key=>$value)
+				{
+						$value['page_id'] = $current;
+						unset($value['id']);
+						$vp->set_args($value);
+						$vp->_flush();
+						$vp->insert_on_empty = true;
+						$vp->extjs_set_json(false,false);
+				}
+			}
+		}
+	}
+
 }
 ?>

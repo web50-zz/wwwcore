@@ -21,15 +21,18 @@ ui.structure.site_tree = Ext.extend(Ext.tree.TreePanel, {
 		Reload: function(s,id){
 			if (id){
 				var node = s.getNodeById(id);
-				node.reload();
 				if (node){
-					if (!node.expanded)
-						node.expand()
-					else
+					node.expand()
+					if (!node.expanded){
+				//9* expand operation  seems to be necessary anyway  		node.expand()
+					}else{
 						node.reload();
+					}
+					s.fireEvent('changenode', node.id, node);
 				}
-			}else if (s.root.rendered == true)
+			}else if (s.root.rendered == true){
 				s.root.reload();
+			}
 		},
 		Saved: function(isNew, formData, respData){
 			if (isNew){
@@ -108,10 +111,12 @@ ui.structure.site_tree = Ext.extend(Ext.tree.TreePanel, {
 						params: {_sid: id},
 						callback: function(options, success, response){
 							var d = Ext.util.JSON.decode(response.responseText);
-							if (d.success)
+							if (d.success){
 								this.fireEvent('deleted', id);
-							else
+								this.fireEvent('changenode', id);
+							}else{
 								showError(this.msgDeleteError);
+							}
 						},
 						scope: this
 					})
@@ -123,7 +128,7 @@ ui.structure.site_tree = Ext.extend(Ext.tree.TreePanel, {
 			app.on({
 				apploaded: function(){
 					var f = new ui.structure_branch_master.main();
-					var w = new Ext.Window({iconCls: this.iconCls, title: this.titlePresets, maximizable: true, modal: true, layout: 'fit', width: f.formWidth, height: 500, items: f});
+					var w = new Ext.Window({iconCls: this.iconCls, title: this.titlePresets, maximizable: true, modal: true, layout: 'fit', width: 600, height: 500, items: f});
 					f.on({
 						cancelled: function(){w.destroy()},
 						scope: this
@@ -159,9 +164,14 @@ ui.structure.site_tree = Ext.extend(Ext.tree.TreePanel, {
 				apploaded: function(){
 					var f = new ui.structure_branch_master.selector();
 					f.attachToId = id;
-					var w = new Ext.Window({iconCls: this.iconCls, title: this.titlePresets, maximizable: true, modal: true, layout: 'fit', width: 400, height: 500, items: f});
+					var w = new Ext.Window({iconCls: this.iconCls, title: this.titlePresets, maximizable: true, modal: true, layout: 'fit', width: 600, height: 500, items: f});
 					f.on({
-						branchLoaded: function(){w.destroy();this.operation.Reload(this,id)},
+						branchLoaded: function(data){
+									w.destroy();
+									this.operation.Reload(this,id);
+									var node = this.getNodeById(id);
+									node.setText(data.root_title);
+								},
 						cancelled: function(){w.destroy()},
 						scope: this
 					});

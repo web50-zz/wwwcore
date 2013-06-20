@@ -121,7 +121,7 @@ ui.structure_presets.grid = Ext.extend(Ext.grid.EditorGridPanel, {
 		config = config || {};
 		Ext.apply(this, config, {
 			columns: [
-				{header:  'ID', id: 'id', dataIndex: 'id', sortable: true, width: 40},
+				{header:  'ID', id: 'id', dataIndex: 'id', sortable: true, width: 70},
 				{header:  'Добавлено', id: 'created_datetime', dataIndex: 'created_datetime', sortable: true, width: 120, xtype: 'datecolumn', format: 'd M Y H:i'},
 				{header:  'Добавил', id: 'str_creator_name', dataIndex: 'str_creator_name', sortable: true, width: 100},
 				{header:  'Наименование', id: 'title', dataIndex: 'title', sortable: true, width: 250}

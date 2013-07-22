@@ -44,7 +44,7 @@ class ui_contacts extends user_interface
 			}
 			if(array_key_exists('subject',$args) && $args['subject'] == '')
 			{
-				throw new Exception('Заполните поле "Тема"');
+	//9* 22072013 needed only episodically			throw new Exception('Заполните поле "Тема"');
 			}
 			if(!filter_var($args['email'], FILTER_VALIDATE_EMAIL))
 			{
@@ -84,10 +84,7 @@ class ui_contacts extends user_interface
 	private function send_email($acc)
 	{
 		$rcpt = registry::get('CONTACT_FORM_EMAIL');
-		$mail_data['subject'] = $acc['subject'];
-		$mail_data['name'] = $acc['name'];
-		$mail_data['email'] = $acc['email'];
-		$mail_data['message'] = $acc['message'];
+		$mail_data = $acc;
 		$id = registry::get('EMAIL_TEMPLATE_TEXT');
 		if($id >0)
 		{

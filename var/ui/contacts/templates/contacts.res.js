@@ -22,7 +22,7 @@ $(document).ready(function(){
 				function(data){
 					if(data.success == true){
 						self.message('success',data.message,'Сообщение');
-						self.btn.hide();
+	//					self.btn.hide();
 					}else{
 						self.message('error',data.message,'Ошибка');
 					}

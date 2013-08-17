@@ -11,7 +11,7 @@
 
 class ui_contacts extends user_interface
 {
-	public $title = 'Contacts';
+	public $title = 'Контактная форма';
 
 	
 	public function __construct()
@@ -44,9 +44,31 @@ class ui_contacts extends user_interface
 			}
 			if(array_key_exists('subject',$args) && $args['subject'] == '')
 			{
-				throw new Exception('Заполните поле "Тема"');
+	//9* 22072013 needed only episodically			throw new Exception('Заполните поле "Тема"');
+			}
+			if(!filter_var($args['email'], FILTER_VALIDATE_EMAIL))
+			{
+				throw new Exception('поле "E-mail" заполнено некорректно');
+			}
+			$dns = '';
+
+			// ==== Getting DNS part of the mail ==== //
+			$pieces = explode('@', $args['email']);
+			if(isset($pieces[1]))
+			{
+				$dns = $pieces[1];
 			}
 
+			// ==== Checking if the checkdnsrr exists ==== //
+			if(function_exists('checkdnsrr') && checkdnsrr($dns) === false)
+			{
+				throw new Exception('поле "E-mail" заполнено некорректно');
+			}
+			// ==== Checking if the gethostbyname exists ==== //
+			else if(function_exists('gethostbyname') && gethostbyname($dns) === $dns)
+			{
+				throw new Exception('поле "E-mail" заполнено некорректно');
+			}
 			$this->send_email($args);
 			$msg = 'Спасибо, сообщение отправлено';
 			$resp = array('success'=>true,'message'=>$msg);
@@ -62,10 +84,7 @@ class ui_contacts extends user_interface
 	private function send_email($acc)
 	{
 		$rcpt = registry::get('CONTACT_FORM_EMAIL');
-		$mail_data['subject'] = $acc['subject'];
-		$mail_data['name'] = $acc['name'];
-		$mail_data['email'] = $acc['email'];
-		$mail_data['message'] = $acc['message'];
+		$mail_data = $acc;
 		$id = registry::get('EMAIL_TEMPLATE_TEXT');
 		if($id >0)
 		{
@@ -85,9 +104,13 @@ class ui_contacts extends user_interface
 			$body = $this->parse_tmpl('message.html',$mail_data);
 			$title ='Получено сообщение с формы обратной связи';
 		}
-		$core_domain = 'localhost';
+		$core_domain = $_SERVER['HTTP_HOST'];
+		if(!$core_domain)
+		{
+			$core_domain = 'localhost';
+		}
 		require_once LIB_PATH.'Swift/swift_required.php';
-		$transport = Swift_SendmailTransport::newInstance();
+		$transport = Swift_MailTransport::newInstance();
 		$mailer = Swift_Mailer::newInstance($transport);
 		$message = Swift_Message::newInstance($title)
 			->setFrom(array('no-reply@'.$core_domain => 'no-reply'))

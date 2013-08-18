@@ -7,7 +7,7 @@
 */
 class ui_www_article_comment extends user_interface
 {
-	public $title = 'Статьи: Комментарии пользователей';
+	public $title = 'www: Публикации - Комментарии пользователей';
 
 	protected $deps = array(
 		'main' => array(
@@ -95,7 +95,7 @@ class ui_www_article_comment extends user_interface
 				$di->_flush();
 				$di->push_args(array(
 					'created_datetime' => date('Y-m-d H:i:s'),	// Дата создания комментария
-					'public' => 1,					// Признак того, что комментарий сразу публикуется
+					'published' => 1,					// Признак того, что комментарий сразу публикуется
 					'article_id' => $aid,				// ID статьи, к которой прикрепляется комментарий
 					'name' => request::get('commentor_name'),	// Имя пользователя
 					'comment' => htmlspecialchars(request::get('user_comment')),	// Комментарий

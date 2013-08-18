@@ -7,7 +7,7 @@
 */
 class ui_www_article_rating extends user_interface
 {
-	public $title = 'Статьи: Рэйтинг';
+	public $title = 'www: Публикации - Рэйтинг';
 
 	protected $deps = array(
 	);

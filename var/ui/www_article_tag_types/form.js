@@ -1,13 +1,33 @@
-ui.www_article_comment.item_form = Ext.extend(Ext.form.FormPanel, {
+ui.www_article_tag_types.form = Ext.extend(Ext.form.FormPanel, {
+	formWidth: 400,
+	formHeight: 200,
+
+	loadText: 'Загрузка данных формы',
+
+	lblTitle: 'Название',
+	lblURI: 'URI',
+	lblAvailable: 'Доступен',
+	lblId: "Id",
+	saveText: 'Сохранение...',
+	blankText: 'Необходимо заполнить',
+	maxLengthText: 'Не больше 256 символов',
+
+	bttSave: 'Сохранить',
+	bttCancel: 'Отмена',
+
+	errSaveText: 'Ошибка во время сохранения',
+	errInputText: 'Корректно заполните все необходимые поля',
+	errConnectionText: "Ошибка связи с сервером",
+	msgNotDefined: 'Операция не активна, пока не сохранена форма',
+
 	Load: function(data){
 		var f = this.getForm();
 		f.load({
-			url: 'di/www_article_comment/get.json',
-			params: {_sid: data.id},
+			url: 'di/www_article_tag_types/get.json',
+			params: {_sid: data._sid},
 			waitMsg: this.loadText,
 			success: function(frm, act){
 				var d = Ext.util.JSON.decode(act.response.responseText);
-				f.setValues([{id: '_sid', value: data.id}]);
 				this.fireEvent("data_loaded", d.data, data.id);
 			},
 			scope:this
@@ -19,7 +39,7 @@ ui.www_article_comment.item_form = Ext.extend(Ext.form.FormPanel, {
 		var f = this.getForm();
 		if (f.isValid()){
 			f.submit({
-				url: 'di/www_article_comment/set.do',
+				url: 'di/www_article_tag_types/set.do',
 				waitMsg: this.saveText,
 				success: function(form, action){
 					var d = Ext.util.JSON.decode(action.response.responseText);
@@ -49,49 +69,38 @@ ui.www_article_comment.item_form = Ext.extend(Ext.form.FormPanel, {
 		this.fireEvent('cancelled');
 	},
 
-	formWidth: 640,
-	formHeight: 480,
-	lblTitle: 'Наименование',
-	lblPublished:'Опубликовано',
-	loadText: 'Загрузка данных формы',
-	saveText: 'Сохранение...',
-	bttSave: 'Сохранить',
-	bttCancel: 'Отмена',
-	errSaveText: 'Ошибка во время сохранения',
-	errInputText: 'Корректно заполните все необходимые поля',
-	errConnectionText: "Ошибка связи с сервером",
-
 	/**
 	 * @constructor
 	 */
 	constructor: function(config){
 		config = config || {};
+
 		Ext.apply(this, {
-			labelAlign: 'right', 
-			labelWidth: 120,
-			border: false, 
-			frame: true,
-			defaults: {xtype: 'textfield', width: 150, anchor: '100%'},
+			layout: 'form',
+			frame: true, 
+			labelWidth: 100,
+			labelAlign: 'right',
+			autoScroll: true,
+			defaults: {xtype: 'textfield', width: 80, anchor: '98%'},
 			items: [
-				{name: '_sid', inputType: 'hidden'},
-				{fieldLabel: this.lblPublished, hiddenName: 'published', value: 1, xtype: 'combo', width: 50, anchor: null,
-					store: new Ext.data.SimpleStore({ fields: ['value', 'title'], data: [[1, 'Да'], [0, 'Нет']] }),
-					valueField: 'value', displayField: 'title', mode: 'local', triggerAction: 'all', selectOnFocus: true, editable: false
-				},
-				{fieldLabel: 'Пользователь', name: 'name', allowBlank: false, maxLength:255},
-				{fieldLabel: 'Комментарий', name: 'comment', xtype: 'textarea', height: 300}
+				{name: '_sid', xtype: 'hidden'},
+				{fieldLabel: this.lblId, name: 'id', xtype: 'displayfield'},
+				{fieldLabel:this.lblTitle, name: 'title', allowBlank: false},
+				{fieldLabel:this.lblURI, name: 'uri'},
+				{fieldLabel: this.lblAvailable, hiddenName: 'not_available', value: 0, xtype: 'combo', anchor: '90%',
+								store: new Ext.data.SimpleStore({ fields: ['value', 'title'], data: [[0, 'Доступен'],[1, 'Не доступен']]}),
+								valueField: 'value', displayField: 'title', mode: 'local',
+								triggerAction: 'all', selectOnFocus: true, editable: false
+				}
 			],
 			buttonAlign: 'right',
 			buttons: [
 				{iconCls: 'disk', text: this.bttSave, handler: this.Save, scope: this},
 				{iconCls: 'cancel', text: this.bttCancel, handler: this.Cancel, scope: this}
-			],
-			keys: [
-				//{key: [Ext.EventObject.ENTER], handler: this.Save, scope: this}
 			]
 		});
 		Ext.apply(this, config);
-		ui.www_article_comment.item_form.superclass.constructor.call(this, config);
+		ui.www_article_tag_types.form.superclass.constructor.call(this, config);
 		this.on({
 			data_saved: function(data, id){
 				this.getForm().setValues([{id: '_sid', value: id}]);

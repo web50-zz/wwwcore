@@ -1,0 +1,22 @@
+<div class="waf_default list">
+	<div class="main_title">Статьи</div>
+{__(apply(/records)__}
+	<div class="news_div">
+		<div class="post_title">{__title__}</div>
+		<div class="post_date">{__php::date('d.m.Y',strtotime($release_date))__}</div>
+		{__set(#images = json_decode($images))__}
+		{__set(#url = $url)__}
+		{__(apply(#images)__}
+			{__(if($file_type == 4)__}
+				<img class="preview" alt="" src="{__#url__}{__prefix__}-{__image__}"/>
+			{__if)__}
+		{__apply)__}
+		{__php::substr(strip_tags($content), 0, strpos(strip_tags($content), '.', 250))__}
+		<br>
+		<br> 
+		<a class="link_to" href="/blog/{__uri__}/">далее</a>
+		<div class="clear:both;"></div>
+	</div>
+{__apply)__}
+{__pager__}
+</div>

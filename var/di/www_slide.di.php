@@ -62,7 +62,7 @@ class di_www_slide extends data_interface
 	*	Получить данные элемента в виде JSON
 	* @access protected
 	*/
-	public function get($pid)
+	public function get($pid,$limit_start = 0,$limit_records = 1)
 	{
 		$this->_flush(true);
 		$this->push_args(array('_spid' => $pid));
@@ -76,11 +76,11 @@ class di_www_slide extends data_interface
 		);
 		$this->set_order('RAND()');
 		//$this->set_order('title');
-		$this->set_limit(1);
+		$this->set_limit($limit_start,$limit_records);
 		//$this->connector->debug = true;
 		$this->_get();
 		$this->pop_args();
-		return $this->get_results(0);
+		return $this->get_results();
 	}
 	
 	/**

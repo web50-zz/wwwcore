@@ -1,0 +1,21 @@
+CREATE TABLE `www_article` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `release_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `post_type` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `author` varchar(255) NOT NULL DEFAULT '',
+  `source` varchar(255) NOT NULL,
+  `content` text NOT NULL,
+  `uri` varchar(255) NOT NULL DEFAULT '',
+  `unique_visitors` mediumint(8) unsigned NOT NULL,
+  `total_visitors` mediumint(8) unsigned NOT NULL,
+  `like` mediumint(8) unsigned NOT NULL,
+  `dislike` mediumint(8) unsigned NOT NULL,
+  `published` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `order` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `unique_visitors` (`unique_visitors`),
+  KEY `total_visitors` (`total_visitors`),
+  KEY `like` (`like`),
+  KEY `dislike` (`dislike`)
+) ENGINE=MyISAM AUTO_INCREMENT=99 DEFAULT CHARSET=utf8

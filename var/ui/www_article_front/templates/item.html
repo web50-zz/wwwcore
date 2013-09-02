@@ -1,0 +1,9 @@
+<div class="waf_default item">
+	{__(if(/hide_title == 0)__}
+	<div class="main_title">{__title__}</div>
+	{__if)__}
+	<div class="post_date">{__php::date('d.m.Y', strtotime($release_date))__}</div>
+	<div class="news_div">
+	{__$content__}
+	</div>
+</div>

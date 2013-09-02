@@ -147,5 +147,45 @@ class di_www_article_rating extends data_interface
 		$this->_flush();
 		$this->extjs_unset_json();
 	}
+
+	public function unset_for_article($eObj, $ids, $args)
+	{
+		$this->push_args(array());
+		if (!is_array($ids) && $ids > 0)
+		{
+			$this->set_args(array(
+				'_sarticle_id' => $ids,
+			));
+			$this->_flush();
+			$this->_unset();
+		}
+		else if (is_array($ids))
+		{
+			foreach ($ids as $id)
+			{
+				$this->set_args(array(
+					'_sarticle_id' => $id,
+				));
+				$this->_flush();
+				$this->insert_on_empty = true;
+				$this->_unset();
+			}
+		}
+		else
+		{
+			// Some error, because unknown project ID
+		}
+		$this->pop_args();
+	}
+
+
+	public function _listeners()
+	{
+		return array(
+			array('di' => 'www_article', 'event' => 'onUnset', 'handler' => 'unset_for_article'),
+		);
+	}
+
+
 }
 ?>

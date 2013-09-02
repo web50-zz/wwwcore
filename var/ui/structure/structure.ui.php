@@ -52,7 +52,12 @@ class ui_structure extends user_interface
 		$divp = data_interface::get_instance('ui_view_point');
 		$divp->_flush();
 		$divp->set_args(array('_spid' => $page['id']));
-		if (SRCH_URI != "") $divp->set_args(array('_sdeep_hide' => 0), true);
+		/* 9* 12082013  неясно зачем так было ибо на кроме главной все выводится и скртыие не действует
+			if (SRCH_URI != "") $divp->set_args(array('_sdeep_hide' => 0), true);
+			ниже новый вариант
+		*/
+		$divp->set_args(array('_sdeep_hide' => 0), true);
+
 		$divp->set_order('view_point');
 		$divp->set_order('order');
 		$divp->_get();

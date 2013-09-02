@@ -193,6 +193,7 @@ class di_structure_branch_master extends data_interface
 		$this->_flush();
 		$this->args['_sid'] =  $this->args['sid'];
 		$data = $this->extjs_form_json(false,false);
+		$change_current = false;
 		if($data['success'] == true)
 		{
 			$preset_data =  unserialize($data['data']['preset_data']);
@@ -200,13 +201,18 @@ class di_structure_branch_master extends data_interface
 			{
 				$this->update_node($this->args['pid'],$preset_data);
 				$this->attach_to($this->args['pid'],$preset_data);
+				$change_current = true;
+			}
+			else if($this->args['type'] == 2)
+			{
+				$this->attach_to($this->args['pid'],$preset_data,true);
 			}
 			else
 			{
 				$this->attach_to($this->args['pid'],$preset_data);
 			}
 		}
-		return array('success'=>true,'root_title'=>$preset_data['title']);
+		return array('success'=>true,'root_title'=>$preset_data['title'],'sync'=>$change_current);
 	}
 
 // сохраняем потомков узла $this->args['pid']  как новый пресет
@@ -356,13 +362,20 @@ class di_structure_branch_master extends data_interface
 		}
 	}
 
-	public function attach_to($parent = 1,$branch = array())
+	public function attach_to($parent = 1,$branch = array(), $include_root = false)
 	{
-		if(count($branch['childs'])>0)
+		if($include_root == true)
 		{
-			foreach($branch['childs'] as $key=>$value)
+			$this->process_node($parent,$branch);
+		}
+		else
+		{
+			if(count($branch['childs'])>0)
 			{
-				$this->process_node($parent,$branch['childs'][$key]);
+				foreach($branch['childs'] as $key=>$value)
+				{
+					$this->process_node($parent,$branch['childs'][$key]);
+				}
 			}
 		}
 	}

@@ -4,8 +4,9 @@ ui.structure_branch_master.selector = Ext.extend(ui.structure_branch_master.grid
 	bttDelete: 'Удалить',
 	bttSearch: 'Найти',
 	bttCancle: 'Сбросить',
-	lblLoad: 'Загрузить потомков',
-	lblLoadAll: 'Загрузить потомков с замещением текущей ( текущая нода будет изменена )',
+	lblLoad: 'Добавить только потомков',
+	lblLoadAll: 'Добавить с замещением ( текущая нода будет изменена )',
+	lblLoadRoot: 'Добавить ниже',
 
 	limit: 50,
 	pagerEmptyMsg: 'Нет записей',
@@ -52,7 +53,8 @@ ui.structure_branch_master.selector = Ext.extend(ui.structure_branch_master.grid
 				var id = row.get('id');
 				var cmenu = new Ext.menu.Menu({items: [
 					{iconCls: 'cog_add', text: this.lblLoad, handler: this.attachTo, scope: this},
-					{iconCls: 'cog_add', text: this.lblLoadAll, handler: this.attachToFull, scope: this}
+					{iconCls: 'cog_add', text: this.lblLoadAll, handler: this.attachToFull, scope: this},
+					{iconCls: 'cog_add', text: this.lblLoadRoot, handler: this.attachToDown, scope: this}
 				]});
 				e.stopEvent();  
 				cmenu.showAt(e.getXY());

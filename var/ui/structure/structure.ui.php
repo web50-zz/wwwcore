@@ -204,7 +204,10 @@ class ui_structure extends user_interface
 		}
 		if($this->exact_uri_match == false && $this->inner_uri_match == false)
 		{
+			if(registry::get('strict_url_check') == 'true')//9* 03092013 если в конфигах задана жесткая проверка наличия урл то вот вам 404. Если не задано то как и ранше все виртуальные вложенности  приходят на ближайший парент.
+			{
 				$this->do_404();
+			}
 		}
 		// Collect Structure resources
 		/* 9* 08112012

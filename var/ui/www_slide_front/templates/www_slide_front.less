@@ -1,0 +1,207 @@
+// anything slider based theme
+.slider_wrap{
+	width: 407px;
+	height: 115px;
+	margin-top: 405px;
+	margin-left: 55px;
+	background-image:url('/themes/vlnt/img/sentence_bg.png');
+	background-repeat: no-repeat;
+	padding-top: 45px;
+	#slider_m{
+		height: 100px;
+		width: 290px;
+		li{
+			font-size: 14px;
+			font-style: italic;
+			font-family: Georgia;
+		}
+	}
+	/* Overall Wrapper */
+	.anythingSlider-vlnt {
+		margin: 0 auto;
+		/* 30px right & left padding for the navigation arrows */
+		padding: 0 10px;
+		/* slider window - top & bottom borders, default state */
+		.anythingWindow {
+			border-top: 0px solid #333;
+			border-bottom: 0px solid #333;
+		}
+		/************************
+		  NAVIGATION POSITIONING
+		 ************************/
+		/* Navigation Arrows */
+		.arrow {
+			top: 50%;
+			position: absolute;
+			display: block;
+			a {
+				display: block;
+				width: 30px;
+				height: 40px;
+				margin: -20px 0 0 0; /* half height of image */
+				text-align: center;
+				outline: 0;
+				background: url(/instances/js_widgets/var/ui/anything_slider/res/arrows-minimalist.png) no-repeat;
+			}
+		}
+		/* back arrow */
+		.back { left: 0; }
+		.back a { background-position: left bottom; }
+		.back a:hover,
+		.back a.hover { background-position: left top; }
+		/* forward arrow */
+		.forward { right: 0; }
+		.forward a { background-position: right bottom; }
+		.forward a:hover,
+		.forward a.hover { background-position: right top; }
+		.anythingControls{
+			height: 15px; /* limit height, needed for IE9 of all things */
+			outline: 0;
+			display: none;
+			position: absolute;
+			bottom: 5px;
+			margin: 0px  45px -20px 100px;
+			z-index: 100;
+			opacity: 0.90;
+			filter: alpha(opacity=90);
+
+			/* Navigation buttons + start/stop button, default state */
+			 a {
+			//	background-color: #333;
+			//	color: #fff;
+			//	border: #000 1px solid;
+			}
+			/* Navigation current button, default state */
+			a.cur,
+			a:hover {
+			//	background-color: #777;
+			//	color: #000;
+				background-image: url('/themes/vlnt/img/slider_sprite.png');
+				background-position: 0px 0px;
+			}
+
+			/* start-stop button, stopped, default state */
+			 a.start-stop {
+				background: #040;
+				color: #ddd;
+				/* top shadow */
+				-moz-box-shadow: inset 1px 2px 5px rgba(0, 0, 0, 0.5);
+				-webkit-box-shadow: inset 1px 2px 5px rgba(0, 0, 0, 0.5);
+				box-shadow: inset 1px 2px 5px rgba(0, 0, 0, 0.5);
+			}
+			/* start-stop button, playing, default state */
+			 a.start-stop.playing {
+				background-color: #800;
+			}
+
+			/* start-stop button, default hovered text color (when visible) */
+			/* hide nav/start-stop background image shadow on hover - makes the button appear to come forward */
+			 a.start-stop:hover,
+			 a.start-stop.hover,
+			 a.start-stop {
+				color: #fff;
+				/* clear top shadow */
+				-moz-box-shadow: inset 0 0 0 #000000;
+				-webkit-box-shadow: inset 0 0 0 #000000;
+				box-shadow: inset 0 0 0 #000000;
+			}
+			ul {
+				margin: 0;
+				padding: 0;
+				float: left;
+				li {
+					list-style: none;
+					float: left;
+					margin: 0;
+					padding: 0;
+				}
+				 a {
+					display: inline-block;
+					width: 11px;
+					height: 11px;
+					margin: 3px;
+					padding: 0;
+					text-decoration: none;
+					text-align: center;
+					outline: 0;
+					background-image: url('/themes/vlnt/img/slider_sprite.png');
+					background-position: -20px 0px;
+				}
+				 a:hover {
+				//	color: #fff;
+					/* clear top shadow */
+					-moz-box-shadow: inset 0 0 0 #000000;
+					-webkit-box-shadow: inset 0 0 0 #000000;
+					box-shadow: inset 0 0 0 #000000;
+				}
+			}
+
+			span {
+				display: block;
+				visibility: hidden;
+			}
+
+			/* navigationSize window */
+			 .anythingNavWindow {
+				overflow: hidden;
+				float: left;
+			}
+			/* navigationSize nav arrow positioning */
+			li.prev span,
+			li.next span {
+				visibility: visible;
+				position: relative;
+				top: -6px; /* bring navigationSize text arrows into view */
+			}
+
+			/* Autoplay Start/Stop button */
+			.start-stop {
+				margin: 3px;
+				padding: 0;
+				display: inline-block;
+				width: 10px;
+				height: 10px;
+				text-align: center;
+				text-decoration: none;
+				z-index: 100;
+				outline: 0;
+			}
+		}
+		&.activeSlider{
+				/*
+				 =================================
+				 Active State (has keyboard focus)
+				 =================================
+				*/
+				/* slider window - top & bottom borders, active state */
+				 .anythingWindow {
+					border-color: #164054;
+				}
+
+				/* Navigation buttons, active state */
+				.anythingControls{ 
+					a {
+					//	background-color: #164054;
+						color: #fff;
+					}
+					/* Navigation current button, active state */
+					 a.cur, a:hover {
+					//	background-color: #fff;
+						color: #000;
+					}
+					/* start-stop button, stopped, active state */
+					a.start-stop {
+					//	background: #080;
+						color: #fff;
+					}
+					a.start-stop.playing {
+						color: #fff;
+					//	background: #f00;
+					}
+					.start-stop:hover, .start-stop.hover {
+						color: #fff;
+					}
+				}
+		}
+	}
+}

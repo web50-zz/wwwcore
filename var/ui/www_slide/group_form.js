@@ -58,6 +58,7 @@ ui.www_slide.group_form = Ext.extend(Ext.form.FormPanel, {
 	lblComment: 'Комментарий',
 	lblWidth: 'Ширина',
 	lblHeight: 'Высота',
+	lblId:'Id',
 
 	loadText: 'Загрузка данных формы',
 	saveText: 'Сохранение...',
@@ -81,6 +82,7 @@ ui.www_slide.group_form = Ext.extend(Ext.form.FormPanel, {
 			items: [
 				{name: '_sid', inputType: 'hidden'},
 				{name: 'pid', xtype: 'hidden'},
+				{fieldLabel: this.lblId, name: 'id', xtype: 'displayfield'},
 				{fieldLabel: this.lblTitle, name: 'title', allowBlank: false, maxLength: 255},
 				{fieldLabel: this.lblWidth, name: 'width', xtype: 'numberfield', allowDecimals: false},
 				{fieldLabel: this.lblHeight, name: 'height', xtype: 'numberfield', allowDecimals: false},

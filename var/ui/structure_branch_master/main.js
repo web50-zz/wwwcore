@@ -4,7 +4,7 @@ ui.structure_branch_master.main = Ext.extend(ui.structure_branch_master.grid, {
 	bttDelete: 'Удалить',
 	bttSearch: 'Найти',
 	bttCancle: 'Сбросить',
-	bttExport:'Экпорт',
+	bttExport:'Экcпорт',
 	bttAttach: 'Добавить потомков',
 	bttAttachDown: 'Добавить ниже',
 	limit: 50,
@@ -53,7 +53,7 @@ ui.structure_branch_master.main = Ext.extend(ui.structure_branch_master.grid, {
 				var id = row.get('id');
 				var cmenu = new Ext.menu.Menu({items: [
 					{iconCls: 'cog_edit', text: this.bttEdit, handler: this.Edit, scope: this},
-					{iconCls: 'cog_add', text: bttExport , handler: this.Export, scope: this},
+					{iconCls: 'cog_add', text: this.bttExport , handler: this.Export, scope: this},
 					{iconCls: 'cog_delete', text: this.bttDelete, handler: this.Delete, scope: this}
 				]});
 				e.stopEvent();  

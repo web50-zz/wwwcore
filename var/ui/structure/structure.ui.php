@@ -30,12 +30,26 @@ class ui_structure extends user_interface
 	}
 
 	/**
+	*	Подготовительные операции, перед запуском функции process_page()
+	*/
+	public function prepare_process_page()
+	{
+		// Prepare variables
+		$this->key_words = array();
+		$this->title_words = array();
+		$this->description = array();
+		$this->css_resources = array();
+		$this->js_resources = array();
+		return $this;
+	}
+
+	/**
 	*	Парсинг контента страницы
 	* @access	public
 	* @param	array	$page	Массив с описанием страницы
 	* @param	boolean	$output	Вывод страницы на экран (true - Да, false - возвращает результат парсинга через return)
 	*/
-        public function process_page($page, $output = true)
+        public function process_page($page, $output = true, $without_prepare = false)
         {
 		$di_s =  data_interface::get_instance('structure');
 		if(!$page)// 9* если не найдено страницы вообще, то сразу 404 с остальными вариантами разберемся  ниже
@@ -74,12 +88,16 @@ class ui_structure extends user_interface
 		$divp->_get();
 		$vps = $divp->get_results();
 
-		// Prepare variables
-		$this->key_words = array();
-		$this->title_words = array();
-		$this->description = array();
-		$this->css_resources = array();
-		$this->js_resources = array();
+		if (!$without_prepare)
+		{
+			// Prepare variables
+			$this->key_words = array();
+			$this->title_words = array();
+			$this->description = array();
+			$this->css_resources = array();
+			$this->js_resources = array();
+		}
+
 		//9* мета на страницу итмеет приоритет перед глобальной мета
 		if($page['mkeywords'] != '')
 		{
@@ -198,7 +216,7 @@ class ui_structure extends user_interface
 			}
 			catch(exception $e)
 			{
-				dbg::write('error: '.$e->getmessage());
+				dbg::write('ERROR: '.$e->getmessage() . "\n" . $e->getTraceAsString());
 				dbg::write($vp->ui_name);
 			}
 		}

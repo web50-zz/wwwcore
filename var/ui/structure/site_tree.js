@@ -170,7 +170,10 @@ ui.structure.site_tree = Ext.extend(Ext.tree.TreePanel, {
 									w.destroy();
 									this.operation.Reload(this,id);
 									var node = this.getNodeById(id);
-									node.setText(data.root_title);
+									if(data.sync == true)
+									{
+										node.setText(data.root_title);
+									}
 								},
 						cancelled: function(){w.destroy()},
 						scope: this

@@ -13,7 +13,9 @@ class ui_structure extends user_interface
 	protected $title_words =  array();
 	protected $description =  array();
 	protected $page_itself = '';
-
+	protected $inner_uri_match = false;//9* если есть влоденные uri  то будет true
+	protected $exact_uri_match = false;
+	protected $uri_check_list = array();//9* список уи и методов которые вызываются и дложны быть учтены при  решении 404
 	protected $deps = array(
 		'main' => array(
 			'structure.site_tree',
@@ -28,13 +30,36 @@ class ui_structure extends user_interface
 	}
 
 	/**
+	*	Подготовительные операции, перед запуском функции process_page()
+	*/
+	public function prepare_process_page()
+	{
+		// Prepare variables
+		$this->key_words = array();
+		$this->title_words = array();
+		$this->description = array();
+		$this->css_resources = array();
+		$this->js_resources = array();
+		return $this;
+	}
+
+	/**
 	*	Парсинг контента страницы
 	* @access	public
 	* @param	array	$page	Массив с описанием страницы
 	* @param	boolean	$output	Вывод страницы на экран (true - Да, false - возвращает результат парсинга через return)
 	*/
-        public function process_page($page, $output = true)
+        public function process_page($page, $output = true, $without_prepare = false)
         {
+		$di_s =  data_interface::get_instance('structure');
+		if(!$page)// 9* если не найдено страницы вообще, то сразу 404 с остальными вариантами разберемся  ниже
+		{
+			$this->do_404();
+		}
+		if($di_s->exact_match == true)
+		{
+			$this->exact_uri_match = true;
+		}
 		$page = $this->before_process_page($page);
                 $data = array(
                         'args' => request::get(),
@@ -52,18 +77,27 @@ class ui_structure extends user_interface
 		$divp = data_interface::get_instance('ui_view_point');
 		$divp->_flush();
 		$divp->set_args(array('_spid' => $page['id']));
-		if (SRCH_URI != "") $divp->set_args(array('_sdeep_hide' => 0), true);
+		/* 9* 12082013  неясно зачем так было ибо на кроме главной все выводится и скртыие не действует
+			if (SRCH_URI != "") $divp->set_args(array('_sdeep_hide' => 0), true);
+			ниже новый вариант
+		*/
+		$divp->set_args(array('_sdeep_hide' => 0), true);
+
 		$divp->set_order('view_point');
 		$divp->set_order('order');
 		$divp->_get();
 		$vps = $divp->get_results();
 
-		// Prepare variables
-		$this->key_words = array();
-		$this->title_words = array();
-		$this->description = array();
-		$this->css_resources = array();
-		$this->js_resources = array();
+		if (!$without_prepare)
+		{
+			// Prepare variables
+			$this->key_words = array();
+			$this->title_words = array();
+			$this->description = array();
+			$this->css_resources = array();
+			$this->js_resources = array();
+		}
+
 		//9* мета на страницу итмеет приоритет перед глобальной мета
 		if($page['mkeywords'] != '')
 		{
@@ -130,6 +164,10 @@ class ui_structure extends user_interface
 					$ui->theme = $page['theme_overload'];
 				}
 				
+				if($vp->has_structure == 1 && $this->exact_uri_match == false)
+				{
+					$this->uri_check_list[$vp->ui_name][$vp->ui_call] = 1;
+				}
 				// Collect VP resources 
 				$this->collect_resources($ui, $vp->ui_name);
 
@@ -178,11 +216,17 @@ class ui_structure extends user_interface
 			}
 			catch(exception $e)
 			{
-				dbg::write('error: '.$e->getmessage());
+				dbg::write('ERROR: '.$e->getmessage() . "\n" . $e->getTraceAsString());
 				dbg::write($vp->ui_name);
 			}
 		}
-
+		if($this->exact_uri_match == false && $this->inner_uri_match == false)
+		{
+			if(registry::get('strict_url_check') == 'true')//9* 03092013 если в конфигах задана жесткая проверка наличия урл то вот вам 404. Если не задано то как и ранше все виртуальные вложенности  приходят на ближайший парент.
+			{
+				$this->do_404();
+			}
+		}
 		// Collect Structure resources
 		/* 9* 08112012
 			Заново восстанавливаем глобальную тему по 
@@ -414,6 +458,22 @@ class ui_structure extends user_interface
 	public function before_process_page($page)
 	{
 		return $page;
+	}
+	//9*  если во вьюпоинте  найден вложенный ури можнов ыставить что  он есть. Это надо для  решения по выдаче 404
+	public function have_inner_match($ui_name,$ui_call)
+	{
+		if($this->uri_check_list[$ui_name][$ui_call] == 1)
+		{
+			$this->inner_uri_match = true;
+		}
+	}
+
+	public function do_404()
+	{
+		$data = array();
+		$out = $this->parse_tmpl("404.html", $data);
+		header(" ",true,'404');
+		response::send($out, 'html');
 	}
 }
 ?>

@@ -92,7 +92,7 @@ class ui_contacts extends user_interface
 			$di->_flush();
 			$di->set_args(array('_sid'=>$id));
 			$res = $di->extjs_form_json(false,false);
-			if($res['data']['text'] != '')
+			if($res['data']['content'] != '')
 			{
 				$tmpl =  new tmpl($res['data']['content'],'text');
 				$body =  $tmpl->parse($mail_data);

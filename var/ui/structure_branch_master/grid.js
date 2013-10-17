@@ -93,7 +93,9 @@ ui.structure_branch_master.grid = Ext.extend(Ext.grid.EditorGridPanel, {
 	attachToFull: function(){
 		this.attachTo(1);
 	},
-
+	attachToDown: function(){
+		this.attachTo(2);
+	},
 	Export: function(){
 		var id = this.getSelectionModel().getSelected().get('id');
 		if(id>0){

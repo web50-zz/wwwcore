@@ -22,7 +22,10 @@ class di_structure extends data_interface
 	* @var	string	$name	Имя таблицы
 	*/
 	protected $name = 'structure';
-	
+	/*
+	* флаг ставится в  true если search_by_uri  дает  точное совпадение  по $uri, иначе  false чтобы учесть позже при отдаче 404
+	*/
+	public $exact_match = false;
 	/**
 	* @var	array	$fields	Конфигурация таблицы
 	*/
@@ -82,9 +85,13 @@ class di_structure extends data_interface
 		$sql = "SELECT * FROM `{$this->name}` WHERE `uri` IN (" . join(', ', $y) . ") ORDER BY `left` DESC LIMIT 1";
 		$this->_get($sql);
 		$result = $this->get_results();
-
-		if (empty($result))
+		if($uri == $result[0]['uri'])
 		{
+			$this->exact_match = true;
+		}
+		if (empty($result) && $uri == '/')
+		{
+			$this->exact_match = true;
 			$sql = 'SELECT * FROM `' . $this->name . '` WHERE `id` = :id';
 			$result = $this->connector->exec($sql, array('id' => 1), true, true);
 		}
@@ -169,16 +176,24 @@ class di_structure extends data_interface
 	{
 		if ($this->args['_sid'] > 0)
 		{
-			$uri = $this->get_args('uri');
-			$this->calc_uri();
+			if ($this->args['_sid'] > 1)
+			{
+				$uri = $this->get_args('uri');
+				$this->calc_uri();
+			}
 			
 			$this->_flush();
 			$this->insert_on_empty = false;
 			$data = $this->extjs_set_json(false);
 			$data['data']['uri'] = $this->get_args('uri');
 			
-			if ($data['data']['uri'] != $uri)
-				$this->recalc_uri($this->args['_sid']);
+			if ($this->args['_sid'] > 1)
+			{
+				if ($data['data']['uri'] != $uri)
+				{
+					$this->recalc_uri($this->args['_sid']);
+				}
+			}
 		}
 		else if($this->args['pid'] > 0)
 		{
@@ -187,6 +202,7 @@ class di_structure extends data_interface
 			
 			if ($ns->add_node($this->args['pid']))
 			{
+
 				$this->args['_sid'] = $this->get_lastChangedId(0);
 				$this->calc_uri();
 				

@@ -167,12 +167,20 @@ class di_structure extends data_interface
 		$ns = new nested_sets($this);
 		return $ns->get_parents(PAGE_ID, true);
 	}
+
+	public function _set_page($data)
+	{
+		$this->push_args($data);
+		$result = $this->sys_set(true);
+		$this->pop_args();
+		return $result;
+	}
 	
 	/**
 	*	Добавить узел
 	* @access protected
 	*/
-	protected function sys_set()
+	protected function sys_set($inner = false)
 	{
 		if ($this->args['_sid'] > 0)
 		{
@@ -209,6 +217,7 @@ class di_structure extends data_interface
 				$this->_flush();
 				$this->insert_on_empty = false;
 				$data = $this->extjs_set_json(false);
+				$data['data']['id'] = $this->args['_sid'];
 				$data['data']['uri'] = $this->args['uri'];
 			}
 			else
@@ -227,7 +236,14 @@ class di_structure extends data_interface
 				);
 		}
 		
-		response::send($data, 'json');
+		if ($inner === true)
+		{
+			return $data;
+		}
+		else
+		{
+			response::send($data, 'json');
+		}
 	}
 
 	public function node_set()

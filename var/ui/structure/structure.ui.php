@@ -9,9 +9,10 @@
 class ui_structure extends user_interface
 {
 	public $title = 'Структура';
-	protected $key_words =  array();
-	protected $title_words =  array();
-	protected $description =  array();
+	protected $_res_deps = array();		// Массив ресурсов, которые необходимо загрузить в 0 VP
+	protected $key_words = array();
+	protected $title_words = array();
+	protected $description = array();
 	protected $page_itself = '';
 	protected $inner_uri_match = false;//9* если есть влоденные uri  то будет true
 	protected $exact_uri_match = false;
@@ -35,12 +36,18 @@ class ui_structure extends user_interface
 	public function prepare_process_page()
 	{
 		// Prepare variables
+		$this->_res_deps = array();
 		$this->key_words = array();
 		$this->title_words = array();
 		$this->description = array();
 		$this->css_resources = array();
 		$this->js_resources = array();
 		return $this;
+	}
+
+	public function add_dep($ui, $call)
+	{
+		$this->_res_deps[] = array('ui' => $ui, 'call' => $call);
 	}
 
 	/**
@@ -91,6 +98,7 @@ class ui_structure extends user_interface
 		if (!$without_prepare)
 		{
 			// Prepare variables
+			$this->_res_deps = array();
 			$this->key_words = array();
 			$this->title_words = array();
 			$this->description = array();
@@ -136,18 +144,34 @@ class ui_structure extends user_interface
 			$this->theme_path = CURRENT_THEME_PATH;
 			$this->theme = '';
 		}
+
 		// 9* include and mask some js  depes for current theme.
 		$js_deps_file = BASE_PATH.$this->theme_path.'/js_deps.php';
-		if(file_exists($js_deps_file))
+		if (file_exists($js_deps_file))
 		{
 			include_once($js_deps_file);
-			foreach($js_deps as $depk=>$depv)
+			foreach ($js_deps as $depk => $depv)
 			{
-				$path = $this->theme_path.$depv;//9* note that $this->theme_path declared in user_interface prototype class by defults based on  theme init cfg
+				$path = $this->theme_path . $depv; //9* note that $this->theme_path declared in user_interface prototype class by defults based on  theme init cfg
 				$data['js_resources'][] = $path;
 			}
 		}
 		//9* end of js deps inclusion
+
+		// {START: Подключить необходимые ресурсы в 0 VP, если они определены
+		if (!empty($this->_res_deps))
+		{
+			foreach ($this->_res_deps as $dep)
+			{
+				$vps[] = (object)array(
+					'view_point' => 0,
+					'ui_name' => $dep['ui'],
+					'ui_call' => $dep['call'],
+					'ui_configure' => '',
+				);
+			}
+		}
+		// END}
 
 		foreach ($vps as $vp)
 		{
@@ -169,7 +193,7 @@ class ui_structure extends user_interface
 					$this->uri_check_list[$vp->ui_name][$vp->ui_call] = 1;
 				}
 				// Collect VP resources 
-				$this->collect_resources($ui, $vp->ui_name);
+				//$this->collect_resources($ui, $vp->ui_name);
 
 				/* 9* some cache procs */
 				if ($vp->cache_enabled == 1)

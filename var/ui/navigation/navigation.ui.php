@@ -30,6 +30,16 @@ class ui_navigation extends user_interface
 
 		$st = data_interface::get_instance('structure');
 		$data['records'] = $st->get_main_menu($parent, $level_down);
+
+		// Если у нас имеется предустановленный префикс
+		if (defined('PREDEFINED_URI_PREFIX') && PREDEFINED_URI_PREFIX != '/')
+		{
+			foreach ($data['records'] as $n => $rec)
+			{
+				$data['records'][$n]['uri'] = substr_replace($rec['uri'], PREDEFINED_URI_PREFIX, 0, 1);
+			}
+		}
+
 		$data['page_id'] = PAGE_ID;
 		$data['srch_uri'] = SRCH_URI;
 		$data['page_uri'] = PAGE_URI;

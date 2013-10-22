@@ -386,12 +386,20 @@ class di_structure extends data_interface
 		
 		return TRUE;
 	}
+
+	public function _unset_page($data)
+	{
+		$this->push_args($data);
+		$result = $this->sys_unset(true);
+		$this->pop_args();
+		return $result;
+	}
 	
 	/**
 	*	Удалить узел
 	* @access protected
 	*/
-	protected function sys_unset()
+	protected function sys_unset($inner = false)
 	{
 		$id = intval($this->args['_sid']);
 		$this->unset_recursively($id);
@@ -405,7 +413,15 @@ class di_structure extends data_interface
 		{
 			$data = array('success' => false);
 		}
-		response::send($data, 'json');
+
+		if ($inner === true)
+		{
+			return $data;
+		}
+		else
+		{
+			response::send($data, 'json');
+		}
 	}
 
 	/**

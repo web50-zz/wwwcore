@@ -166,6 +166,44 @@ class di_ui_view_point extends data_interface
 
 		response::send(array('success' => true), 'json');
 	}
+
+	/**
+	*	Получить новый order для vp на указанной странице
+	* @param	integer	$page_id	ID страницы
+	* @param	integer	$vp_id		ID view point
+	* @return	integer			Новыя порядковый номер
+	*/
+	public function get_new_order($page_id, $vp_id)
+	{
+		$this->_flush();
+		$this->_get("SELECT MAX(`order`) + 1 AS `order` FROM `{$this->name}` WHERE `page_id` = " . intval($page_id) . " AND `view_point` = " . intval($vp_id));
+		return $this->get_results(0, 'order');
+	}
+
+	/**
+	*	Перестроить order в указанном view point
+	* @param	integer	$page_id	ID страницы
+	* @param	integer	$vp_id		ID view point
+	*/
+	public function reorder($page_id, $vp_id)
+	{
+		// Получаем все записи в указанном view point
+		$recs = $this->_flush()
+			->push_args(array('_spage_id' => $page_id, '_sview_point' => $vp))
+			->set_what(array('id'))
+			->_get()
+			->pop_args()
+			->get_results(false, 'id');
+
+		// перебираем их и записываем в order № п\п
+		foreach ($recs as $order => $id)
+		{
+			$this->_flush()
+				->push_args(array('_sid' => $id, 'order' => $order))
+				->_set()
+				->pop_args();
+		}
+	}
 	
 	/**
 	*	Удалить данные и вернуть JSON-пакет для ExtJS
@@ -176,6 +214,7 @@ class di_ui_view_point extends data_interface
 		$this->_flush();
 		$this->extjs_unset_json();
 	}
+
 	public function drop_by_page_id($page_id = 0)
 	{
 		if($page_id>0)

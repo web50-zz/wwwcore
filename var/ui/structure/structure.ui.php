@@ -436,23 +436,16 @@ class ui_structure extends user_interface
 	*/
 	protected function sys_templates()
 	{
+		if($this->args['overload'] != '')
+		{
+			$this->theme_path = THEMES_PATH.$this->args['overload'].'/';//9* Это надо на случай если  задан оерлоад дефолтовой темы на страницу
+		}
 		$data = $this->get_tdir_files_list();
 		if(count($data) == 0)
 		{
-			dbg::write("WARNING!! NO TEMPLATES available to assign as main at sys_templates()");
 			if(defined('CURRENT_THEME_PATH'))
 			{
-				
-				dbg::write("Trying to get template list from default kernel locations");
 				$data = $this->get_tdir_files_list('default');
-				if(count($data) == 0)
-				{
-					dbg::write("WARNING!! NO TEMPLATES  available AT ALL(default locations also) to assign as main at sys_templates()");
-				}
-				else
-				{
-					dbg::write("Success");
-				}
 			}
 		}
 		response::send($data, 'json');

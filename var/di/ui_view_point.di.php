@@ -204,6 +204,76 @@ class di_ui_view_point extends data_interface
 				->pop_args();
 		}
 	}
+
+	/**
+	*	Перестроить order в указанном view point
+	* @param	integer	$page_id	ID страницы
+	* @param	integer	$vp_id		ID view point
+	* @param	integer	$source_id	ID контента
+	* @param	string	$dir		Направление (up или down)
+	* @return	boolean			TRUE, если перемещение свершилось, иначе FALSE
+	*/
+	public function move($page_id, $vp_id, $source_id, $dir)
+	{
+		$dir = strtolower($dir);
+		// Определяем текущий order
+		$opos = (int)$this->_flush()
+			->push_args(array('_sid' => $source_id))
+			->set_what(array('order'))
+			->_get()
+			->pop_args()
+			->get_results(0, 'order');
+		
+		if ($dir == 'up' && $opos > 0)
+		{
+			// Определяем order предыдущего элемента
+			$npos = $this->_flush()
+				->push_args(array('_spage_id' => $page_id, '_sview_point' => $vp_id, '_lorder' => $opos))
+				->set_what(array('order'))
+				->set_order('order', 'DESC')
+				->set_limit(0, 1)
+				->_get()
+				->pop_args()
+				->get_results(0, 'order');
+		}
+		else if ($dir == 'down')
+		{
+			// Определить order следующего элемента
+			$npos = $this->_flush()
+				->push_args(array('_spage_id' => $page_id, '_sview_point' => $vp_id, '_morder' => $opos))
+				->set_what(array('order'))
+				->set_order('order', 'ASC')
+				->set_limit(0, 1)
+				->_get()
+				->pop_args()
+				->get_results(0, 'order');
+		}
+		else
+		{
+			return false;
+		}
+
+		if ($npos === false || $opos === false)
+			return false;
+
+		$values = array(
+			'opos' => $opos,
+			'npos' => $npos,
+			'id' => $source_id,
+			'pid' => $page_id,
+			'vid' => $vp_id,
+		);
+
+		if ($opos < $npos)
+			$query = "UPDATE `{$this->name}` SET `order` = IF(`id` = :id, :npos, `order` - 1) WHERE `order` >= :opos AND `order` <= :npos AND `page_id` = :pid AND `view_point` = :vid";
+		else
+			$query = "UPDATE `{$this->name}` SET `order` = IF(`id` = :id, :npos, `order` + 1) WHERE `order` >= :npos AND `order` <= :opos AND `page_id` = :pid AND `view_point` = :vid";
+
+		$this->_flush();
+		$this->connector->exec($query, $values);
+
+		return true;
+	}
 	
 	/**
 	*	Удалить данные и вернуть JSON-пакет для ExtJS

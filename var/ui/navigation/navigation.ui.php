@@ -27,7 +27,7 @@ class ui_navigation extends user_interface
 		$parent = $this->get_args('parent', FALSE);
 		//9* если задано берем вплоть до заданногоуровня  ниже верхнего уровня нод по дефолту берем первый левел
 		$level_down = (int)$this->get_args('level_down', 1);
-
+		
 		$st = data_interface::get_instance('structure');
 		$data['records'] = $st->get_main_menu($parent, $level_down);
 

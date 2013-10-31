@@ -189,7 +189,7 @@ class di_ui_view_point extends data_interface
 	{
 		// Получаем все записи в указанном view point
 		$recs = $this->_flush()
-			->push_args(array('_spage_id' => $page_id, '_sview_point' => $vp))
+			->push_args(array('_spage_id' => $page_id, '_sview_point' => $vp_id))
 			->set_what(array('id'))
 			->_get()
 			->pop_args()

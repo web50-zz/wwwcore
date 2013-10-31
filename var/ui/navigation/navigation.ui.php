@@ -30,16 +30,6 @@ class ui_navigation extends user_interface
 		
 		$st = data_interface::get_instance('structure');
 		$data['records'] = $st->get_main_menu($parent, $level_down);
-
-		// Если у нас имеется предустановленный префикс
-		if (defined('PREDEFINED_URI_PREFIX') && PREDEFINED_URI_PREFIX != '/')
-		{
-			foreach ($data['records'] as $n => $rec)
-			{
-				$data['records'][$n]['uri'] = substr_replace($rec['uri'], PREDEFINED_URI_PREFIX, 0, 1);
-			}
-		}
-
 		$data['page_id'] = PAGE_ID;
 		$data['srch_uri'] = SRCH_URI;
 		$data['page_uri'] = PAGE_URI;
@@ -71,7 +61,7 @@ class ui_navigation extends user_interface
 		$this->title_words = $data[count($data)-1]['title'];
 		$this->key_words = $data[count($data)-1]['title'];
 		$this->description = $data[count($data)-1]['title'];
-		return $this->parse_tmpl('trunc_menu.html',$data);
+		return $this->parse_tmpl('trunc_menu.html', $data);
 	}
 
 	/*9* берем первый левел и чайлдов для каждого из топов *. Итогом Будут столбцы топ и его чайлды */	
@@ -100,12 +90,13 @@ class ui_navigation extends user_interface
 	*/
 	private function get_sub_structure($page)
 	{
-		$divp = data_interface::get_instance('ui_view_point');
-		$divp->_flush();
-		$divp->set_args(array('_spid' => $page['id'], '_shas_structure' => 1));
-		$divp->set_order('view_point');
-		$divp->set_order('order');
-		$vps = $divp->_get();
+		$vps = data_interface::get_instance('ui_view_point')
+			->_flush()
+			->set_args(array('_spid' => $page['id'], '_shas_structure' => 1))
+			->set_order('view_point')
+			->set_order('order')
+			->_get()
+			->get_results();
 
 		foreach ($vps as $vp)
 		{

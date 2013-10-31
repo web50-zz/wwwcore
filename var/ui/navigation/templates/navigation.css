@@ -23,24 +23,22 @@ color:#FFF;
 .sub_menu{
 }
 
-.sub_menu_ul{
-margin:0px;
-padding:0px;
-list-style:none outside none;
+.sub_menu UL{
+	margin:0px;
+	padding:0px;
+	list-style:none;
 }
 
-#sub_menu_ul li{
-margin:0px;
-padding:0px;
+.sub_menu UL LI{
+	margin:0px;
+	padding:0px;
+	padding-left: 10px;
 }
 
-#sub_menu_ul li a{
-color:#666;
+.sub_menu UL LI A{
+	color:#666;
 }
 
-#sub_menu_ul li a.active{
-text-decoration:underline;
+.sub_menu UL LI A.active{
+	text-decoration:underline;
 }
-
-
-

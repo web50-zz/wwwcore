@@ -76,6 +76,10 @@ ui.structure.node_form = Ext.extend(Ext.form.FormPanel, {
 	 */
 	constructor: function(config){
 		config = config || {};
+		var st = new Ext.data.JsonStore({
+					url: 'ui/structure/templates.do',
+					fields: ['template'],
+				});
 		Ext.apply(this, {
 			labelAlign: 'right', 
 			labelWidth: 150,
@@ -100,9 +104,14 @@ ui.structure.node_form = Ext.extend(Ext.form.FormPanel, {
 				{fieldLabel: this.lblKeyw, name: 'mkeywords', xtype:'textarea'},
 				{fieldLabel: this.lblDescr, xtype:'textarea',name: 'mdescr'},
 				{fieldLabel: this.lblTmpl, xtype: 'combo', hiddenName: 'template', value: 'default.html',
-					store: new Ext.data.JsonStore({url: 'ui/structure/templates.do', fields: ['template']}),
-					valueField: 'template', displayField: 'template',
-					emptyText: 'Выберите шаблон...', typeAhead: true, triggerAction: 'all', selectOnFocus: true, editable: false
+					store:st,
+					valueField: 'template', 
+					displayField: 'template',
+					emptyText: 'Выберите шаблон...', 
+					typeAhead: true, 
+					triggerAction: 'all', 
+					selectOnFocus: true, 
+					editable: false
 				},
 				{fieldLabel: this.lblParams, xtype:"textarea",name: 'params_json'}
 			],
@@ -117,6 +126,10 @@ ui.structure.node_form = Ext.extend(Ext.form.FormPanel, {
 		});
 		Ext.apply(this, config);
 		ui.structure.node_form.superclass.constructor.call(this, config);
+		st.on('beforeload',function(){
+					var overload = this.getForm().findField('theme_overload').getValue();
+					st.baseParams = {'overload':overload}
+		},this);
 		this.on({
 			data_saved: function(isNew, formData, respData){
 				this.getForm().setValues([{id: '_sid', value: respData.id}, {id: 'uri', value: respData.uri},{id: 'id', value: respData.id}]);

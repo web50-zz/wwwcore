@@ -184,7 +184,9 @@ class di_structure extends data_interface
 	{
 		if ($this->args['_sid'] > 0)
 		{
-			if ($this->args['_sid'] > 1)
+			$name = $this->get_args('name', false);
+
+			if ($this->args['_sid'] > 1 && $name)
 			{
 				$uri = $this->get_args('uri');
 				$this->calc_uri();
@@ -195,7 +197,7 @@ class di_structure extends data_interface
 			$data = $this->extjs_set_json(false);
 			$data['data']['uri'] = $this->get_args('uri');
 			
-			if ($this->args['_sid'] > 1)
+			if ($this->args['_sid'] > 1 && $name)
 			{
 				if ($data['data']['uri'] != $uri)
 				{
@@ -250,9 +252,12 @@ class di_structure extends data_interface
 	{
 		if ($this->args['_sid'] > 0)
 		{
-			if ($this->args['_sid'] > 1)
+
+			$name = $this->get_args('name', false);
+
+			if ($this->args['_sid'] > 1 && $name)
 			{
-				$uri = $this->get_args('uri');
+				$uri = $this->get_args('uri', false);
 				$this->calc_uri();
 			}
 			
@@ -260,12 +265,14 @@ class di_structure extends data_interface
 			$this->insert_on_empty = false;
 			$data = $this->extjs_set_json(false);
 
-			if ($this->args['_sid'] > 1)
+			if ($this->args['_sid'] > 1 && $name)
 			{
 				$data['data']['uri'] = $this->get_args('uri');
 				
 				if ($data['data']['uri'] != $uri)
+				{
 					$this->recalc_uri($this->args['_sid']);
+				}
 			}
 		}
 		else if($this->args['pid'] > 0)
@@ -324,6 +331,7 @@ class di_structure extends data_interface
 				$this->_flush();				// Сбрасываем DI
 				$this->insert_on_empty = false;			// Запрещаем записывать новые записи
 				$data = $this->extjs_set_json(false);		// Сохраняем новый URI
+				$data['data']['uri'] = $this->get_args('uri');
 
 				$this->pop_args();				// Возвращаем исходные параметры
 				$this->recalc_uri();				// Расчитываем URI всех потомков
@@ -472,7 +480,7 @@ class di_structure extends data_interface
 	protected function sys_slice()
 	{
                 $pid = intval($this->args['node']);
-                $fields = array('id', 'title' => 'text', 'module' => 'ui', 'params','concat("id: ",`'.$this->name.'`.`id`,"<br>URI: ",`'.$this->name.'`.`uri`)'=>'qtip');
+                $fields = array('id', 'title' => 'text', 'uri', 'hidden', 'module' => 'ui', 'params','concat("id: ",`'.$this->name.'`.`id`,"<br>URI: ",`'.$this->name.'`.`uri`)'=>'qtip');
 		$this->mode = 'NESTED_SETS_SLICE';
                 if ($pid > 0)
                 {

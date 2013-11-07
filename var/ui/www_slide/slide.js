@@ -11,10 +11,10 @@ ui.www_slide.slide = Ext.extend(ui.www_slide.slide_grid, {
 	cnfrmTitle: "Подтверждение",
 	cnfrmMsg: "Вы действительно хотите удалить этот баннер?",
 
-	AddFlash: function(){
+	AddImage: function(){
 		this.Add(1);
 	},
-	AddImage: function(){
+	AddFlash: function(){
 		this.Add(2);
 	},
 	AddVideo: function(){
@@ -34,10 +34,10 @@ ui.www_slide.slide = Ext.extend(ui.www_slide.slide_grid, {
 				apploaded: function(){
 					if (type == 1){
 						var f = new ui.www_slide.slide_image_form();
-						var title = this.titleAdd+' ('+this.bttAddFlash+')';
+						var title = this.titleAdd+' ('+this.bttAddImage+')';
 					}else if (type == 2){
 						var f = new ui.www_slide.slide_flash_form();
-						var title = this.titleAdd+' ('+this.bttAddImage+')';
+						var title = this.titleAdd+' ('+this.bttAddFlash+')';
 					}else if (type == 3){
 						var f = new ui.www_slide.slide_video_form();
 						var title = this.titleAdd+' ('+this.bttAddVideo+')';
@@ -85,10 +85,10 @@ ui.www_slide.slide = Ext.extend(ui.www_slide.slide_grid, {
 			apploaded: function(){
 				if (type == 1){
 					var f = new ui.www_slide.slide_image_form();
-					var title = this.titleEdit+' ('+this.bttAddFlash+')';
+					var title = this.titleEdit+' ('+this.bttAddImage+')';
 				}else if (type == 2){
 					var f = new ui.www_slide.slide_flash_form();
-					var title = this.titleEdit+' ('+this.bttAddImage+')';
+					var title = this.titleEdit+' ('+this.bttAddFlash+')';
 				}else if (type == 3){
 					var f = new ui.www_slide.slide_video_form();
 					var title = this.titleEdit+' ('+this.bttAddVideo+')';
@@ -145,8 +145,8 @@ ui.www_slide.slide = Ext.extend(ui.www_slide.slide_grid, {
 	{
 		Ext.apply(this, {
 			tbar: [
-				{iconCls: 'page_white_flash', text: this.bttAddFlash, handler: this.AddFlash, scope: this},
 				{iconCls: 'page_white_picture', text: this.bttAddImage, handler: this.AddImage, scope: this},
+				{iconCls: 'page_white_flash', text: this.bttAddFlash, handler: this.AddFlash, scope: this},
 				{iconCls: 'page_white_star', text: this.bttAddVideo, handler: this.AddVideo, scope: this},
 				{iconCls: 'page_white_star', text: this.bttAddVideo2, handler: this.AddVideo2, scope: this},
 				{iconCls: 'page_white_text', text: this.bttAddText, handler: this.AddText, scope: this},
@@ -188,7 +188,7 @@ ui.www_slide.slide = Ext.extend(ui.www_slide.slide_grid, {
 				cmenu.showAt(e.getXY());
 			},
 			//render: function(){this.store.load({params:{start: 0, limit: this.pagerSize}})},
-			dblrowclick: this.Edit,
+			dblclick: this.Edit,
 			scope: this
 		});
 	}

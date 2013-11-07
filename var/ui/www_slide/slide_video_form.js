@@ -1,4 +1,18 @@
 ui.www_slide.slide_video_form = Ext.extend(Ext.form.FormPanel, {
+	formWidth: 1000,
+	formHeight: 600,
+	lblTitle: 'Наименование',
+	lblComment: 'Комментарий',
+	lblLink: 'Ссылка на видео',
+
+	loadText: 'Загрузка данных формы',
+	saveText: 'Сохранение...',
+	bttSave: 'Сохранить',
+	bttCancel: 'Отмена',
+	errSaveText: 'Ошибка во время сохранения',
+	errInputText: 'Корректно заполните все необходимые поля',
+	errConnectionText: "Ошибка связи с сервером",
+
 	Load: function(data){
 		var f = this.getForm();
 		if (data.id > 0){
@@ -51,19 +65,6 @@ ui.www_slide.slide_video_form = Ext.extend(Ext.form.FormPanel, {
 		this.fireEvent('cancelled');
 	},
 
-	formWidth: 640,
-	formHeight: 200,
-	lblTitle: 'Наименование',
-	lblLink: 'Ссылка на видео',
-
-	loadText: 'Загрузка данных формы',
-	saveText: 'Сохранение...',
-	bttSave: 'Сохранить',
-	bttCancel: 'Отмена',
-	errSaveText: 'Ошибка во время сохранения',
-	errInputText: 'Корректно заполните все необходимые поля',
-	errConnectionText: "Ошибка связи с сервером",
-
 	/**
 	 * @constructor
 	 */
@@ -75,13 +76,18 @@ ui.www_slide.slide_video_form = Ext.extend(Ext.form.FormPanel, {
 			border: false, 
 			frame: true,
 			layout: 'form',
-			defaults: {xtype: 'textfield', width: 100, anchor: '100%'},
+			autoScroll: true,
+			defaults: {xtype: 'textfield', width: 100, anchor: '98%'},
 			items: [
 				{name: '_sid', xtype: 'hidden'},
 				{name: 'slide_group_id', xtype: 'hidden'},
 				{name: 'type', xtype: 'hidden', value: 3},
 				{fieldLabel: this.lblTitle, name: 'title'},
-				{fieldLabel: this.lblLink, name: 'link'}
+				{fieldLabel: this.lblLink, name: 'link'},
+				{fieldLabel: this.lblComment, name: 'comment', xtype: 'ckeditor', CKConfig: {
+					height: 330,
+					filebrowserImageBrowseUrl: 'ui/file_manager/browser.html'
+				}}
 			],
 			buttonAlign: 'right',
 			buttons: [

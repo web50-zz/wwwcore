@@ -57,7 +57,7 @@ class di_www_slide_group extends data_interface
 	}
 
 	/**
-	*	Список доступных текстовых контентов
+	*	Список доступных слайдеров
 	*/
 	protected function sys_available()
 	{
@@ -66,7 +66,6 @@ class di_www_slide_group extends data_interface
 			FROM `www_slide` AS `b` LEFT JOIN `www_slide_group` AS `bg` ON `b`.`slide_group_id` = `bg`.`id`
 			GROUP BY `bg`.`id` HAVING `count` > 0', array(), true);
 		$data = $this->get_results();
-		//array_unshift($data, array('id' => '', 'title' => 'Новый текст'));
 		return response::send($data, 'json');
 	}
 	

@@ -83,18 +83,22 @@ ui.www_slide.group = function(config){
 		});
 	}.createDelegate(this);
 	var Delete = function(id){
-		Ext.Ajax.request({
-			url: 'di/www_slide_group/unset.do',
-			params: {_sid: id},
-			callback: function(options, success, response){
-				var d = Ext.util.JSON.decode(response.responseText);
-				if (d.success)
-					this.fireEvent('deleted', id);
-				else
-					showError('Во время удаления возникли ошибки.');
-			},
-			scope: this
-		})
+		Ext.Msg.confirm(this.cnfrmTitle, this.cnfrmMsg, function(btn){
+			if (btn == "yes"){
+				Ext.Ajax.request({
+					url: 'di/www_slide_group/unset.do',
+					params: {_sid: id},
+					callback: function(options, success, response){
+						var d = Ext.util.JSON.decode(response.responseText);
+						if (d.success)
+							this.fireEvent('deleted', id);
+						else
+							showError('Во время удаления возникли ошибки.');
+					},
+					scope: this
+				});
+			}
+		}, this);
 	}.createDelegate(this);
 	this.deleteNode = function(id, name){
 		Ext.Msg.confirm('Подтверждение.', 'Вы действительно хотите удалить страницу "'+(name || id)+'"?', function(btn){if (btn == "yes") Delete(id)});
@@ -152,5 +156,8 @@ Ext.extend(ui.www_slide.group, Ext.tree.TreePanel, {
 	cnfrmMsg: "Вы действительно хотите удалить эту страницу?",
 
 	addTitle: "Добавление страницы",
-	editTitle: "Изменение страницы"
+	editTitle: "Изменение страницы",
+
+	cnfrmTitle: "Удаление слайдера",
+	cnfrmMsg: "Данный слайдер и всё его содержимое будет удалено. Вы уверены?"
 });

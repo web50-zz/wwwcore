@@ -57,6 +57,14 @@ class di_www_slide extends data_interface
 	{
 		return BASE_PATH . $this->path_to_storage;
 	}
+
+	/**
+	*	Получить путь к хранилищу файлов на файловой системе
+	*/
+	public function get_url()
+	{
+		return "/{$this->path_to_storage}";
+	}
 	
 	/**
 	*	Получить данные элемента в виде JSON
@@ -93,7 +101,16 @@ class di_www_slide extends data_interface
 		{
 			$this->args["_s{$this->args['field']}"] = "%{$this->args['query']}%";
 		}
-		$this->extjs_grid_json();
+		$this->extjs_grid_json(array(
+			'id',
+			'order',
+			'type',
+			'title',
+			'link',
+			'comment',
+			'real_name',
+			'"' . $this->get_url() . '"' => 'path',
+		));
 	}
 	
 	/**
@@ -182,6 +199,34 @@ class di_www_slide extends data_interface
 		
 		if ($file !== false)
 		{
+			// Если это изображение
+			if (($type = $this->get_args('type', false)) && $type == 1)
+			{
+				// Если выбрано уменьшение загружаемого изображения
+				if (($resize = $this->get_args('resize', false)) && $resize > 0)
+				{
+					// Если определён слайдер
+					if (($gid = $this->get_args('slide_group_id', false)) && $gid > 0)
+					{
+						// Получаем размеры слайдера
+						$size = data_interface::get_instance('www_slide_group')
+							->_flush()
+							->push_args(array('_sid' => $gid))
+							->set_what(array('width', 'height'))
+							->_get()
+							->pop_args()
+							->get_results(0);
+
+						// Если определены размеры слайдера
+						if ($size->width > 0 && $size->height > 0)
+						{
+							$adaptive = ($resize == 2);
+							$this->resize_image($file, $size->width, $size->height, $adaptive);
+						}
+					}
+				}
+			}
+
 			unset($file['type']);// Ибо type - это тип слайда
 			if (!($fid > 0))
 			{
@@ -197,8 +242,44 @@ class di_www_slide extends data_interface
 			$result = array('success' => false);
 		}
 		
-		dbg::write($result);
 		response::send(response::to_json($result), 'html');
+	}
+	
+	/**
+	*	Изменение размеров изображения
+	*
+	* @access	private
+	* @param	array	$file	Массив с данными по текущему файлу
+	* @param	integer	$width	Ширина превьюшки, по умолчанию 300px
+	* @param	integer	$height	Высота превьюшки, по умолчанию 300px
+	* @param	boolean	$adaptive	Адаптивное масштабирование true - Да, false - Нет
+	* @param	string	$bckgr	Указывается цвет подложки (white, black, red и т.п.), если null, то подложка не используется
+	*/
+	public function resize_image($file, $width = 300, $height = 300, $adaptive = true, $bckgr = null)
+	{
+		require_once INSTANCES_PATH .'wwwcore/lib/thumb/ThumbLib.inc.php';
+		$file_name = $this->get_path_to_storage() . $file['real_name'];
+		$new_name = $this->get_path_to_storage() . $file['real_name'];
+		$thumb = PhpThumbFactory::create($file_name);
+		// Если указан адаптивное изменение размеров, то применяем adaptiveResize()
+		if ($adaptive)
+			$thumb->adaptiveResize($width, $height);
+		else
+			$thumb->resize($width, $height);
+		// Сохраняем превью в указанный файл
+		$thumb->save($new_name);
+
+		// Если указана полдложка, то накладываем её
+		if ($bckgr !== null)
+		{
+			$crImg = new Imagick($new_name);
+			$bgImg = new Imagick();
+			$bgImg->newImage($width, $height, new ImagickPixel('white'));
+			$bgImg->setImageFormat($crImg->getImageFormat());
+			$bgImg->setImageColorspace($crImg->getImageColorspace());
+			$bgImg->compositeImage($crImg, $crImg->getImageCompose(), (int)($width - $crImg->getImageWidth()) / 2, (int)($height - $crImg->getImageHeight()) / 2);
+			$bgImg->writeImage($new_name);
+		}
 	}
 
 	protected function sys_simple_set()
@@ -271,13 +352,14 @@ class di_www_slide extends data_interface
 	*/
 	public function remove_files($ids)
 	{
-		$this->_flush();
-		$this->set_args(array('_spid' => $ids));
-		$files = $this->_get();
+		$files = $this->_flush()
+			->push_args(array('_spid' => $ids))
+			->_get()
+			->get_results();
 
 		$this->_flush();
-		$this->set_args(array('_spid' => $ids));
 		$this->extjs_unset_json(false);
+		$this->pop_args();
 		
 		if (!empty($files))
 		{
@@ -286,6 +368,21 @@ class di_www_slide extends data_interface
 				file_system::remove_file($file->real_name, $this->get_path_to_storage());
 			}
 		}
+	}
+
+	/**
+	*	Обработчик удаления категори(и|й)
+	*/
+	public function unset_slider($eObj, $ids, $args)
+	{
+		$this->remove_files($ids);
+	}
+
+	public function _listeners()
+	{
+		return array(
+			array('di' => 'www_slide_group', 'event' => 'onUnset', 'handler' => 'unset_slider'),
+		);
 	}
 }
 ?>

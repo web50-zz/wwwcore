@@ -180,12 +180,14 @@ class di_www_slide_group extends data_interface
 	{
 		$this->_flush();
 		$id = intval($this->args['_sid']);
-		$this->unset_recursively($id);
+		$cids = (array)$this->unset_recursively($id);
 
 		$ns = new nested_sets($this);
+
 		if ($id > 0 && $ns->delete_node($id))
 		{
 			$result = array('success' => true);
+			$this->fire_event('onUnset', array($cids, $this->get_args()));
 		}
 		else
 		{
@@ -196,9 +198,29 @@ class di_www_slide_group extends data_interface
 	}
 
 	/**
+	*	Получаем ID удаляемого узла и его потомков
+	* @access protected
+	* @param	integer	$id	ID удаляемого узла
+	* @return	array		Массиво ID удаляемых узлов
+	*/
+	protected function unset_recursively($id)
+	{
+		$ids = array($id);
+
+		$ns = new nested_sets($this);
+		$childs = $ns->get_childs($id, false);
+
+		foreach ($childs as $child)
+		{
+			$ids[] = $child['id'];
+		}
+
+		return $ids;
+	}
+
+	/**
 	*	Удалить рекурсивно все связи
 	* @access protected
-	*/
 	protected function unset_recursively($id)
 	{
 		$ns = new nested_sets($this);
@@ -210,5 +232,6 @@ class di_www_slide_group extends data_interface
 		$sc = data_interface::get_instance('www_slide');
 		$sc->remove_files($ids);
 	}
+	*/
 }
 ?>

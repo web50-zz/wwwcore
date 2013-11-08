@@ -1,4 +1,20 @@
 ui.www_slide.group_form = Ext.extend(Ext.form.FormPanel, {
+	formWidth: 1000,
+	formHeight: 600,
+	lblTitle: 'Наименование',
+	lblComment: 'Комментарий',
+	lblWidth: 'Ширина',
+	lblHeight: 'Высота',
+	lblId:'Id',
+
+	loadText: 'Загрузка данных формы',
+	saveText: 'Сохранение...',
+	bttSave: 'Сохранить',
+	bttCancel: 'Отмена',
+	errSaveText: 'Ошибка во время сохранения',
+	errInputText: 'Корректно заполните все необходимые поля',
+	errConnectionText: "Ошибка связи с сервером",
+
 	Load: function(data){
 		var f = this.getForm();
 		var id = parseInt(data.id) || 0;
@@ -52,22 +68,6 @@ ui.www_slide.group_form = Ext.extend(Ext.form.FormPanel, {
 		this.fireEvent('cancelled');
 	},
 
-	formWidth: 640,
-	formHeight: 480,
-	lblTitle: 'Наименование',
-	lblComment: 'Комментарий',
-	lblWidth: 'Ширина',
-	lblHeight: 'Высота',
-	lblId:'Id',
-
-	loadText: 'Загрузка данных формы',
-	saveText: 'Сохранение...',
-	bttSave: 'Сохранить',
-	bttCancel: 'Отмена',
-	errSaveText: 'Ошибка во время сохранения',
-	errInputText: 'Корректно заполните все необходимые поля',
-	errConnectionText: "Ошибка связи с сервером",
-
 	/**
 	 * @constructor
 	 */
@@ -86,7 +86,10 @@ ui.www_slide.group_form = Ext.extend(Ext.form.FormPanel, {
 				{fieldLabel: this.lblTitle, name: 'title', allowBlank: false, maxLength: 255},
 				{fieldLabel: this.lblWidth, name: 'width', xtype: 'numberfield', allowDecimals: false},
 				{fieldLabel: this.lblHeight, name: 'height', xtype: 'numberfield', allowDecimals: false},
-				{fieldLabel: this.lblComment, name: 'comment', height: '100', xtype: 'htmleditor'}
+				{fieldLabel: this.lblComment, name: 'comment', xtype: 'ckeditor', CKConfig: {
+					height: 350,
+					filebrowserImageBrowseUrl: 'ui/file_manager/browser.html'
+				}}
 			],
 			buttonAlign: 'right',
 			buttons: [

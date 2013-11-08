@@ -1,4 +1,21 @@
 ui.www_slide.slide_image_form = Ext.extend(Ext.form.FormPanel, {
+	formWidth: 1000,
+	formHeight: 600,
+	lblLink: 'Ссылка',
+	lblTarget: 'Цель',
+	lblTitle: 'Наименование',
+	lblFile: 'Баннер',
+	lblComment: 'Комментарий',
+	lblResize: 'Уменьшить',
+
+	loadText: 'Загрузка данных формы',
+	saveText: 'Сохранение...',
+	bttSave: 'Сохранить',
+	bttCancel: 'Отмена',
+	errSaveText: 'Ошибка во время сохранения',
+	errInputText: 'Корректно заполните все необходимые поля',
+	errConnectionText: "Ошибка связи с сервером",
+
 	Load: function(data){
 		var f = this.getForm();
 		if (data.id > 0){
@@ -51,22 +68,6 @@ ui.www_slide.slide_image_form = Ext.extend(Ext.form.FormPanel, {
 		this.fireEvent('cancelled');
 	},
 
-	formWidth: 640,
-	formHeight: 480,
-	lblLink: 'Ссылка',
-	lblTarget: 'Цель',
-	lblTitle: 'Наименование',
-	lblFile: 'Баннер',
-	lblComment: 'Комментарий',
-
-	loadText: 'Загрузка данных формы',
-	saveText: 'Сохранение...',
-	bttSave: 'Сохранить',
-	bttCancel: 'Отмена',
-	errSaveText: 'Ошибка во время сохранения',
-	errInputText: 'Корректно заполните все необходимые поля',
-	errConnectionText: "Ошибка связи с сервером",
-
 	/**
 	 * @constructor
 	 */
@@ -79,7 +80,8 @@ ui.www_slide.slide_image_form = Ext.extend(Ext.form.FormPanel, {
 			frame: true,
 			layout: 'form',
 			fileUpload: true,
-			defaults: {xtype: 'textfield', width: 100, anchor: '100%'},
+			autoScroll: true,
+			defaults: {xtype: 'textfield', width: 100, anchor: '98%'},
 			items: [
 				{name: '_sid', xtype: 'hidden'},
 				{name: 'slide_group_id', xtype: 'hidden'},
@@ -87,17 +89,29 @@ ui.www_slide.slide_image_form = Ext.extend(Ext.form.FormPanel, {
 				{fieldLabel: this.lblFile, name: 'file', xtype: 'fileuploadfield', buttonCfg: {text: '', iconCls: 'folder'}},
 				{fieldLabel: this.lblLink, name: 'link'},
 				{fieldLabel: this.lblTarget, hiddenName: 'target', xtype: 'combo', width: 50,
+					mode: 'local', triggerAction: 'all', selectOnFocus: true, editable: false,
+					valueField: 'value', displayField: 'title', value: '_blank',
 					store: new Ext.data.SimpleStore({fields: ['value', 'title'], data: [
 						['_blank', 'Новое окно (_blank)'],
 						['_self', 'Текущее окно (_self)'],
 						['_parent', 'Фрейм-родитель (_parent)'],
 						['_top', 'В окне без фреймов (_top)']
-					]}),
-					valueField: 'value', displayField: 'title', value: '_blank',
-					mode: 'local', triggerAction: 'all', selectOnFocus: true, editable: false
+					]})
+				},
+				{fieldLabel: this.lblResize, hiddenName: 'resize', xtype: 'combo', width: 50,
+					mode: 'local', triggerAction: 'all', selectOnFocus: true, editable: false,
+					valueField: 'value', displayField: 'title', value: 0,
+					store: new Ext.data.SimpleStore({fields: ['value', 'title'], data: [
+						[0, 'Не уменьшать'],
+						[1, 'Пропорционально'],
+						[2, 'Адаптивно']
+					]})
 				},
 				{fieldLabel: this.lblTitle, name: 'title'},
-				{fieldLabel: this.lblComment, name: 'comment', height: '100', xtype: 'htmleditor'}
+				{fieldLabel: this.lblComment, name: 'comment', xtype: 'ckeditor', CKConfig: {
+					height: 250,
+					filebrowserImageBrowseUrl: 'ui/file_manager/browser.html'
+				}}
 			],
 			buttonAlign: 'right',
 			buttons: [

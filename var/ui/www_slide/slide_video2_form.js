@@ -1,6 +1,6 @@
 ui.www_slide.slide_video2_form = Ext.extend(Ext.form.FormPanel, {
-	formWidth: 640,
-	formHeight: 480,
+	formWidth: 1000,
+	formHeight: 600,
 	lblTitle: 'Наименование',
 	lblFile: 'Файл',
 	lblComment: 'Комментарий',
@@ -75,14 +75,18 @@ ui.www_slide.slide_video2_form = Ext.extend(Ext.form.FormPanel, {
 			frame: true,
 			layout: 'form',
 			fileUpload: true,
-			defaults: {xtype: 'textfield', width: 100, anchor: '100%'},
+			autoScroll: true,
+			defaults: {xtype: 'textfield', width: 100, anchor: '98%'},
 			items: [
 				{name: '_sid', xtype: 'hidden'},
 				{name: 'slide_group_id', xtype: 'hidden'},
 				{name: 'type', xtype: 'hidden', value: 5},
 				{fieldLabel: this.lblFile, name: 'file', xtype: 'fileuploadfield', buttonCfg: {text: '', iconCls: 'folder'}},
 				{fieldLabel: this.lblTitle, name: 'title'},
-				{fieldLabel: this.lblComment, name: 'comment', height: '100', xtype: 'htmleditor'}
+				{fieldLabel: this.lblComment, name: 'comment', xtype: 'ckeditor', CKConfig: {
+					height: 330,
+					filebrowserImageBrowseUrl: 'ui/file_manager/browser.html'
+				}}
 			],
 			buttonAlign: 'right',
 			buttons: [

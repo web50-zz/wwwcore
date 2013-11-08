@@ -29,7 +29,7 @@ class ui_www_slide_front extends user_interface
 				->pop_args()
 				->get_results(0);
 
-			if (!empty($group_info))
+			if (!empty($slider))
 			{
 				$slider->slides = data_interface::get_instance('www_slide')
 					->_flush()
@@ -38,12 +38,24 @@ class ui_www_slide_front extends user_interface
 					->pop_args()
 					->get_results();
 
-				return $this->parse_tmpl('default.html', $slider);
+				$slider->path = data_interface::get_instance('www_slide')->get_url();
+
+				$template = $this->get_args('template', 'default.html');
+
+				return $this->parse_tmpl($template, $slider);
 			}
 		}
 
 		return false;
 	}
-		
+	
+	/**
+	*       Page configure form
+	*/
+	protected function sys_configure_form()
+	{
+		$tmpl = new tmpl($this->pwd() . 'configure_form.js');
+		response::send($tmpl->parse($this), 'js');
+	}
 }
 ?>

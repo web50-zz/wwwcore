@@ -20,28 +20,29 @@ class ui_www_slide_front extends user_interface
 
 	public function pub_content()
 	{
-		$group =  $this->get_args('group',0);
-		if($group  == 0)
+		if (($gid = $this->get_args('group', false)) && $gid > 0)
 		{
-			return false;
+			$slider = data_interface::get_instance('www_slide_group')
+				->_flush()
+				->push_args(array("_sid" => $gid))
+				->_get()
+				->pop_args()
+				->get_results(0);
+
+			if (!empty($group_info))
+			{
+				$slider->slides = data_interface::get_instance('www_slide')
+					->_flush()
+					->push_args(array("_sslide_froup_id" => $gid))
+					->_get()
+					->pop_args()
+					->get_results();
+
+				return $this->parse_tmpl('default.html', $slider);
+			}
 		}
-		$group_di  = data_interface::get_instance('www_slide_group');
-		$group_di->_flush();
-		$group_di->set_args(array("_sid"=>$group));
-		$group_di->_get();
-		$group_info = $group_di->get_results(0);
-		if(!($group_info->id >0))
-		{
-			return false;
-		}
-		$slide_di =  data_interface::get_instance('www_slide');
-		
-		$slide_di->_flush();
-		$slide_di->set_args(array("_sslide_froup_id"=>$group));
-		$slide_di->_get();
-		$slide_frames = $slide_di->get_results();
-		$group_info->slides = $slide_frames;
-		return $this->parse_tmpl('default.html',$group_info);
+
+		return false;
 	}
 		
 }

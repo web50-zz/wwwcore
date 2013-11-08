@@ -17,6 +17,23 @@ class ui_navigation extends user_interface
 	}
 
 	/**
+	*	Общий шаблон, для отрисовки любого типа меню, любой сложности
+	*/
+	protected function pub_menu()
+	{
+		// Шаблон
+		$template = $this->get_args('template', 'menu.html');
+
+		// Родитель (по умолчанию родителем является корневая нода - Home)
+		$parent = $this->get_args('parent', 1);
+
+		// Глубина вложенности (если передаётся NULL, то до бесконечности)
+		$deep = $this->get_args('deep', null);
+
+		return $this->parse_tmpl($template, data_interface::get_instance('structure')->get_menu($parent, $deep));
+	}
+
+	/**
 	*	main menu  tracks  'template' variable to set more templates then default
 	*/
 	protected function pub_top_menu()

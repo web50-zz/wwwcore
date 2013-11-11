@@ -18,7 +18,8 @@ try
 		authenticate::logout();
 
 	//$uri = (empty($_SERVER['REDIRECT_URL'])) ? '/' : $_SERVER['REDIRECT_URL'];
-	$uri = "/" . request::get('_uri', '');
+	//$uri = "/" . request::get('_uri', '');
+	$uri = URI;
         $diStrc = data_interface::get_instance(SITE_DI);
 	$uiSt = user_interface::get_instance(SITE_UI);
 

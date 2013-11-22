@@ -1,4 +1,16 @@
 ui.text.item_form = Ext.extend(Ext.form.FormPanel, {
+	formWidth: 800,
+	formHeight: 640,
+	lblTitle: 'Наименование',
+
+	loadText: 'Загрузка данных формы',
+	saveText: 'Сохранение...',
+	bttSave: 'Сохранить',
+	bttCancel: 'Отмена',
+	errSaveText: 'Ошибка во время сохранения',
+	errInputText: 'Корректно заполните все необходимые поля',
+	errConnectionText: "Ошибка связи с сервером",
+
 	Load: function(data){
 		var f = this.getForm();
 		f.load({
@@ -49,18 +61,6 @@ ui.text.item_form = Ext.extend(Ext.form.FormPanel, {
 		this.fireEvent('cancelled');
 	},
 
-	formWidth: 800,
-	formHeight: 680,
-	lblTitle: 'Наименование',
-
-	loadText: 'Загрузка данных формы',
-	saveText: 'Сохранение...',
-	bttSave: 'Сохранить',
-	bttCancel: 'Отмена',
-	errSaveText: 'Ошибка во время сохранения',
-	errInputText: 'Корректно заполните все необходимые поля',
-	errConnectionText: "Ошибка связи с сервером",
-
 	/**
 	 * @constructor
 	 */
@@ -69,16 +69,14 @@ ui.text.item_form = Ext.extend(Ext.form.FormPanel, {
 		Ext.apply(this, {
 			labelAlign: 'right', 
 			labelWidth: 120,
+			autoScroll: true,
 			border: false, 
 			frame: true,
 			defaults: {xtype: 'textfield', width: 150, anchor: '100%'},
 			items: [
 				{name: '_sid', inputType: 'hidden'},
 				{fieldLabel: this.lblTitle, name: 'title', allowBlank: false, maxLength:255},
-				{hideLabel: true, name: 'content', xtype: 'ckeditor', CKConfig: {
-					height: 350,
-					filebrowserImageBrowseUrl: 'ui/file_manager/browser.html'
-				}}
+				{hideLabel: true, name: 'content', xtype: 'ckeditor', CKConfig: {height: 330}}
 			],
 			buttonAlign: 'right',
 			buttons: [

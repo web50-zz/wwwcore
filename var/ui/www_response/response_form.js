@@ -84,7 +84,7 @@ ui.www_response.response_form = Ext.extend(Ext.form.FormPanel, {
 				{name: 'pid', xtype: 'hidden'},
 				{fieldLabel: this.fldDate, name: 'created_datetime', xtype: 'displayfield', tpl: tpl},
 				{fieldLabel: this.fldName, name: 'name', allowBlank: false, maxLength: 255},
-				{fieldLabel: this.fldName, name: 'email', allowBlank: false, maxLength: 255},
+				{fieldLabel: this.fldEmail, name: 'email', maxLength: 255},
 				{fieldLabel: this.fldComment, name: 'comment', height: '100', xtype: 'htmleditor'}
 			],
 			buttonAlign: 'right',

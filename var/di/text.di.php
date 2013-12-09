@@ -46,10 +46,6 @@ class di_text extends data_interface
 	*/
 	public function get()
 	{
-		#$this->_flush(true);
-		#$this->connector->fetchMethod = PDO::FETCH_ASSOC;
-		#$sc = $this->join_with_di('structure_content', array('id' => 'cid'), array('pid' => 'pid'));
-		#return $this->_get();
 		$this->_flush();
 		$data =	$this->extjs_form_json(false,false);
 		return $data['data'];
@@ -61,7 +57,8 @@ class di_text extends data_interface
 	protected function sys_available()
 	{
 		$this->_flush();
-		$data = $this->_get();
+		$this->_get();
+		$data = $this->get_results();
 		array_unshift($data, array('id' => '', 'title' => 'Новый текст'));
 		return response::send($data, 'json');
 	}
@@ -89,16 +86,6 @@ class di_text extends data_interface
 		$this->extjs_form_json(array(
 			'id', 'title', 'content','hide_title'
 		));
-	}
-	
-	/**
-	*	Получить данные элемента в виде JSON
-	* @access protected
-	*/
-	protected function sys_item()
-	{
-		$this->_flush();
-		$this->extjs_form_json();
 	}
 	
 	/**

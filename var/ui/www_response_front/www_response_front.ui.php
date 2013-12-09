@@ -56,7 +56,7 @@ class ui_www_response_front extends user_interface
 	{
 		$result = array();
 		$error = false;
-		$input = request::get(array('pid', 'name', 'email', 'comment'), array(1, false, false, false));
+		$input = request::get(array('pid', 'name', 'email', 'comment', 'user_code'), array(1, false, false, false, false));
 
 		if (!($input['pid'] > 0))
 		{
@@ -86,12 +86,22 @@ class ui_www_response_front extends user_interface
 			$result['fields'][] = 'comment';
 		}
 
+		require_once INSTANCES_PATH .'wwwcore/lib/dapphp-securimage-3.2RC2/securimage.php';
+		$captcha = new Securimage();
+
+		if (!$captcha->check($input['user_code']))
+		{
+			$error = true;
+			$result['errors'][] = 'Необходимо указать правильный код';
+			$result['fields'][] = 'user_code';
+		}
+
 		try
 		{
 			if (!$error)
 			{
 				// Контрольная проверка методом ФБ
-				$ctrl = strlen((string)request::get('pid')) + strlen($input['name']) + strlen($input['email']) + strlen($input['comment']);
+				$ctrl = strlen($input['user_code']) + mb_strlen($input['name'], ENCODING) + mb_strlen($input['email'], ENCODING) + mb_strlen($input['comment'], ENCODING);
 
 				// Если контрольная сумма не совпадает, то делаем вид, что всё Ок
 				if ($ctrl != (int)request::get('climb'))

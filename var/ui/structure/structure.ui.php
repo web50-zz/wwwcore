@@ -106,6 +106,9 @@ class ui_structure extends user_interface
 			$this->js_resources = array();
 		}
 
+		// собираем ресурсы для structure ui
+		$this->collect_resources($this, $this->interfaceName);
+
 		//9* мета на страницу итмеет приоритет перед глобальной мета
 		if($page['mkeywords'] != '')
 		{
@@ -265,8 +268,6 @@ class ui_structure extends user_interface
 			$this->theme_path = CURRENT_THEME_PATH;
 			$this->theme = '';
 		}
-		// собираем ресурсы для structure ui
-		$this->collect_resources($this, $this->interfaceName);
 
 //		if($this->title_words) $title_words[] =  $this->title_words;
 //		if($this->key_words) $key_words[] =  $this->key_words;
@@ -284,8 +285,8 @@ class ui_structure extends user_interface
 			$data['IS_LOGGED'] = 'yes';
 
                 $template = (!empty($page['template'])) ? $page['template'] : pub_template;
-		$out = $this->parse_tmpl("main/{$template}", $data, array('ui' => array($this, 'collect_resources')));
-
+	//	$out = $this->parse_tmpl("main/{$template}", $data, array('ui' => array($this, 'collect_resources')));//9* 04122013 во первых колбэк тут нахуй не нужен потому что  коллект ресурсес  вызывается  выше во второых чтобы структуре  джс шли приоритетом  это перенесено выше цикла прохода по  vp 
+		$out = $this->parse_tmpl("main/{$template}", $data);
 		// Окончательный сбор данных по ресурсам
 		$css_res = array();
 		foreach ($this->css_resources as $a) $css_res = array_merge($css_res, $a);

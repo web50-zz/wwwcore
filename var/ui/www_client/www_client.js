@@ -52,13 +52,13 @@ ui.www_client.main = Ext.extend(ui.www_client.grid, {
 	},
 
 	frmLoading: 'Загрузка формы редактирования',
-	titleAdd: 'Добавление персоны',
-	titleEdit: 'Редактирование персоны',
+	titleAdd: 'Добавление клиента',
+	titleEdit: 'Редактирование клиента',
 	bttAdd: 'Создать',
 	bttEdit: 'Изменить',
 	bttDelete: 'Удалить',
 	cnfrmTitle: "Подтверждение",
-	cnfrmMsg: "Вы действительно хотите удалить эту персону?",
+	cnfrmMsg: "Вы действительно хотите удалить клиента?",
 
 	/**
 	 * @constructor

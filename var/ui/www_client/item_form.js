@@ -50,7 +50,7 @@ ui.www_client.item_form = Ext.extend(Ext.form.FormPanel, {
 	},
 
 	formWidth: 800,
-	formHeight: 400,
+	formHeight: 700,
 
 	loadText: 'Загрузка данных формы',
 	saveText: 'Сохранение...',
@@ -77,7 +77,7 @@ ui.www_client.item_form = Ext.extend(Ext.form.FormPanel, {
 				{fieldLabel: 'Логотип', name: 'file', xtype: 'fileuploadfield', buttonCfg: {text: '', iconCls: 'folder'}},
 				{fieldLabel: 'Клиент', name: 'client_name', allowBlank: false, maxLength: 128},
 				{fieldLabel: 'Ссылка', name: 'link', allowBlank: false, maxLength: 255},
-				{fieldLabel: 'Описание', name: 'description', xtype: 'htmleditor', height: 200}
+				{hideLabel: true, name: 'description', xtype: 'ckeditor', CKConfig: {height: 330}}
 			],
 			buttonAlign: 'right',
 			buttons: [

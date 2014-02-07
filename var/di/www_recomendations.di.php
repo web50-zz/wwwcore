@@ -1,13 +1,12 @@
 <?php
 /**
-*	Интерфейс данных "WWW: Клиенты"
 *
-* @author	Anthon S. Litvinenko <a.litvinenko@web50.ru>
+* @author	Fedot B Pozdnyakov <9@u9.ru>
 * @package	SBIN Diesel
 */
-class di_www_client extends data_interface
+class di_www_recomendations extends data_interface
 {
-	public $title = 'WWW: Клиенты';
+	public $title = 'WWW: Рекомендательные письма';
 
 	/**
 	* @var	string	$cfg	Имя конфигурации БД
@@ -22,15 +21,15 @@ class di_www_client extends data_interface
 	/**
 	* @var	string	$name	Имя таблицы
 	*/
-	protected $name = 'www_client';
+	protected $name = 'www_recomendations';
 
 	/**
 	* @var	string	$path_to_storage	Путь к хранилищу файлов каталога
 	*/
-	public $path_to_storage = 'filestorage/www_client/';
+	public $path_to_storage = 'filestorage/www_recomendations/';
 
 	/**
-	* @var	array	$_preview	Массив с описанием параметров preview-файлов по умолчанию, можно переопределить ключём реестра "www_client"
+	* @var	array	$_preview	Массив с описанием параметров preview-файлов по умолчанию, можно переопределить ключём реестра "www_recomendations"
 	*/
 	protected $_preview = array(
 		'thumb' => array(
@@ -48,9 +47,11 @@ class di_www_client extends data_interface
 		'id' => array('type' => 'integer', 'serial' => TRUE, 'readonly' => TRUE),
 		'order' => array('type' => 'integer'),		// Порядок отображение
 		'client_name' => array('type' => 'string'),	// Наименование клиента
-		'real_name' => array('type' => 'string'),	// Файл с логотипом
+		'client_id' => array('type' => 'integer'),	// ID клиента если взят из базы клиентов
+		'real_name' => array('type' => 'string'),	// Файл скан пиьсма
 		'description' => array('type' => 'text'),	// Описание
-		'link' => array('type' => 'string'),		// Ссылка
+		'person' => array('type' => 'text'),	// Персона автор  письма
+		'position' => array('type' => 'text'),	// Должность персоны
 	);
 	
 	public function __construct ()
@@ -63,7 +64,7 @@ class di_www_client extends data_interface
 	*	Применить параметры для превью
 	* @param	string	$reg_key	Имя ключа в реестре с параметрами preview
 	*/
-	protected function prepare_preview_params($reg_key = 'www_client')
+	protected function prepare_preview_params($reg_key = 'www_recomendations')
 	{
 		if ($reg_key && ($new_params = registry::get($reg_key)) != '')
 		{
@@ -88,26 +89,11 @@ class di_www_client extends data_interface
 			'id',
 			'order',
 			"CONCAT('/', '{$this->path_to_storage}', 'thumb-', `real_name`)" => 'preview',
+			'client_id',
 			'client_name',
-			'link',
 		));
 	}
-
-	protected function sys_combo_list()
-	{
-		$this->_flush();
-		$this->set_order('order', 'ASC');
-		$data = $this->extjs_grid_json(array(
-			'id',
-			'order',
-			"CONCAT('/', '{$this->path_to_storage}', 'thumb-', `real_name`)" => 'preview',
-			'client_name',
-			'link',
-		),false);
-		array_unshift($data['records'],array('id'=>'0','client_name'=>'Не выбран'));
-		response::send($data,'json');
-	}
-
+	
 	protected function sys_get()
 	{
 		$this->_flush();

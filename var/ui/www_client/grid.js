@@ -72,10 +72,10 @@ ui.www_client.grid = Ext.extend(Ext.grid.EditorGridPanel, {
 				sortInfo: {field: 'order', direction: 'ASC'}
 			})
 		});
-		var image = new Ext.XTemplate('<img src="{preview}" height="150" border="0"/>');
+		var image = new Ext.XTemplate('<img src="{preview}" width="150" border="0"/>');
 		image.compile();
 		var drag = function(preview, name){
-			return  '<img src="'+preview+'" height="150" align="left">'+'<b style="font-size: 13px;">'+name+'</b><br>'
+			return  '<img src="'+preview+'" width="150" align="left">'+'<b style="font-size: 13px;">'+name+'</b><br>'
 		}
 		Ext.apply(this, {
 			loadMask: true,
@@ -100,7 +100,7 @@ ui.www_client.grid = Ext.extend(Ext.grid.EditorGridPanel, {
 					width: 200
 				},
 				columns: [
-					{header: 'Логотип', dataIndex: 'preview', xtype: 'templatecolumn', tpl: image},
+					{header: 'Логотип', dataIndex: 'preview', xtype: 'templatecolumn', width: 200, tpl: image},
 					{header: 'Ссылка', dataIndex: 'link'},
 					{header: 'Клиент', dataIndex: 'client_name', id: 'expand'}
 				]

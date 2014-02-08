@@ -6,7 +6,7 @@ ui.www_client.main = Ext.extend(ui.www_client.grid, {
 				var f = new ui.www_client.item_form();
 				var w = new Ext.Window({iconCls: this.iconCls, title: this.titleAdd, maximizable: true, modal: true, layout: 'fit', width: f.formWidth, height: f.formHeight, items: f});
 				f.on({
-					data_saved: function(){this.store.reload()},
+					data_saved: function(){w.destroy();this.store.reload()},
 					cancelled: function(){w.destroy()},
 					scope: this
 				});
@@ -26,7 +26,7 @@ ui.www_client.main = Ext.extend(ui.www_client.grid, {
 				var f = new ui.www_client.item_form();
 				var w = new Ext.Window({iconCls: this.iconCls, title: this.titleEdit, maximizable: true, modal: true, layout: 'fit', width: f.formWidth, height: f.formHeight, items: f});
 				f.on({
-					data_saved: function(){this.store.reload()},
+					data_saved: function(){w.destroy();this.store.reload()},
 					cancelled: function(){w.destroy()},
 					scope: this
 				});

@@ -51,6 +51,7 @@ class di_www_client extends data_interface
 		'real_name' => array('type' => 'string'),	// Файл с логотипом
 		'description' => array('type' => 'text'),	// Описание
 		'link' => array('type' => 'string'),		// Ссылка
+		'photoalbum_id' => array('type' => 'integer'),		// Фотоальбом
 	);
 	
 	public function __construct ()

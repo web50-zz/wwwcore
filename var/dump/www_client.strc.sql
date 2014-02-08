@@ -5,6 +5,7 @@ CREATE TABLE `www_client` (
 	`real_name` varchar(64) NOT NULL,
 	`link` varchar(255) NOT NULL,
 	`description` text NOT NULL,
+	`photoalbum_id` int(10) unsigned NOT NULL,
 	PRIMARY KEY (`id`),
 	KEY `order` (`order`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

@@ -33,7 +33,7 @@ class ui_www_slide_front extends user_interface
 			{
 				$slider->slides = data_interface::get_instance('www_slide')
 					->_flush()
-					->push_args(array("_sslide_froup_id" => $gid))
+					->push_args(array("_sslide_group_id" => $gid))
 					->_get()
 					->pop_args()
 					->get_results();

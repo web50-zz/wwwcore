@@ -26,15 +26,31 @@ class ui_www_recomendations extends user_interface
         public function pub_content()
         {
 		$data = array();
-		$data['clients'] =  $this->get_clients();
+		$data['records'] =  $this->get_recomendations();
 		$data['path']  = data_interface::get_instance('www_recomendations')->path_to_storage;
                 return $this->parse_tmpl('content.html', $data);
         }
 
+	public function pub_list_parametric()
+	{
+                $di = data_interface::get_instance('www_recomendations');
+		$template = $this->get_args('template','content.html');
+		$limit = $this->get_args('limit','10');
+		$order = $this->get_args('order','order');
+		$dir = $this->get_args('dir','ASC');
+		$di->push_args(array());
+		$di->_flush();
+		$di->set_order($order,$dir);
+		$di->set_limit($limit);
+		$di->_get();
+		$di->pop_args();
+		$data['records'] = $di->get_results();
+                return $this->parse_tmpl($template, $data);
+	}
 	/**
-	*	Получить все доступные услуги
+	*	Получить все доступные услуги   9* Не понмю может это вообще не нужно  надо бы коцнуть
 	*/
-	private function get_clients()
+	private function get_recomendations()
 	{
                 $di = data_interface::get_instance('www_recomendations');
 		$di->push_args(array());

@@ -47,6 +47,49 @@ class ui_www_recomendations extends user_interface
 		$data['records'] = $di->get_results();
                 return $this->parse_tmpl($template, $data);
 	}
+
+
+// 9*  выводит рекомендацию
+	public function pub_recomendation()
+	{
+		try{
+			$srch = explode("/",SRCH_URI);
+			$st = user_interface::get_instance('structure');
+			$mode = $this->get_args('mode','std');
+			$template = $this->get_args('template','recomendation.html');
+			if(count($srch) == 2 && $srch[1] == '')
+			{
+				$di = data_interface::get_instance('www_recomendations');
+				$di->_flush();
+				$di->push_args(array('_sid'=>$srch[0]));
+				$di->_get();
+				$res = $di->get_results(0);
+				$di->pop_args();
+				if(!($res->id >0))
+				{
+					throw new Exception('not found');
+				}
+				if($mode == 'ajax')
+				{
+					response::send($this->parse_tmpl($template,$res),'text');
+				}
+				return $this->parse_tmpl($template,$res);
+			}
+			else{
+				throw new Exception('not found');
+			}
+		}
+		catch(Exception $e)
+		{
+			$m = $e->getMessage();
+			if($mode == 'ajax')
+			{
+				$st->do_404();
+			}
+			response::send($this->parse_tmpl('recomendation_scan.html',$res),'text');
+		}
+		die();
+	}
 	/**
 	*	Получить все доступные услуги   9* Не понмю может это вообще не нужно  надо бы коцнуть
 	*/

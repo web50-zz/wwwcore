@@ -33,17 +33,22 @@ class ui_www_client extends user_interface
         }
 
 	/**
-	*	Получить все доступные услуги
+	*	Получить всех клиентов плюс если в  DI www_recomendations есть рекомендательное письмо по клиенту то  и его id
 	*/
 	private function get_clients()
 	{
                 $di = data_interface::get_instance('www_client');
-		$di->push_args(array());
 		$di->_flush();
+		$di->push_args(array());
 		$di->set_order('order');
-		$di->_get();
+		$di2 = $di->join_with_di('www_recomendations',array('id'=>'client_id'),array('id'=>'recom_id'));
+		$what = array(
+			'*',
+			array('di'=>$di2,'name'=>'id')
+		);
+		$res = $di->extjs_grid_json($what,false);
 		$di->pop_args();
-		return $di->get_results();
+		return $res['records'];
 	}
 	
 	/**

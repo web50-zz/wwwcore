@@ -3,6 +3,7 @@ CREATE TABLE `www_person` (
 	`order` smallint(5) unsigned NOT NULL,
 	`person_title` varchar(255) NOT NULL,
 	`person_name` varchar(128) NOT NULL,
+	`category` tinyint(1) unsigned NOT NULL ,
 	`real_name` varchar(64) NOT NULL,
 	`comment` varchar(255) NOT NULL,
 	`description` text NOT NULL,

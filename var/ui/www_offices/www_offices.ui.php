@@ -1,8 +1,7 @@
 <?php
 /**
-*	ПИ "ARV: Акци"
 *
-* @author	Anthon S. Litvinenko <a.litvinenko@web50.ru>
+* @author	Fedot B Pozdnyakov <9@u9.ru>
 * @package	SBIN Diesel
 */
 class ui_www_offices extends user_interface

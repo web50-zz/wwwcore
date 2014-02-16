@@ -49,6 +49,7 @@ class di_www_person extends data_interface
 		'order' => array('type' => 'integer'),		// Порядок отображение
 		'person_title' => array('type' => 'string'),	// Должность
 		'person_name' => array('type' => 'string'),	// Имя
+		'category' => array('type' => 'integer'),	// Категория -  сотрудник  руководство
 		'real_name' => array('type' => 'string'),	// Файл с фотографией
 		'comment' => array('type' => 'text'),		// Комментарий
 		'description' => array('type' => 'text'),	// Описание

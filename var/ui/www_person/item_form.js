@@ -77,6 +77,11 @@ ui.www_person.item_form = Ext.extend(Ext.form.FormPanel, {
 				{fieldLabel: 'Фотография', name: 'file', xtype: 'fileuploadfield', buttonCfg: {text: '', iconCls: 'folder'}},
 				{fieldLabel: 'Имя', name: 'person_name', allowBlank: false, maxLength: 128},
 				{fieldLabel: 'Должность', name: 'person_title', allowBlank: false, maxLength: 255},
+				{fieldLabel:'Категория', hiddenName: 'category', value: 1, xtype: 'combo', anchor: null,
+					store: new Ext.data.SimpleStore({ fields: ['value', 'title'], data: [[0, 'Не определена'],[1, 'Сотрудник'], [2, 'Руководство']]}),
+					valueField: 'value', displayField: 'title', mode: 'local',
+					triggerAction: 'all', selectOnFocus: true, editable: false
+				},
 				{fieldLabel: 'Комментарий', name: 'comment', maxLength: 255},
 				{fieldLabel: 'Описание', name: 'description', xtype: 'htmleditor', height: 200}
 			],

@@ -27,20 +27,27 @@ class ui_www_person extends user_interface
         public function pub_content()
         {
 		$data = array();
-		$data['persons'] =  $this->get_persons();
+		$template = $this->get_args('template', 'content.html');
+		$category = $this->get_args('category', '0');
+		$data['persons'] =  $this->get_persons($category);
 		$data['path']  = data_interface::get_instance('www_person')->path_to_storage;
-                return $this->parse_tmpl('content.html', $data);
+		$data['category'] = $category;
+                return $this->parse_tmpl($template, $data);
         }
 
 	/**
 	*	Получить все доступные услуги
 	*/
-	private function get_persons()
+	private function get_persons($category =  0)
 	{
                 $di = data_interface::get_instance('www_person');
 		$di->push_args(array());
 		$di->_flush();
 		$di->set_order('order');
+		if($category != 0)
+		{
+			$di->set_args(array('_scategory'=>$category));
+		}
 		$di->_get();
 		$di->pop_args();
 		return $di->get_results();

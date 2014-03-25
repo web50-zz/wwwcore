@@ -1,0 +1,12 @@
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+	<div class="data_block" style="display:none">
+		<div data-coord="{__map__}" class="city_coord"></div>
+		{__(apply(/records)__}
+		{__(if($map)__}
+		<div data-coord="{__map__}" data-title="{__title__}" class="office_coord"><div class="inf"><strong>{__title__}</strong>{__content__}</div></div>
+		{__else__}
+		{__if)__}
+		{__apply)__}
+	</div>
+	<div class="map"></div>
+</div>

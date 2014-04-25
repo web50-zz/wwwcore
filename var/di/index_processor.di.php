@@ -273,8 +273,15 @@ class di_index_processor extends data_interface
 		$result = preg_replace_callback(
 			'/\\\u([0-9a-fA-F]{4})/', 
 			create_function('$_m', 'return mb_convert_encoding("&#" . intval($_m[1], 16) . ";", "UTF-8", "HTML-ENTITIES");'),
+                        str_replace('\n','',str_replace('\t','',str_replace('\r','',str_replace('"','\"',json_encode($arr)))))
+		);
+		/* 9* старый вариант не учитыввал замены переходов строк  и табов  на \n\t
+		$result = preg_replace_callback(
+			'/\\\u([0-9a-fA-F]{4})/', 
+			create_function('$_m', 'return mb_convert_encoding("&#" . intval($_m[1], 16) . ";", "UTF-8", "HTML-ENTITIES");'),
 			json_encode($arr)
 		);
+		*/
 		return $result;
 	}
 

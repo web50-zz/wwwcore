@@ -3,11 +3,11 @@
 *
 * @author	Fedot B Pozdnyakov <9@u9.ru>
 * @package	SBIN Diesel
-* @since	2014-02-12
+* @since	2014-03-21
 */
-class di_www_offices extends data_interface
+class di_www_offices_city extends data_interface
 {
-	public $title = 'ARV: Акции';
+	public $title = 'www: Офисы города';
 
 	/**
 	* @var	string	$cfg	Имя конфигурации БД
@@ -22,7 +22,7 @@ class di_www_offices extends data_interface
 	/**
 	* @var	string	$name	Имя таблицы
 	*/
-	protected $name = 'www_offices';
+	protected $name = 'www_offices_city';
 	
 	/**
 	* @var	array	$fields	Конфигурация таблицы
@@ -30,15 +30,7 @@ class di_www_offices extends data_interface
 	public $fields = array(
 		'id' => array('type' => 'integer', 'serial' => TRUE, 'readonly' => TRUE),
 		'title' => array('type' => 'string'),
-		'city_id' => array('type' => 'integer'),
-		'addr' => array('type' => 'string'),
-		'postaddr' => array('type' => 'string'),
 		'map' => array('type' => 'string'),
-		'phones' => array('type' => 'string'),
-		'email' => array('type' => 'string'),
-		'site' => array('type' => 'string'),
-		'work_time' => array('type' => 'string'),
-		'content' => array('type' => 'text'),
 	);
 	
 	public function __construct ()

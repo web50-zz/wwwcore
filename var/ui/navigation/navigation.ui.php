@@ -50,6 +50,8 @@ class ui_navigation extends user_interface
 		$data['page_id'] = PAGE_ID;
 		$data['srch_uri'] = SRCH_URI;
 		$data['page_uri'] = PAGE_URI;
+		$st =  user_interface::get_instance('structure');
+		$data['current'] = $st->get_page_info();
 		return $this->parse_tmpl($template, $data);
 	}
 	

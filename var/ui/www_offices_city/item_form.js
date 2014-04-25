@@ -1,16 +1,9 @@
-ui.www_offices.item_form = Ext.extend(Ext.form.FormPanel, {
+ui.www_offices_city.item_form = Ext.extend(Ext.form.FormPanel, {
 	formWidth: 640,
-	formHeight: 750,
+	formHeight: 150,
 	lblTitle: 'Название',
-	lblCntnt: 'Описание',
-	lblAddr:'Адрес', 
-	lblPostAddr:'Почтовый', 
-	lblWorkTime:'Режим работы', 
-	lblPhones:'Телефоны',
-	lblEmail:'E-mail',
-	lblSite:'Сайт',
 	lblMap:'Карта',
-	lblCity:'Город',
+
 
 	loadText: 'Загрузка данных формы',
 	saveText: 'Сохранение...',
@@ -23,7 +16,7 @@ ui.www_offices.item_form = Ext.extend(Ext.form.FormPanel, {
 	Load: function(data){
 		var f = this.getForm();
 		f.load({
-			url: 'di/www_offices/get.json',
+			url: 'di/www_offices_city/get.json',
 			params: {_sid: data.id},
 			waitMsg: this.loadText,
 			success: function(frm, act){
@@ -40,7 +33,7 @@ ui.www_offices.item_form = Ext.extend(Ext.form.FormPanel, {
 		var f = this.getForm();
 		if (f.isValid()){
 			f.submit({
-				url: 'di/www_offices/set.do',
+				url: 'di/www_offices_city/set.do',
 				waitMsg: this.saveText,
 				success: function(form, action){
 					var d = Ext.util.JSON.decode(action.response.responseText);
@@ -85,30 +78,7 @@ ui.www_offices.item_form = Ext.extend(Ext.form.FormPanel, {
 			items: [
 				{name: '_sid', inputType: 'hidden'},
 				{fieldLabel: this.lblTitle, name: 'title', allowBlank: false, maxLength:255},
-				{fieldLabel: this.lblCity, hiddenName: 'city_id', xtype: 'combo',
-						valueField: 'id', displayField: 'title', value: '', emptyText: '', 
-						store: new Ext.data.JsonStore({url: 'di/www_offices_city/list.json', root: 'records', fields: ['id', 'title'], autoLoad: true,
-							listeners: {
-								load: function(store,ops){
-									var f = this.getForm().findField('city_id');
-									f.setValue(f.getValue());
-								}, 
-								beforeload:function(store,ops){
-								},
-								scope: this
-							}
-						}),
-						mode: 'local', triggerAction: 'all', selectOnFocus: true, editable: false
-				},
-
-				{fieldLabel: this.lblAddr, name: 'addr', maxLength:255},
-				{fieldLabel: this.lblPostAddr, name: 'postaddr', maxLength:255},
-				{fieldLabel: this.lblWorkTime, name: 'work_time', xtype: 'ckeditor', CKConfig: {height: 60, toolbar: 'Basic'}},
-				{fieldLabel: this.lblPhones, name: 'phones', xtype: 'ckeditor', CKConfig: {height: 60, toolbar: 'Basic'}},
-				{fieldLabel: this.lblEmail, name: 'email'},
-				{fieldLabel: this.lblSite, name: 'site'}, 
-				{fieldLabel: this.lblCntnt, name: 'content', xtype: 'ckeditor', CKConfig: {height: 60, toolbar: 'Basic'}},
-				{fieldLabel: this.lblMap, name: 'map', xtype:'textarea'} 
+				{fieldLabel: this.lblMap, name: 'map', maxLength:255}
 			],
 			buttonAlign: 'right',
 			buttons: [
@@ -120,7 +90,7 @@ ui.www_offices.item_form = Ext.extend(Ext.form.FormPanel, {
 			]
 		});
 		Ext.apply(this, config);
-		ui.www_offices.item_form.superclass.constructor.call(this, config);
+		ui.www_offices_city.item_form.superclass.constructor.call(this, config);
 		this.on({
 			data_saved: function(data, id){
 				this.getForm().setValues([{id: '_sid', value: id}]);

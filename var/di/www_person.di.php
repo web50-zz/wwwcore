@@ -7,7 +7,7 @@
 */
 class di_www_person extends data_interface
 {
-	public $title = 'WWW: Персоны';
+	public $title = 'www: Персоны';
 
 	/**
 	* @var	string	$cfg	Имя конфигурации БД

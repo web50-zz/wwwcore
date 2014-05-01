@@ -50,7 +50,7 @@ ui.www_person.item_form = Ext.extend(Ext.form.FormPanel, {
 	},
 
 	formWidth: 800,
-	formHeight: 400,
+	formHeight: 600,
 
 	loadText: 'Загрузка данных формы',
 	saveText: 'Сохранение...',
@@ -83,7 +83,11 @@ ui.www_person.item_form = Ext.extend(Ext.form.FormPanel, {
 					triggerAction: 'all', selectOnFocus: true, editable: false
 				},
 				{fieldLabel: 'Комментарий', name: 'comment', maxLength: 255},
-				{fieldLabel: 'Описание', name: 'description', xtype: 'htmleditor', height: 200}
+				{fieldLabel: 'Описание', name: 'description', xtype: 'ckeditor', CKConfig: {
+					height: 180,
+					toolbar: 'Basic',
+					filebrowserImageBrowseUrl: 'ui/file_manager/browser.html'
+				}}
 			],
 			buttonAlign: 'right',
 			buttons: [

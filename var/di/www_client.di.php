@@ -136,10 +136,11 @@ class di_www_client extends data_interface
 	/**
 	*	Добавить \ Сохранить файл
 	*/
-	protected function sys_set()
+	public function sys_set()
 	{
 		$fid = $this->get_args('_sid');
-
+		$silent = $this->get_args('silent',false);
+		$from_source = $this->get_args('source',false);
 		if ($fid > 0)
 		{
 			$this->_flush();
@@ -152,7 +153,29 @@ class di_www_client extends data_interface
 		// Create share folder if not exists
 		if (!file_exists($dir)) mkdir($dir, 0775, true);
 
-		$file = (!empty($old_file_name)) ? file_system::replace_file('file', $old_file_name, $dir) : file_system::upload_file('file', $dir);
+		if(!empty($old_file_name))
+		{
+			if($from_source != false)
+			{
+				$file = file_system::copy_file($from_source,$this->get_path_to_storage(), $old_file_name);
+			}
+			else
+			{
+				$file = file_system::replace_file('file', $old_file_name, $this->get_path_to_storage());
+			}
+		}else{
+			if($from_source != false)
+			{
+				$file = file_system::copy_file($from_source, $this->get_path_to_storage());
+			}
+			else
+			{
+				$file = file_system::upload_file('file', $this->get_path_to_storage());
+			}
+		};
+
+
+//		$file = (!empty($old_file_name)) ? file_system::replace_file('file', $old_file_name, $dir) : file_system::upload_file('file', $dir);
 		
 		if ($file !== false)
 		{
@@ -191,7 +214,10 @@ class di_www_client extends data_interface
 		{
 			$result = array('success' => false);
 		}
-		
+		if($silent == true)
+		{
+			return $result;
+		}
 		response::send(response::to_json($result), 'html');
 	}
 

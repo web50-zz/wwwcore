@@ -6,7 +6,7 @@
 */
 class ui_www_faq_front extends user_interface
 {
-	public $title = 'WWW: Faq front';
+	public $title = 'www: Faq front';
 	
 	public function __construct ()
 	{

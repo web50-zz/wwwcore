@@ -7,7 +7,7 @@
 */
 class ui_www_client extends user_interface
 {
-	public $title = 'WWW: Клиенты';
+	public $title = 'www: Клиенты';
 
 	protected $deps = array(
 		'main' => array(
@@ -26,10 +26,12 @@ class ui_www_client extends user_interface
         */
         public function pub_content()
         {
+		$template = $this->get_args('template', 'content.html');
 		$data = array();
+		$data = array_merge($data, $this->args);
 		$data['clients'] =  $this->get_clients();
 		$data['path']  = data_interface::get_instance('www_client')->path_to_storage;
-                return $this->parse_tmpl('content.html', $data);
+                return $this->parse_tmpl($template, $data);
         }
 
 	/**

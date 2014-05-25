@@ -7,7 +7,7 @@
 */
 class ui_www_response_front extends user_interface
 {
-	public $title = 'WWW: Отзывы front';
+	public $title = 'www: Отзывы front';
 	
 	public function __construct ()
 	{

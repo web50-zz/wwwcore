@@ -7,7 +7,7 @@
 */
 class ui_www_video extends user_interface
 {
-	public $title = 'WWW: Видео';
+	public $title = 'www: Видео';
 
 	protected $deps = array(
 		'main' => array(

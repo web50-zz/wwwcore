@@ -6,7 +6,7 @@
 */
 class ui_www_offices extends user_interface
 {
-	public $title = 'ARV: Акци';
+	public $title = 'www: Офисы';
 
 	protected $deps = array(
 		'main' => array(

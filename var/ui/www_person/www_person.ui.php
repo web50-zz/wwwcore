@@ -7,7 +7,7 @@
 */
 class ui_www_person extends user_interface
 {
-	public $title = 'WWW: Персоны';
+	public $title = 'www: Персоны';
 
 	protected $deps = array(
 		'main' => array(

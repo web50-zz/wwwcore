@@ -7,7 +7,7 @@
 */
 class ui_www_visitor_indexer extends user_interface
 {
-	public $title = 'Индексатор поселещний страниц';
+	public $title = 'www: Индексатор поселещний страниц';
 
 	protected $deps = array(
 	);

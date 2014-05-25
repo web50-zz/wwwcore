@@ -6,7 +6,7 @@
 */
 class ui_www_faq extends user_interface
 {
-	public $title = 'WWW: FAQ';
+	public $title = 'www: FAQ';
 
 	protected $deps = array(
 		'main' => array(

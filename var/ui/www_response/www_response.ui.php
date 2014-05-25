@@ -7,7 +7,7 @@
 */
 class ui_www_response extends user_interface
 {
-	public $title = 'WWW: Отзывы';
+	public $title = 'www: Отзывы';
 
 	protected $deps = array(
 		'main' => array(

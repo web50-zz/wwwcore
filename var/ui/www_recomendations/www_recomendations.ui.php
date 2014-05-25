@@ -6,7 +6,7 @@
 */
 class ui_www_recomendations extends user_interface
 {
-	public $title = 'WWW: Рекомендательные  письма';
+	public $title = 'www: Рекомендательные  письма';
 
 	protected $deps = array(
 		'main' => array(

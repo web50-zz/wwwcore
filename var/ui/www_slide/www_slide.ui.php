@@ -7,7 +7,7 @@
 */
 class ui_www_slide extends user_interface
 {
-	public $title = 'WWW: Слайды';
+	public $title = 'www: Слайды';
 
 	protected $deps = array(
 		'main' => array(

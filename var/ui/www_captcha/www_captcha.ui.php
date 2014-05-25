@@ -7,7 +7,7 @@
 */
 class ui_www_captcha extends user_interface
 {
-	public $title = 'WWW Captcha';
+	public $title = 'www Captcha';
 
 	protected $deps = array(
 	);

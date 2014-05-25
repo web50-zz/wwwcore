@@ -6,7 +6,7 @@
 * to  use make $EMULATE= false;
 */
 
-//$EMULATE = true;
+$EMULATE = true;
 $source_wp_path = '/server/web/documents/avik.u9.ru/images/data/clients/ru';
 $STOP_URI_INTERPRETER = true;
 
@@ -19,9 +19,33 @@ foreach($posts as $key=>$value)
 	$j++;
 	echo("\r\n iteration: $j\r\n");
 	echo("id: {$value->id} {$value->name} \r\n");
+	echo("Photoalbum for : {$new_post_id}\r\n");
+		
+	$_FILES['file'] = array(
+		'name'=>'',
+		'type'=>'',
+		'tmp_name'=>'',
+		'error'=>4,
+		'size'=>0,
+	);
+	$album_args = array(
+		'title'=>$value->name,
+		'description'=>'Альбом для клиента'. $value->name,
+		'name'=>'client'.$value->id,
+		'pid'=>16,
+	);
+	if(!($EMULATE == true))
+	{
+		$di = data_interface::get_instance('photoalbum');
+		$res = $di->_album_set($album_args);
+		$album_id = $res['data']['id'];
+	}
+	
+	echo("Photoalbum ID : {$album_id}\r\n");
 	$post_args = array(
 		'client_name'=>$value->name,
 		'description'=>$value->description.$value->items.$value->items_description,
+		'photoalbum_id'=>$album_id,
 		'silent'=>true,
 	);
 	$logo_path = $source_wp_path.'/'.$value->id.'/'.$value->logo;
@@ -43,7 +67,6 @@ foreach($posts as $key=>$value)
 	echo("Post imported new ID: {$new_post_id}\r\n");
 	// images
 	$images = get_images($value->id);
-//	dbg::show($images);
 	foreach($images as $key1=>$val2)
 	{
 		$thumb = $value;
@@ -51,19 +74,16 @@ foreach($posts as $key=>$value)
 		if(file_exists($source_absolute))
 		{
 			$args = array(
-				'item_id'=>$new_post_id,
-				'file_type'=>3,
+				'photoalbum_id'=>$album_id,
 				'title'=>'Картинка',
-				'comment'=>'Импорт из вордпресса',
 				'source'=>$source_absolute,
-				'silent'=>'true',
 			);
 			echo("Loading thumb\r\n");
 			if(!($EMULATE == true))
 			{
-				$di = data_interface::get_instance('m2_item_files');
+				$di = data_interface::get_instance('photo');
 				$di->set_args($args);
-//				$res = $di->sys_set(true);
+				$res = $di->sys_set(true);
 			}
 		}
 	}

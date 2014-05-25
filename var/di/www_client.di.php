@@ -7,7 +7,7 @@
 */
 class di_www_client extends data_interface
 {
-	public $title = 'WWW: Клиенты';
+	public $title = 'www: Клиенты';
 
 	/**
 	* @var	string	$cfg	Имя конфигурации БД
@@ -52,6 +52,7 @@ class di_www_client extends data_interface
 		'description' => array('type' => 'text'),	// Описание
 		'link' => array('type' => 'string'),		// Ссылка
 		'photoalbum_id' => array('type' => 'integer'),		// Фотоальбом
+		'location_id' => array('type' => 'integer'),		// location 
 	);
 	
 	public function __construct ()

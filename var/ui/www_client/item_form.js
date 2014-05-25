@@ -76,13 +76,27 @@ ui.www_client.item_form = Ext.extend(Ext.form.FormPanel, {
 				{name: '_sid', inputType: 'hidden'},
 				{fieldLabel: 'Логотип', name: 'file', xtype: 'fileuploadfield', buttonCfg: {text: '', iconCls: 'folder'}},
 				{fieldLabel: 'Клиент', name: 'client_name', allowBlank: false, maxLength: 128},
-				{fieldLabel: 'Ссылка', name: 'link', allowBlank: false, maxLength: 255},
+				{fieldLabel: 'Ссылка', name: 'link', allowBlank: true, maxLength: 255},
 				{fieldLabel: 'Фотоальбом', hiddenName: 'photoalbum_id', xtype: 'combo',
 						valueField: 'id', displayField: 'title', value: '0', emptyText: 'Не выбран', 
 						store: new Ext.data.JsonStore({url: 'di/photoalbum/list.json', root: 'records', fields: ['id', 'title'], autoLoad: true,
 							listeners: {
 								load: function(store,ops){
 									var f = this.getForm().findField('photoalbum_id');
+									f.setValue(f.getValue());
+								}, 
+								beforeload:function(store,ops){
+								},
+								scope: this
+							}
+						}),
+					mode: 'local', triggerAction: 'all', selectOnFocus: true, editable: false},
+					{fieldLabel: 'Регион', hiddenName: 'location_id', xtype: 'combo',
+						valueField: 'id', displayField: 'title', value: '0', emptyText: 'Не выбран', 
+						store: new Ext.data.JsonStore({url: 'di/locations/list.json', root: 'records', fields: ['id', 'title'], autoLoad: true,
+							listeners: {
+								load: function(store,ops){
+									var f = this.getForm().findField('location_id');
 									f.setValue(f.getValue());
 								}, 
 								beforeload:function(store,ops){

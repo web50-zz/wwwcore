@@ -34,6 +34,52 @@ class ui_www_client extends user_interface
                 return $this->parse_tmpl($template, $data);
         }
 
+	public function pub_map()
+	{
+		$template = $this->get_args('template', 'map.html');
+		$di = data_interface::get_instance('www_client');
+		$di->_flush();
+		$di->set_group('location_id');
+		$di->where = 'location_id>0' ;
+		$res = $di->extjs_grid_json(array('location_id'),false);
+		foreach($res['records'] as $key=>$value)
+		{
+			$ids[] = $value['location_id'];
+		}
+		$di = data_interface::get_instance('locations');
+		$di->_flush();
+		$di->set_args(array('_sid'=>$ids));
+		$data = $di->extjs_grid_json(false,false);
+                return $this->parse_tmpl($template, $data);
+	}
+
+	public function pub_result()
+	{
+		$part = $this->get_args('part',false);
+		$location_id = request::get('id');
+		$di = data_interface::get_instance('www_client');
+		$di->_flush();
+		$di->set_args(array(
+				'_slocation_id'=>$location_id,
+		));
+		$data = $di->extjs_grid_json(array('*'),false);
+
+		$di = data_interface::get_instance('locations');
+		$di->_flush();
+		$di->set_args(array('_sid'=>$location_id));
+		$res = $di->extjs_form_json(false,false);
+		$data['city'] = $res['data']['title'];
+                $html =  $this->parse_tmpl('search_result.html', $data);
+		if($part == true)
+		{
+			response::send(array('success'=>true,'html'=>$html),'json');
+		}
+		else
+		{
+			return $html; 
+		}
+	}
+
 	/**
 	*	Получить всех клиентов плюс если в  DI www_recomendations есть рекомендательное письмо по клиенту то  и его id
 	*/

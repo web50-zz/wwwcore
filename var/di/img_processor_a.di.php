@@ -120,8 +120,9 @@ class di_img_processor_a extends data_interface
 	}
 
 
-	public function prepare_remove_image($eObj,$ids)
+	public function prepare_remove_image($eObj,$ids_in)
 	{
+		$ids[] = $ids_in["_sid"];//9* fix to avoid _spid in array of $ids
 		$data = $this->get_data($ids);
 		$file_name = $data[$this->settings['source_field']];
 		if($file_name == '')

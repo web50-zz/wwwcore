@@ -106,8 +106,6 @@ class ui_structure extends user_interface
 			$this->js_resources = array();
 		}
 
-		// собираем ресурсы для structure ui
-		$this->collect_resources($this, $this->interfaceName);
 
 		//9* мета на страницу итмеет приоритет перед глобальной мета
 		if($page['mkeywords'] != '')
@@ -147,6 +145,9 @@ class ui_structure extends user_interface
 			$this->theme_path = CURRENT_THEME_PATH;
 			$this->theme = '';
 		}
+
+		// собираем ресурсы для structure ui
+		$this->collect_resources($this, $this->interfaceName);//9* это должно быть обязательно после того как определилась теме оверлоад 
 
 		// 9* include and mask some js  depes for current theme.
 		$js_deps_file = BASE_PATH.$this->theme_path.'/js_deps.php';

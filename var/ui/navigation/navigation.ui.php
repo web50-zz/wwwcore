@@ -130,5 +130,35 @@ class ui_navigation extends user_interface
 
 		return array();
 	}
+	
+	/**
+	*	Sub menu level down nodes for current node
+	*/
+	protected function pub_brothers_menu()
+	{
+		//9* принудительно задать парента для выбранного вью поинта
+		$st = data_interface::get_instance('structure');
+		$data = $st->get_trunc_menu();
+		$level = $this->get_args('level',0);
+		$level_down =(int)$this->get_args('level_down',1);
+		if($level == 0)
+		{
+			$level = $data[count($data) - 2]['level'];
+		}
+		foreach($data as $key=>$value)
+		{
+			if($value['level'] == $level)
+			{
+				$parent = $value;
+			}
+		}
+		$st =  data_interface::get_instance('structure');
+		$res['records'] = $st->get_main_menu($parent['id'],$level_down);
+		$res['parent'] = $parent;
+		$std =  user_interface::get_instance('structure');
+		$res['current'] = $std->get_page_info();
+		return $this->parse_tmpl('brothers_menu.html', $res);
+	}
+
 }
 ?>

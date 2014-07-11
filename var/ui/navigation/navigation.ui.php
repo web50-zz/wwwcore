@@ -91,7 +91,7 @@ class ui_navigation extends user_interface
 		$data['records'] = $st->get_main_menu($parent,$level_down);
 		foreach($data['records'] as $key=>$value)
 		{
-			$tmp = $st->get_main_menu($value['id'],2);
+			$tmp = $st->get_main_menu($value['id'],1);
 			$data['records'][$key]['childs'] = $tmp;
 		}
 		foreach($data['records'] as $key=>$value){

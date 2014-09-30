@@ -87,6 +87,7 @@ class ui_navigation extends user_interface
 	protected function pub_top_and_1_down(){
 		$parent = (int)$this->get_args('parent',1);
 		$level_down =(int)$this->get_args('level_down',1);
+		$template = $this->get_args('template', 'top_and_1_down.html');
 		$st = data_interface::get_instance('structure');
 		$data['records'] = $st->get_main_menu($parent,$level_down);
 		foreach($data['records'] as $key=>$value)
@@ -107,7 +108,7 @@ class ui_navigation extends user_interface
 		$data['page_uri'] = PAGE_URI;
 		$st =  user_interface::get_instance('structure');
 		$data['current'] = $st->get_page_info();
-		return $this->parse_tmpl('top_and_1_down.html',$data);
+		return $this->parse_tmpl($template,$data);
 	}
 	/**
 	*

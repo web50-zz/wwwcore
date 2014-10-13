@@ -61,9 +61,10 @@ class ui_navigation extends user_interface
 	protected function pub_sub_menu()
 	{
 		//9* принудительно задать парента для выбранного вью поинта
+		$template = $this->get_args('template', 'sub_menu.html');
 		$page = (int)$this->get_args('page', 0);
 		$st = data_interface::get_instance('structure');
-		return $this->parse_tmpl('sub_menu.html', $st->get_sub_menu($page));
+		return $this->parse_tmpl($template, $st->get_sub_menu($page));
 	}
 	
 	/**

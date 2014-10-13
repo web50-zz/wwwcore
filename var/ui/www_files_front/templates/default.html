@@ -1,0 +1,52 @@
+<div class="files_list">
+	<ul>
+		{__(apply(/records)__}
+			<li>
+				<a href="/filestorage/{__real_name__}">{__title__}</a>
+			</li>
+		{__apply)__}
+		</ul>
+	{__apply pager(/custom_pager/page, /custom_pager/total, /custom_pager/limit, /custom_pager/prefix, /custom_pager/range)__}
+</div>
+{__(template pager(page, total, limit, prefix, range)__}
+	{__set(@page = (@page == 0) ? 1 : @page)__}
+	{__set(@prefix = (!empty(@prefix)) ? @prefix . '&' : '')__}
+	{__set(@total_pages = ceil(@total / @limit))__}
+	{__set(@range = (@range == 0) ? 9 : @range)__}
+	<div class="paginator1">
+		<ul>
+			{__(if(@page > 1)__}
+			<li><a href="?{__@prefix__}page={__echo(@page - 1)__}">
+<img src="/themes/pso/img/arrow_green_left.png"/>
+			</a></li>
+			{__if)__}
+			<li class="bordered {__(if(@page == 1)__}active{__if)__}"><a href="?{__@prefix__}page=1">1</a></li>
+			{__(if(@total_pages > 1)__}
+				{__(if(@page < round(@range / 2))__}
+					{__apply pages(@page, 2, (@range > @total_pages) ? @total_pages : @range, (@range < @total_pages))__}
+					{__(if(@range < @total_pages)__}
+					<li class="{__(if(@page == @total_pages)__}active{__if)__}"><a href="?{__@prefix__}page={__@total_pages__}">{__@total_pages__}</a></li>
+					{__if)__}
+				{__elseif(@page + round(@range / 2) + 1 < @total_pages)__}
+					{__set(@start = @page - round(@range / 2) + 2)__}
+					{__apply pages(@page, @start, @start + @range - 1, true)__}
+					<li class="{__(if(@page == @total_pages)__}active{__if)__}"><a href="?{__@prefix__}page={__@total_pages__}">{__@total_pages__}</a></li>
+				{__elseif(@total_pages > @range)__}
+					{__apply pages(@page, @total_pages - @range, @total_pages, false)__}
+				{__else__}
+					{__apply pages(@page, 2, @total_pages, false)__}
+				{__if)__}
+			{__if)__}
+			{__(if(@page < @total_pages)__}
+			<li><a href="?{__@prefix__}page={__echo(@page + 1)__}"><img src="/themes/pso/img/arrow_green.png"/>
+			</a></li>
+			{__if)__}
+		</ul>
+	</div>
+{__template)__}
+{__(template pages(current_page, page, end, last_bordered)__}
+	<li class="{__(if(@page == @end AND @last_bordered)__}bordered{__if)__} {__(if(@page == @current_page)__}active{__if)__}"><a href="?{__@prefix__}page={__@page__}">{__@page__}</a></li>
+	{__(if(@page < @end)__}
+		{__apply pages(@current_page, @page + 1, @end, @last_bordered)__}
+	{__if)__}
+{__template)__}

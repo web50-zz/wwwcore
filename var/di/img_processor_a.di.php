@@ -95,7 +95,14 @@ class di_img_processor_a extends data_interface
 		{
 			require_once INSTANCES_PATH .'wwwcore/lib/thumb/ThumbLib.inc.php';
 			$thumb = PhpThumbFactory::create($file_as_is);
-			$thumb->adaptiveResize($this->preview_width, $this->preview_height)->save($file_out);
+			if($this->settings['resize_type'] == 'classic')
+			{
+				$thumb->resize($this->preview_width, $this->preview_height)->save($file_out);
+			}
+			else
+			{
+				$thumb->adaptiveResize($this->preview_width, $this->preview_height)->save($file_out);
+			}
 			$file_as_is = $file_out;
 		}
 

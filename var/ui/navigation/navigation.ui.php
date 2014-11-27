@@ -61,9 +61,10 @@ class ui_navigation extends user_interface
 	protected function pub_sub_menu()
 	{
 		//9* принудительно задать парента для выбранного вью поинта
+		$template = $this->get_args('template', 'sub_menu.html');
 		$page = (int)$this->get_args('page', 0);
 		$st = data_interface::get_instance('structure');
-		return $this->parse_tmpl('sub_menu.html', $st->get_sub_menu($page));
+		return $this->parse_tmpl($template, $st->get_sub_menu($page));
 	}
 	
 	/**
@@ -87,11 +88,12 @@ class ui_navigation extends user_interface
 	protected function pub_top_and_1_down(){
 		$parent = (int)$this->get_args('parent',1);
 		$level_down =(int)$this->get_args('level_down',1);
+		$template = $this->get_args('template', 'top_and_1_down.html');
 		$st = data_interface::get_instance('structure');
 		$data['records'] = $st->get_main_menu($parent,$level_down);
 		foreach($data['records'] as $key=>$value)
 		{
-			$tmp = $st->get_main_menu($value['id'],2);
+			$tmp = $st->get_main_menu($value['id'],1);
 			$data['records'][$key]['childs'] = $tmp;
 		}
 		foreach($data['records'] as $key=>$value){
@@ -107,7 +109,7 @@ class ui_navigation extends user_interface
 		$data['page_uri'] = PAGE_URI;
 		$st =  user_interface::get_instance('structure');
 		$data['current'] = $st->get_page_info();
-		return $this->parse_tmpl('top_and_1_down.html',$data);
+		return $this->parse_tmpl($template,$data);
 	}
 	/**
 	*
@@ -130,5 +132,35 @@ class ui_navigation extends user_interface
 
 		return array();
 	}
+	
+	/**
+	*	Sub menu level down nodes for current node
+	*/
+	protected function pub_brothers_menu()
+	{
+		//9* принудительно задать парента для выбранного вью поинта
+		$st = data_interface::get_instance('structure');
+		$data = $st->get_trunc_menu();
+		$level = $this->get_args('level',0);
+		$level_down =(int)$this->get_args('level_down',1);
+		if($level == 0)
+		{
+			$level = $data[count($data) - 2]['level'];
+		}
+		foreach($data as $key=>$value)
+		{
+			if($value['level'] == $level)
+			{
+				$parent = $value;
+			}
+		}
+		$st =  data_interface::get_instance('structure');
+		$res['records'] = $st->get_main_menu($parent['id'],$level_down);
+		$res['parent'] = $parent;
+		$std =  user_interface::get_instance('structure');
+		$res['current'] = $std->get_page_info();
+		return $this->parse_tmpl('brothers_menu.html', $res);
+	}
+
 }
 ?>

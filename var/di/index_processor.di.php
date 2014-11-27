@@ -133,6 +133,7 @@ class di_index_processor extends data_interface
 		}
 
 		$args['last_changed'] = date('Y-m-d H:i:s');
+		$args['changer_uid'] = UID;
 		$this->_flush();
 		$this->push_args($args);
 		$this->set_args(array('_sitem_id' => $id), true);

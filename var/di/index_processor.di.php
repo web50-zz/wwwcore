@@ -248,7 +248,7 @@ class di_index_processor extends data_interface
 		$this->update_field($this->removeable_id,$this->field_to_update);
 	}
 
-	public function index_field_prepare_unset($eObj, $ids, $args)
+	public function index_field_prepare_unset($eObj, $ids, $args = array())
 	{
 		$di_name =  $eObj->get_name();
 		foreach($this->settings['composite_fields'] as $key=>$value)

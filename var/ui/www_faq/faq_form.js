@@ -6,6 +6,8 @@ ui.www_faq.faq_form = Ext.extend(Ext.form.FormPanel, {
 	fldName: 'Коротко',
 	fldEmail: 'e-mail',
 	fldComment: 'Содержание',
+	fldFio:'Фио',
+	fldPhone:'Телефон',
 
 	loadText: 'Загрузка данных формы',
 	saveText: 'Сохранение...',
@@ -84,7 +86,9 @@ ui.www_faq.faq_form = Ext.extend(Ext.form.FormPanel, {
 				{name: 'pid', xtype: 'hidden'},
 				{fieldLabel: this.fldDate, name: 'created_datetime', xtype: 'displayfield', tpl: tpl},
 				{fieldLabel: this.fldName, name: 'name', allowBlank: false, maxLength: 255},
-			//	{fieldLabel: this.fldEmail, name: 'email', maxLength: 255},
+				{fieldLabel: this.fldEmail, name: 'email', maxLength: 255},
+				{fieldLabel: this.fldFio, name: 'fio', maxLength: 255},
+				{fieldLabel: this.fldPhone, name: 'phone', maxLength: 255},
 				{fieldLabel: this.fldComment, name: 'comment', height: '450',  xtype: 'ckeditor', CKConfig: {height: 60, toolbar: 'Basic'}}
 			],
 			buttonAlign: 'right',

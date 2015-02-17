@@ -121,7 +121,7 @@ class di_www_recomendations extends data_interface
 	/**
 	*	Добавить \ Сохранить файл
 	*/
-	protected function sys_set()
+	public function sys_set($silent = false)
 	{
 		$fid = $this->get_args('_sid');
 
@@ -176,7 +176,10 @@ class di_www_recomendations extends data_interface
 		{
 			$result = array('success' => false);
 		}
-		
+		if($silent == true)
+		{
+			return $result;
+		}
 		response::send(response::to_json($result), 'html');
 	}
 

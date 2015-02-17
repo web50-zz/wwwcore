@@ -89,10 +89,12 @@ class ui_www_client extends user_interface
 		$di->_flush();
 		$di->push_args(array());
 		$di->set_order('order');
-		$di2 = $di->join_with_di('www_recomendations',array('id'=>'client_id'),array('id'=>'recom_id'));
+		$di2 = $di->join_with_di('www_recomendations',array('id'=>'client_id'),array('id'=>'recom_id','real_name'=>'recom_real_name','description'=>'recom_description'));
 		$what = array(
 			'*',
-			array('di'=>$di2,'name'=>'id')
+			array('di'=>$di2,'name'=>'id'),
+			array('di'=>$di2,'name'=>'real_name'),
+			array('di'=>$di2,'name'=>'description'),
 		);
 		$res = $di->extjs_grid_json($what,false);
 		$di->pop_args();

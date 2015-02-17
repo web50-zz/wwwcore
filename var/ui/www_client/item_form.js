@@ -49,8 +49,8 @@ ui.www_client.item_form = Ext.extend(Ext.form.FormPanel, {
 		this.fireEvent('cancelled');
 	},
 
-	formWidth: 800,
-	formHeight: 700,
+	formWidth: 700,
+	formHeight: 550,
 
 	loadText: 'Загрузка данных формы',
 	saveText: 'Сохранение...',
@@ -106,7 +106,7 @@ ui.www_client.item_form = Ext.extend(Ext.form.FormPanel, {
 						}),
 					mode: 'local', triggerAction: 'all', selectOnFocus: true, editable: false},
 
-				{hideLabel: true, name: 'description', xtype: 'ckeditor', CKConfig: {height: 330}}
+				{hideLabel: true, name: 'description', xtype: 'ckeditor', CKConfig: {height: 130}}
 			],
 			buttonAlign: 'right',
 			buttons: [

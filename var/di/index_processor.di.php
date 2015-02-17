@@ -51,6 +51,8 @@ class di_index_processor extends data_interface
 					'index_field_name'=>'files_list',
 					'di_name'=>'m2_item_files',
 					'di_key'=>'item_id',
+					'order_field'=>'field_name',
+					'order_type'=>'ASC',
 					'fields'=>array(
 						'real_name'=>'',
 						'file_type'=>'',
@@ -131,6 +133,7 @@ class di_index_processor extends data_interface
 		}
 
 		$args['last_changed'] = date('Y-m-d H:i:s');
+		$args['changer_uid'] = UID;
 		$this->_flush();
 		$this->push_args($args);
 		$this->set_args(array('_sitem_id' => $id), true);
@@ -173,6 +176,19 @@ class di_index_processor extends data_interface
 		$di->what = $what;
 		$di->push_args(array('_s'.$input['di_key'] => $id));
 		$di->connector->fetchMethod = PDO::FETCH_ASSOC;
+		if($input['order_field'] != '')
+		{
+			if($input['order_type'] != '')
+			{
+				$tp = $input['order_type'];
+			}
+			else
+			{
+				$tp = 'ASC';
+			}
+
+			$di->set_order($input['order_field'],$tp);
+		}
 		$di->_get();
 		$data = (array)$di->get_results();
 		$di->pop_args();

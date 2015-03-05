@@ -151,7 +151,8 @@ class di_index_processor extends data_interface
 			$what[] = $key2;
 		}
 		$di = data_interface::get_instance($input['di_name']);
-		$di->_flush(true);
+		//$di->_flush(true); 9* 05032015 склейки джойнов были массовые
+		$di->_flush();
 		// обработаем ка джойны
 		$joins_di = array(); //joins $di storage 
 		$i = 0;

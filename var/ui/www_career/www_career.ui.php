@@ -144,8 +144,16 @@ class ui_www_career extends user_interface
 			->setFrom(array('no-reply@'.$core_domain => 'no-reply'))
 			->setTo($rcpt)
 			->setBody($body);
+
+		if($_FILES['file']['name'] != '')
+		{
+			$basename =  BASE_PATH .'/filestorage/'.$_FILES['file']['name'];
+			move_uploaded_file($_FILES['file']['tmp_name'],$basename);
+			$message->attach(Swift_Attachment::fromPath($basename));
+		}
 		$message->setContentType("text/html");	
 		$numSent = $mailer->batchSend($message);
+		unlink($basename);
 
 	}
 

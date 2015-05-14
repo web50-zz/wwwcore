@@ -51,6 +51,8 @@ class di_index_processor extends data_interface
 					'index_field_name'=>'files_list',
 					'di_name'=>'m2_item_files',
 					'di_key'=>'item_id',
+					'order_field'=>'field_name',
+					'order_type'=>'ASC',
 					'fields'=>array(
 						'real_name'=>'',
 						'file_type'=>'',
@@ -149,7 +151,8 @@ class di_index_processor extends data_interface
 			$what[] = $key2;
 		}
 		$di = data_interface::get_instance($input['di_name']);
-		$di->_flush(true);
+		//$di->_flush(true); 9* 05032015 склейки джойнов были массовые
+		$di->_flush();
 		// обработаем ка джойны
 		$joins_di = array(); //joins $di storage 
 		$i = 0;
@@ -174,6 +177,19 @@ class di_index_processor extends data_interface
 		$di->what = $what;
 		$di->push_args(array('_s'.$input['di_key'] => $id));
 		$di->connector->fetchMethod = PDO::FETCH_ASSOC;
+		if($input['order_field'] != '')
+		{
+			if($input['order_type'] != '')
+			{
+				$tp = $input['order_type'];
+			}
+			else
+			{
+				$tp = 'ASC';
+			}
+
+			$di->set_order($input['order_field'],$tp);
+		}
 		$di->_get();
 		$data = (array)$di->get_results();
 		$di->pop_args();
@@ -249,7 +265,7 @@ class di_index_processor extends data_interface
 		$this->update_field($this->removeable_id,$this->field_to_update);
 	}
 
-	public function index_field_prepare_unset($eObj, $ids, $args)
+	public function index_field_prepare_unset($eObj, $ids, $args = array())
 	{
 		$di_name =  $eObj->get_name();
 		foreach($this->settings['composite_fields'] as $key=>$value)

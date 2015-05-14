@@ -35,5 +35,24 @@ class ui_www_faq_front extends user_interface
                 return $this->parse_tmpl($template, $data);
 	}
 
+	protected function pub_question_form()
+	{
+		$template = $this->get_args('tmpl', 'question_form.html');
+                return $this->parse_tmpl($template, $data);
+	}
+
+
+	protected function pub_question_save()
+	{
+		$args = request::get();
+		$args['pid'] = 1;
+		$args['name'] = $args['comment'];
+		$di = data_interface::get_instance('www_faq');
+		$di->set_args($args);
+		$res = $di->sys_set(true);
+		$this->fire_event('onSent', array(request::get()));
+		response::send($res,'json');
+	}
+
 }
 ?>

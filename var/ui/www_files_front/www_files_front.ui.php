@@ -27,9 +27,11 @@ class ui_www_files_front extends user_interface
 		$limit = $this->get_args('limit',20);
 		$enable_pager = $this->get_args('enable_pager',false);
 		$page = request::get('page', 1);
+		$sort = $this->get_args('sort','id');
+		$dir = $this->get_args('dir','DESC');
 		$this->args = array(
-			'sort'=>'id',
-			'dir'=>'DESC',
+			'sort'=>$sort,
+			'dir'=>$dir,
 			'start' => ($page - 1) * $limit,
 			'_sfm_folders_id'=>$folder,
 			'limit'=>$limit,

@@ -1,0 +1,10 @@
+	<ul style="margin-left: 10px">
+{__(apply(/data)__}
+	{__(if($id == /page/id)__}
+		<li><a class="active" href="{__uri__}" title="{__php::htmlspecialchars($title)__}">{__title__}</a></li>
+	{__else__}
+		<li><a href="{__uri__}" title="{__php::htmlspecialchars($title)__}">{__title__}</a></li>
+	{__if)__}
+
+{__apply)__}
+	</ul>

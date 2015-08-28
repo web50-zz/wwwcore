@@ -29,8 +29,8 @@ class ui_navigation extends user_interface
 
 		// Глубина вложенности (если передаётся NULL, то до бесконечности)
 		$deep = $this->get_args('deep', null);
-
-		return $this->parse_tmpl($template, data_interface::get_instance('structure')->get_menu($parent, $deep));
+		$data =  data_interface::get_instance('structure')->get_menu($parent, $deep);
+		return $this->parse_tmpl($template,$data);
 	}
 
 	/**

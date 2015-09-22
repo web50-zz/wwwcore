@@ -30,6 +30,8 @@ class di_www_faq extends data_interface
 			'created_datetime' => array('type' => 'datetime'),
 			'name' => array('type' => 'string'),
 			'email' => array('type' => 'string'),
+			'phone' => array('type' => 'string'),
+			'fio' => array('type' => 'string'),
 			'comment' => array('type' => 'text'),
 			'left' => array('type' => 'integer', 'protected' => 1),
 			'right' => array('type' => 'integer', 'protected' => 1),
@@ -66,7 +68,7 @@ class di_www_faq extends data_interface
 	*	Добавить альбом
 	* @access protected
 	*/
-	protected function sys_set($inner = false)
+	public function sys_set($inner = false)
 	{
 		$id = $this->get_args('_sid');
 

@@ -282,6 +282,7 @@ class ui_structure extends user_interface
 		$data['description'] = join(',', $this->description);
 		$data['CURRENT_THEME_PATH'] = "/{$this->theme_path}";
 		$data['PAGE_ID'] = $page['id'];
+		$data['PAGE_TITLE'] = $page['title'];
 		if (authenticate::is_logged())
 			$data['IS_LOGGED'] = 'yes';
 

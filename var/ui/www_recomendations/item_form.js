@@ -49,8 +49,8 @@ ui.www_recomendations.item_form = Ext.extend(Ext.form.FormPanel, {
 		this.fireEvent('cancelled');
 	},
 
-	formWidth: 800,
-	formHeight: 700,
+	formWidth: 700,
+	formHeight: 600,
 
 	loadText: 'Загрузка данных формы',
 	saveText: 'Сохранение...',

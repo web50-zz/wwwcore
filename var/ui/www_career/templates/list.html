@@ -1,0 +1,33 @@
+<div class="ui-lndp-team">
+	{__(apply(/records)__}
+		<div class="person {__(if(@position == @last)__}last{__if)__}">
+			<div class="pleft">
+				<img src="{__/path__}{__image__}">
+				<div class="fio grey_text_8">
+					{__title__}
+				</div>
+				<div class="vcard">
+				<a class="vcard_a" href="./vcard/{__uri__}/"></a>
+				</div>
+			</div>
+			<div class="pright">
+				<div class="posit grey_text_9">
+					<p class="hd">
+					<strong>{__position__}</strong>
+					</p>
+					{__(if($titles != '')__}
+					<p>{__titles__}</p>
+					{__if)__}
+					<p>
+					{__(if($directions != '')__}
+					<strong>Направления:</strong> {__directions__}<br>
+					{__if)__}
+					{__(if($practices)__}
+					<strong>Практики:</strong> {__practices__}
+					{__if)__}
+					</p>
+				</div>
+			</div>
+		</div>
+	{__apply)__}
+</div>

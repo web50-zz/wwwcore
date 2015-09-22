@@ -22,6 +22,10 @@ class ui_contacts extends user_interface
 
         public function pub_content()
         {
+		if($this->args['acceptor_only'] == true)
+		{
+			$this->send_note();
+		}
 		if(SRCH_URI == 'save/'){
 			$this->send_note();
 		}
@@ -31,6 +35,12 @@ class ui_contacts extends user_interface
 
 	private function send_note()
 	{
+		$headers = getallheaders();
+		if($headers['X-Requested-With'] != 'XMLHttpRequest')
+		{
+			return false;
+		}
+
 		try
 		{
 			$args = request::get();
@@ -71,11 +81,21 @@ class ui_contacts extends user_interface
 			}
 			$this->send_email($args);
 			$msg = 'Спасибо, сообщение отправлено';
+
+			if($this->args['response'] == 'plaintext')
+			{
+				response::send($msg,'text');
+			}
 			$resp = array('success'=>true,'message'=>$msg);
 			response::send($resp,'json');
 		}
 		catch (Exception $e)
 		{
+			if($this->args['response'] == 'plaintext')
+			{
+				response::send($e->getMessage(),'text');;
+			}
+
 			$resp = array('success'=>false,'message'=>$e->getMessage());
 			response::send($resp,'json');
 		}

@@ -1,0 +1,16 @@
+.files_list ul {
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+}
+.files_list .paginator1 ul {
+  margin: 0px;
+  padding: 0px;
+}
+.files_list .paginator1 ul li {
+  margin: 0px;
+  padding: 0px;
+  display: inline;
+  float: left;
+  text-align: center;
+}

@@ -44,7 +44,6 @@ class di_img_processor_a extends data_interface
 	{
 		$base = new Imagick();
 		$base->readImage($file_in);
-		 
 		$o = new Imagick();
 		$o->readImage($overlay);
 		$o->compositeImage($base, imagick::COMPOSITE_OVERLAY, $this->settings['overlay']['x_shift'], $this->settings['overlay']['y_shift']);
@@ -95,13 +94,20 @@ class di_img_processor_a extends data_interface
 		{
 			require_once INSTANCES_PATH .'wwwcore/lib/thumb/ThumbLib.inc.php';
 			$thumb = PhpThumbFactory::create($file_as_is);
-			$thumb->adaptiveResize($this->preview_width, $this->preview_height)->save($file_out);
+			if($this->settings['resize_type'] == 'classic')
+			{
+				$thumb->resize($this->preview_width, $this->preview_height)->save($file_out);
+			}
+			else
+			{
+				$thumb->adaptiveResize($this->preview_width, $this->preview_height)->save($file_out);
+			}
 			$file_as_is = $file_out;
 		}
 
 		if(array_key_exists('mask',$this->settings))
 		{
-			$mask = CURRENT_THEME_PATH.$this->settings['mask']['mask_file'];
+			$mask = BASE_PATH.CURRENT_THEME_PATH.$this->settings['mask']['mask_file'];
 		
 			if(is_readable($file_as_is))
 			{
@@ -111,7 +117,7 @@ class di_img_processor_a extends data_interface
 		}
 		if(array_key_exists('overlay',$this->settings))
 		{
-			$overlay = CURRENT_THEME_PATH.$this->settings['overlay']['overlay_file'];;
+			$overlay = BASE_PATH.CURRENT_THEME_PATH.$this->settings['overlay']['overlay_file'];;
 			if(is_readable($overlay))
 			{
 				$this->create_overlay($file_as_is,$overlay);

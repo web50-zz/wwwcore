@@ -12,10 +12,11 @@
 }
 .wizard2 {
   position: relative;
+  display: none;
 }
 .wizard2 .fup {
   border-bottom: 1px solid black;
-  margin-left: 290px;
+  margin-left: 100px;
   display: block;
   float: left;
   cursor: pointer;
@@ -31,20 +32,15 @@
 }
 .wizard2.avik h3 {
   margin-bottom: 50px;
-  color: #666;
+  color: #0b345d;
 }
 .wizard2.avik .make_order_ico {
   margin-left: 203px;
   margin-bottom: 30px;
 }
 .wizard2.avik .btn_submit {
-  margin-left: 0px;
+  margin-left: 330px;
   margin-top: 25px;
-  margin-left: 300px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  padding: 10px 20px;
-  background: #dedede;
 }
 .wizard2.avik .first_column {
   width: 165px;

@@ -29,8 +29,8 @@ class ui_navigation extends user_interface
 
 		// Глубина вложенности (если передаётся NULL, то до бесконечности)
 		$deep = $this->get_args('deep', null);
-
-		return $this->parse_tmpl($template, data_interface::get_instance('structure')->get_menu($parent, $deep));
+		$data =  data_interface::get_instance('structure')->get_menu($parent, $deep);
+		return $this->parse_tmpl($template,$data);
 	}
 
 	/**
@@ -61,9 +61,10 @@ class ui_navigation extends user_interface
 	protected function pub_sub_menu()
 	{
 		//9* принудительно задать парента для выбранного вью поинта
+		$template = $this->get_args('template', 'sub_menu.html');
 		$page = (int)$this->get_args('page', 0);
 		$st = data_interface::get_instance('structure');
-		return $this->parse_tmpl('sub_menu.html', $st->get_sub_menu($page));
+		return $this->parse_tmpl($template, $st->get_sub_menu($page));
 	}
 	
 	/**
@@ -87,6 +88,7 @@ class ui_navigation extends user_interface
 	protected function pub_top_and_1_down(){
 		$parent = (int)$this->get_args('parent',1);
 		$level_down =(int)$this->get_args('level_down',1);
+		$template = $this->get_args('template', 'top_and_1_down.html');
 		$st = data_interface::get_instance('structure');
 		$data['records'] = $st->get_main_menu($parent,$level_down);
 		foreach($data['records'] as $key=>$value)
@@ -107,7 +109,7 @@ class ui_navigation extends user_interface
 		$data['page_uri'] = PAGE_URI;
 		$st =  user_interface::get_instance('structure');
 		$data['current'] = $st->get_page_info();
-		return $this->parse_tmpl('top_and_1_down.html',$data);
+		return $this->parse_tmpl($template,$data);
 	}
 	/**
 	*

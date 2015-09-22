@@ -284,8 +284,9 @@ class ui_structure extends user_interface
 		$data['PAGE_ID'] = $page['id'];
 		$data['PAGE_TITLE'] = $page['title'];
 		if (authenticate::is_logged())
+		{
 			$data['IS_LOGGED'] = 'yes';
-
+		}
                 $template = (!empty($page['template'])) ? $page['template'] : pub_template;
 	//	$out = $this->parse_tmpl("main/{$template}", $data, array('ui' => array($this, 'collect_resources')));//9* 04122013 во первых колбэк тут нахуй не нужен потому что  коллект ресурсес  вызывается  выше во второых чтобы структуре  джс шли приоритетом  это перенесено выше цикла прохода по  vp 
 		$out = $this->parse_tmpl("main/{$template}", $data);

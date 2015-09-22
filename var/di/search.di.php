@@ -79,7 +79,7 @@ class di_search extends data_interface
 	/**
 	*	Обновить индекс поиска
 	*/
-	protected function _collect()
+	public function _collect()
 	{
 		$strcUI = user_interface::get_instance('structure');
 		$strcDI = data_interface::get_instance('structure');

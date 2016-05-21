@@ -69,13 +69,13 @@ class ui_www_files_front extends user_interface
 		$default =  $this->get_args('default',1);
 		$st = user_interface::get_instance('structure');
 		$data =  $st->get_page_info();
-		if(array_key_exists($prop_name,$data['params_json']))
+		$file_id = $default;
+		if($data['param_json'])
 		{
-			$file_id =  $data['params_json'][$prop_name];
-		}
-		else
-		{
-			$file_id = $default;
+			if(array_key_exists($prop_name,$data['params_json']))
+			{
+				$file_id =  $data['params_json'][$prop_name];
+			}
 		}
 		$di = data_interface::get_instance('fm_files');
 		$di->set_args(array('_sid'=>$file_id));

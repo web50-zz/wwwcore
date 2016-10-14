@@ -146,10 +146,13 @@ class ui_structure extends user_interface
 			$this->theme = '';
 		}
 
-		// собираем ресурсы для structure ui
-		$this->collect_resources($this, $this->interfaceName);//9* это должно быть обязательно после того как определилась теме оверлоад 
 
-		// 9* include and mask some js  depes for current theme.
+		/* 9* 2016-10-14 текущий порядок загрузки ресурсов такой: 
+		1 сначала грузим то что указано в файлах депенденсов 
+		2 потом грузим ресурсы structure, 
+		3 потом грузим остальные  res.js
+		*/
+		/* 9* итак сначала депенденсы */
 		$js_deps_file = BASE_PATH.$this->theme_path.'/js_deps.php';
 		if (file_exists($js_deps_file))
 		{
@@ -157,10 +160,28 @@ class ui_structure extends user_interface
 			foreach ($js_deps as $depk => $depv)
 			{
 				$path = $this->theme_path . $depv; //9* note that $this->theme_path declared in user_interface prototype class by defults based on  theme init cfg
-				$data['js_resources'][] = $path;
+//				$data['js_resources'][] = $path;
+				$this->js_resources[$path][] = $path;
 			}
 		}
+
 		//9* end of js deps inclusion
+
+		// Теперь собираем ресурсы для structure ui
+		$this->collect_resources($this, $this->interfaceName);//9* это должно быть обязательно после того как определилась теме оверлоад
+
+		//9* css ресурсы после структуры css
+		$css_deps_file = BASE_PATH.$this->theme_path.'/css_deps.php';
+		if (file_exists($css_deps_file))
+		{
+			include_once($css_deps_file);
+			foreach ($css_deps as $depk => $depv)
+			{
+				$path = $this->theme_path . $depv; 
+				//$data['js_resources'][] = $path;
+				$this->css_resources[$path][] = $path;
+			}
+		}
 
 		// {START: Подключить необходимые ресурсы в 0 VP, если они определены
 		if (!empty($this->_res_deps))
@@ -298,6 +319,7 @@ class ui_structure extends user_interface
 		$css_hash = md5($css_full);
 
 		$js_res = array();
+		//dbg::show($this->js_resources);
 		foreach ($this->js_resources as $a) $js_res = array_merge($js_res, $a);
 		$js_full = '/' . join(',/', $js_res);
 		//$js_full = '/' . join(',/', $this->js_resources);

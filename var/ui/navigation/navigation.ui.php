@@ -162,5 +162,24 @@ class ui_navigation extends user_interface
 		return $this->parse_tmpl('brothers_menu.html', $res);
 	}
 
+	protected function pub_all_nested()
+	{
+		$data =  array();
+		$template = $this->get_args('template', 'all_nested.html');
+		$parent = (int)$this->get_args('parent',1);
+		$di = data_interface::get_instance('site_map');
+		$parent = $this->get_args('parent',$parent);
+		$hidden = $this->get_args('hidden',0);
+		$di->set_args(array(
+				'parent'=>$parent,
+				'hidden'=>$hidden,
+				));
+		$data_r = $di->get_all();
+		$data['records'] = $data_r['childs'];
+		$data_r['childs'] = '';;
+		$data['parent'] = $data_r; 
+		return $this->parse_tmpl($template,$data);
+	}
+
 }
 ?>

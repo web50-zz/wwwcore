@@ -35,7 +35,9 @@ class di_search extends data_interface
 		'title' => array('type' => 'string'),			// Наименование страницы
 		'content' => array('type' => 'text'),			// Контент страницы
 	);
-	
+
+	public $search_results = array();
+
 	public function __construct ()
 	{
 	    // Call Base Constructor
@@ -53,7 +55,7 @@ class di_search extends data_interface
 		$data = array();
 		if (!empty($word))
 		{
-			$this->_collect();
+//			$this->_collect();
 			$this->_flush();
 			//$site = $this->connector->exec("SELECT *, SUBSTRING(`content`, LOCATE(:word, `content`) - 128, LOCATE(:word, `content`) + 128) AS `finded` FROM `{$table}` WHERE MATCH(`content`) AGAINST (:word)", array('word' => $word), true);
 			$site = $this->connector->exec("SELECT *, SUBSTRING(`content`, LOCATE(:word, `content`) - 128, LOCATE(:word, `content`) + 128) AS `finded` FROM `{$table}` WHERE `content` LIKE :srch", array('word' => $word, 'srch' => $srch), true);
@@ -74,8 +76,10 @@ class di_search extends data_interface
 				$tmp['finded'] = $value->title;
 				$data[] = $tmp;
 			}
+			$this->search_results =  $data;
+			$this->fire_event('onSearch', array($this->get_args()));
 		}
-		return $data;
+		return $this->search_results;
 	}
 
 	/**

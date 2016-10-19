@@ -47,13 +47,13 @@ class di_search extends data_interface
 	*/
 	public function do_search()
 	{
-		$this->_collect();
 		$word = request::get('search');
 		$srch = "%{$word}%";
 		$table = $this->get_name();
 		$data = array();
 		if (!empty($word))
 		{
+			$this->_collect();
 			$this->_flush();
 			//$site = $this->connector->exec("SELECT *, SUBSTRING(`content`, LOCATE(:word, `content`) - 128, LOCATE(:word, `content`) + 128) AS `finded` FROM `{$table}` WHERE MATCH(`content`) AGAINST (:word)", array('word' => $word), true);
 			$site = $this->connector->exec("SELECT *, SUBSTRING(`content`, LOCATE(:word, `content`) - 128, LOCATE(:word, `content`) + 128) AS `finded` FROM `{$table}` WHERE `content` LIKE :srch", array('word' => $word, 'srch' => $srch), true);
@@ -63,6 +63,16 @@ class di_search extends data_interface
 				$finded = $page->finded;
 				$finded = preg_replace("/({$word})/iu", '<span style="background-color: yellow">\1</span>', $finded);
 				$data[] = array_merge((array)$page, array('finded' => $finded));
+			}
+			$sql = "select * from fm_files where `name` like '%$word%' or `title` like  '%$word%'";
+			$file = $this->_get($sql)->get_results();
+			foreach($file as $key=>$value)
+			{
+				$tmp = array();
+				$tmp['uri'] = '/file/?id='.$value->id.'&download';
+				$tmp['title'] = 'Скачать Файл';
+				$tmp['finded'] = $value->title;
+				$data[] = $tmp;
 			}
 		}
 		return $data;

@@ -88,6 +88,8 @@ class di_search extends data_interface
 	*/
 	protected function sys_collect()
 	{
+		$this->_collect();
+		response::send(array('success'=>true,'msg' => 'Индексация проведена'),'JSON');
 	}
 
 	/**

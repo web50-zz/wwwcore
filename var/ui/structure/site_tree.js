@@ -9,6 +9,7 @@ ui.structure.site_tree = Ext.extend(Ext.tree.TreePanel, {
 	bttSaveBranch:'Сохранить ветку',
 	bttLoadBranch:'Загрузить ветку',
 	bttMaster: 'Конфиги',
+	bttSearchReindex :'Переиндексировать поиск',
 	cnfrmTitle: "Подтверждение",
 	cnfrmMsg: "Вы действительно хотите удалить эту страницу?",
 
@@ -123,6 +124,26 @@ ui.structure.site_tree = Ext.extend(Ext.tree.TreePanel, {
 				}
 			}, this);
 		},
+		searchReindex: function(){
+			Ext.Msg.confirm(this.cnfrmTitle, 'Переиндексировать таблицу поиска? Это может занять некоторое время.', function(btn){
+				if (btn == "yes"){
+					Ext.Ajax.request({
+						url: 'di/search/collect.do',
+						params: {_sid: id},
+						callback: function(options, success, response){
+							var d = Ext.util.JSON.decode(response.responseText);
+							if (d.success){
+								Ext.Msg.alert('',d.msg);
+							}else{
+								showError('Проблема индексации');
+							}
+						},
+						scope: this
+					})
+				}
+			}, this);
+		},
+
 		Master: function(){
 			var app = new App({waitMsg: 'Presets grid loading'});
 			app.on({
@@ -200,6 +221,7 @@ ui.structure.site_tree = Ext.extend(Ext.tree.TreePanel, {
 			tbar: [
 			//	{id: 'add', iconCls: 'add', text: this.bttAdd, handler: this.operation.Add.createDelegate(this, [0])},
 				{id: 'master', iconCls: 'add', text: this.bttMaster, handler: this.operation.Master.createDelegate(this, [0])},
+				{id: 'rearchreindex', iconCls: 'add', text: this.bttSearchReindex, handler: this.operation.searchReindex.createDelegate(this, [0])},
 				'->', {iconCls: 'help', handler: function(){showHelp('structure-tree')}}
 			]
 		});

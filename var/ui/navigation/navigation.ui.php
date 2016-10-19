@@ -29,8 +29,8 @@ class ui_navigation extends user_interface
 
 		// Глубина вложенности (если передаётся NULL, то до бесконечности)
 		$deep = $this->get_args('deep', null);
-
-		return $this->parse_tmpl($template, data_interface::get_instance('structure')->get_menu($parent, $deep));
+		$data =  data_interface::get_instance('structure')->get_menu($parent, $deep);
+		return $this->parse_tmpl($template,$data);
 	}
 
 	/**
@@ -160,6 +160,25 @@ class ui_navigation extends user_interface
 		$std =  user_interface::get_instance('structure');
 		$res['current'] = $std->get_page_info();
 		return $this->parse_tmpl('brothers_menu.html', $res);
+	}
+
+	protected function pub_all_nested()
+	{
+		$data =  array();
+		$template = $this->get_args('template', 'all_nested.html');
+		$parent = (int)$this->get_args('parent',1);
+		$di = data_interface::get_instance('site_map');
+		$parent = $this->get_args('parent',$parent);
+		$hidden = $this->get_args('hidden',0);
+		$di->set_args(array(
+				'parent'=>$parent,
+				'hidden'=>$hidden,
+				));
+		$data_r = $di->get_all();
+		$data['records'] = $data_r['childs'];
+		$data_r['childs'] = '';;
+		$data['parent'] = $data_r; 
+		return $this->parse_tmpl($template,$data);
 	}
 
 }

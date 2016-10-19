@@ -27,9 +27,11 @@ class ui_www_files_front extends user_interface
 		$limit = $this->get_args('limit',20);
 		$enable_pager = $this->get_args('enable_pager',false);
 		$page = request::get('page', 1);
+		$sort = $this->get_args('sort','id');
+		$dir = $this->get_args('dir','DESC');
 		$this->args = array(
-			'sort'=>'id',
-			'dir'=>'DESC',
+			'sort'=>$sort,
+			'dir'=>$dir,
 			'start' => ($page - 1) * $limit,
 			'_sfm_folders_id'=>$folder,
 			'limit'=>$limit,
@@ -59,5 +61,48 @@ class ui_www_files_front extends user_interface
 		}
                 return $this->parse_tmpl($template, $data);
         }
+//9* возвращает сорс файла заданного по id и по названиюсвойтсва заданного в странице через json_params
+	public function pub_file_by_page_prop()
+	{
+		$args = $this->get_args();
+		$prop_name = $args['file'];
+		$default =  $this->get_args('default',1);
+		$st = user_interface::get_instance('structure');
+		$data =  $st->get_page_info();
+		$file_id = $default;
+		if($data['param_json'])
+		{
+			if(array_key_exists($prop_name,$data['params_json']))
+			{
+				$file_id =  $data['params_json'][$prop_name];
+			}
+		}
+		$di = data_interface::get_instance('fm_files');
+		$di->set_args(array('_sid'=>$file_id));
+		$di->_flush();
+		$res = $di->_get()->get_results(0);
+		return '/filestorage/'.$res->real_name;
+	}
+
+//9* возвращает сорс файла заданного по id и по названиюсвойтсва заданного в странице через json_params
+	public function pub_file_by_reg_key()
+	{
+		$args = $this->get_args();
+		$prop_name = $args['key'];
+		$id = registry::get($prop_name);
+		if($id == '')
+		{
+			return;
+		}
+		$file_id = $id;
+		$di = data_interface::get_instance('fm_files');
+		$di->_flush();
+		$di->set_args(array('_sid'=>$file_id));
+		$res = $di->_get()->get_results(0);
+		return '/filestorage/'.$res->real_name;
+	}
+
+
+
 }
 ?>

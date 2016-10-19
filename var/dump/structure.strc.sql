@@ -2,7 +2,7 @@ CREATE TABLE `structure` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `hidden` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'скрыть',
   `title` varchar(255) NOT NULL DEFAULT '',
-  `name` varchar(50) NOT NULL DEFAULT '',
+  `name` varchar(255) NOT NULL DEFAULT '',
   `uri` varchar(255) NOT NULL DEFAULT '',
   `redirect` varchar(255) NOT NULL DEFAULT '',
   `module` varchar(100) NOT NULL DEFAULT '',

@@ -102,6 +102,7 @@ class di_search extends data_interface
 		$strcDI->where = '[table]`hidden` = 0';
 		$ns = new nested_sets($strcDI);
 		$tree = $ns->get_childs(0, NULL);
+		define('OVERLOAD_UI_CALL_PREFIX','pub_');
 		foreach ($tree as $page)
 		{
 			// Формируем страницу

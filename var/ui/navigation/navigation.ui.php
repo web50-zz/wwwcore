@@ -178,6 +178,7 @@ class ui_navigation extends user_interface
 		$data['records'] = $data_r['childs'];
 		$data_r['childs'] = '';;
 		$data['parent'] = $data_r; 
+		$data['args' ]['parent'] = $parent;
 		return $this->parse_tmpl($template,$data);
 	}
 

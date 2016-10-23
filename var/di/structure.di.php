@@ -64,7 +64,11 @@ class di_structure extends data_interface
 	public function calc_parent($level = 2, $default = 1)
 	{
 		$ns = new nested_sets($this);
-		$node = $ns->get_parent(PAGE_ID, $level, true);
+
+		if(defined('PAGE_ID'))
+		{
+			$node = $ns->get_parent(PAGE_ID, $level, true);
+		}
 		if (empty($node) && !($node['id'] > 0))
 			$parent = $default;
 		else
@@ -112,11 +116,15 @@ class di_structure extends data_interface
 		$this->where = '`sp1`.`hidden` = 0';
 
 		$ns = new nested_sets($this);
-		return array(
+		$ret =  array(
 			'root' => $ns->get_node($parent),
-			'page' => $ns->get_node(PAGE_ID),
 			'data' => $ns->get_childs($parent, $level_down),
 		);
+		if(defined('PAGE_ID'))
+		{
+			$ret['page'] = $ns->get_node(PAGE_ID);
+		}
+		return $ret;
 	}
 
 	public function get_main_menu($parent = '1',$level_down = 1,$ignore_hidden = false)
@@ -132,7 +140,10 @@ class di_structure extends data_interface
 		}
 		$ns = new nested_sets($this);
 		$branch = $ns->get_childs($parent, $level_down);
-		$top_parent = $ns->get_parent(PAGE_ID, 2);//9* вот то что ниже надо что бы если мы рисуем топ менюдля  страниц нижних уровней индицировать в топ уровне выбранную ветку
+		if(defined('PAGE_ID'))
+		{
+			$top_parent = $ns->get_parent(PAGE_ID, 2);//9* вот то что ниже надо что бы если мы рисуем топ менюдля  страниц нижних уровней индицировать в топ уровне выбранную ветку
+		}
 		foreach($branch as $key=>$value)
 		{
 			if($value['id'] == $top_parent['id'])
@@ -147,25 +158,42 @@ class di_structure extends data_interface
 	{
 		if($page == 0)
 		{
-			$page = PAGE_ID;
+
+			if(defined('PAGE_ID'))
+			{
+				$page = PAGE_ID;
+			}
 		}
 		$this->where = '`sp1`.`hidden` = 0';
-		$ns = new nested_sets($this);
-		$data['root'] = $ns->get_parent($page, 2);
-		$data['page'] = $ns->get_node($page);
-		if (empty($data['root'])) $data['root'] = $data['page'];
-		if ($data['parent']['id'] > 0)
-			$data['childs'] = $ns->get_childs($data['parent']['id'], NULL);
-		else
-			$data['childs'] = $ns->get_childs($data['root']['id'], NULL);
-		$data['page_id'] = PAGE_ID;
+		if($page != 0)
+		{
+			$ns = new nested_sets($this);
+			$data['root'] = $ns->get_parent($page, 2);
+			$data['page'] = $ns->get_node($page);
+			if (empty($data['root'])) $data['root'] = $data['page'];
+			if ($data['parent']['id'] > 0)
+			{
+				$data['childs'] = $ns->get_childs($data['parent']['id'], NULL);
+			}
+			else
+			{
+				$data['childs'] = $ns->get_childs($data['root']['id'], NULL);
+			}
+		}
+		if(defined('PAGE_ID'))
+		{
+			$data['page_id'] = PAGE_ID;
+		}
 		return $data;;
 	}
 	
 	public function get_trunc_menu()
 	{
 		$ns = new nested_sets($this);
-		return $ns->get_parents(PAGE_ID, true);
+		if(defined('PAGE_ID'))
+		{
+			return $ns->get_parents(PAGE_ID, true);
+		}
 	}
 
 	public function _set_page($data)

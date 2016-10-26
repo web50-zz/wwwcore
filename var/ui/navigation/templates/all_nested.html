@@ -1,0 +1,45 @@
+<!--(SKIP_SEARCH-->
+                                    <table id="outertable" align="center" class="outer">
+                                        <tr>
+                                            <td>
+                                                <div id="outerwrap">
+                                                    <table cellspacing="0" border="0" cellpadding="0" id="swmenu" class="ddmx">
+                                                        <tr>
+                                                            <td class='item11 acton'>
+                                                                <a href="/" class="item1">ГЛАВНАЯ</a>
+                                                            </td>
+								{__(apply(/records)__}
+									{__(if(@position > 1 && $id == 123)__}
+									{__else__}
+				                                        <td class='item11'>
+					                                        <a href="{__uri__}" class="item1" style="text-transform:uppercase !important;">{__title__}</a>
+										{__(if(count($childs)>0)__}
+										{__apply childs($childs)__}
+										{__if)__}
+									</td>
+									{__if)__}
+								{__apply)__}
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+<!--SKIP_SEARCH)-->
+
+
+
+{__(template childs(param)__}
+	{__(if(count(@param)>0)__}
+		{__set(#cnt = count(@param))__}
+	<div class="section">
+	{__(apply(@param)__}
+                                    <a href="{__uri__}" class="item2">{__title__}</a>
+				{__(if(count($childs)>0)__}
+				{__apply childs($childs)__}
+				{__if)__}
+	{__apply)__}
+	</div>
+	{__if)__}
+{__template)__}

@@ -332,9 +332,13 @@ class ui_structure extends user_interface
 		$tmpl = new tmpl($out, 'TEXT');
 		$out = $tmpl->parse(array('css_hash' => $css_hash, 'js_hash' => $js_hash));
 		if ($output)
-			response::send($out, 'html');
-		else
+		{
+			echo($out);
+			die();
+			//response::send($out, 'html'); ранее было вот это но респонз косячил в случае  дбг шоу что то наружу да и зачем усложнять
+		}else{
 			return $out;
+		}
         }
 
 	public function collect_resources($ui, $name)

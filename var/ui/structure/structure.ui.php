@@ -304,6 +304,8 @@ class ui_structure extends user_interface
 		$data['CURRENT_THEME_PATH'] = "/{$this->theme_path}";
 		$data['PAGE_ID'] = $page['id'];
 		$data['PAGE_TITLE'] = $page['title'];
+		$data['CANONICAL'] = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+		$data['SHORTLINK'] =  'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
 		if (authenticate::is_logged())
 		{
 			$data['IS_LOGGED'] = 'yes';

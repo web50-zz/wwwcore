@@ -105,6 +105,8 @@ class di_search extends data_interface
 		define('OVERLOAD_UI_CALL_PREFIX','pub_');
 		foreach ($tree as $page)
 		{
+			if($page['redirect'] == '' && $page['hidden'] == 0)
+			{
 			// Формируем страницу
 			$content = $strcUI->process_page($page, false);
 			// Убираем <!--(SKIP_SEARCH--> чтото <!--SKIP_SEARCH-->
@@ -129,6 +131,7 @@ class di_search extends data_interface
 			$this->insert_on_empty = true;
 			$this->_set();
 			$this->pop_args();
+			}
 		}
 
 		// Удаляем устаревшие страницы из индекса

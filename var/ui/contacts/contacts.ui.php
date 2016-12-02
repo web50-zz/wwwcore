@@ -38,6 +38,8 @@ class ui_contacts extends user_interface
 		$headers = getallheaders();
 		if($headers['X-Requested-With'] != 'XMLHttpRequest')
 		{
+			$st = user_interface::get_instance('structure');
+			$st->do_404();
 			return false;
 		}
 

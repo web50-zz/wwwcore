@@ -1,6 +1,6 @@
 {__(apply(/records)__}
 <ul>
-<li><b>{__title__}</b></li>
+<li{__(if(/current/left >= $left && /current/right <= $right)__} active {__if)__}><b>{__title__}</b></li>
 {__(if($childs)__}
 	{__(apply($childs)__}
 		<li>{__title__}</li>

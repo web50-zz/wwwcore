@@ -95,7 +95,7 @@ class ui_www_files_front extends user_interface
 		return '/filestorage/'.$res->real_name;
 	}
 
-//9* возвращает сорс файла заданного по id и по названиюсвойтсва заданного в странице через json_params
+//9* возвращает сорс файла заданного id  по Ключу в реестре 
 	public function pub_file_by_reg_key()
 	{
 		$args = $this->get_args();
@@ -113,6 +113,21 @@ class ui_www_files_front extends user_interface
 		return '/filestorage/'.$res->real_name;
 	}
 
+//9* возвращает сорс файла заданного id 
+	public function pub_file_by_id()
+	{
+		$id = $this->get_args('id');
+		if($id == '')
+		{
+			return;
+		}
+		$file_id = $id;
+		$di = data_interface::get_instance('fm_files');
+		$di->_flush();
+		$di->set_args(array('_sid'=>$file_id));
+		$res = $di->_get()->get_results(0);
+		return '/filestorage/'.$res->real_name;
+	}
 
 
 }

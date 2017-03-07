@@ -304,6 +304,8 @@ class ui_structure extends user_interface
 		$data['CURRENT_THEME_PATH'] = "/{$this->theme_path}";
 		$data['PAGE_ID'] = $page['id'];
 		$data['PAGE_TITLE'] = $page['title'];
+		$data['CANONICAL'] = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+		$data['SHORTLINK'] =  'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
 		if (authenticate::is_logged())
 		{
 			$data['IS_LOGGED'] = 'yes';
@@ -332,9 +334,13 @@ class ui_structure extends user_interface
 		$tmpl = new tmpl($out, 'TEXT');
 		$out = $tmpl->parse(array('css_hash' => $css_hash, 'js_hash' => $js_hash));
 		if ($output)
-			response::send($out, 'html');
-		else
+		{
+			echo($out);
+			die();
+			//response::send($out, 'html'); ранее было вот это но респонз косячил в случае  дбг шоу что то наружу да и зачем усложнять
+		}else{
 			return $out;
+		}
         }
 
 	public function collect_resources($ui, $name)

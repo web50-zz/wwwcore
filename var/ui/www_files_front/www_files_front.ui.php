@@ -36,11 +36,22 @@ class ui_www_files_front extends user_interface
 			'_sfm_folders_id'=>$folder,
 			'limit'=>$limit,
 		);
+		if($folder > 0)
+		{
+			$di = data_interface::get_instance('fm_folders');
+			$di->_flush();
+			$di->set_args(array('_sid'=>$folder));
+			$folder_data = $di->_get()->get_results(0);
+		}
 
 		$di =  data_interface::get_instance('fm_files');
 		$di->_flush();
 		$di->set_args($this->args);
 		$data = $di->extjs_grid_json(false,false);
+		if($folder_data)
+		{
+			$data['title'] = $folder_data->title;
+		}
 		if($enable_pager == true)
 		{
 			$pager = user_interface::get_instance('pager');

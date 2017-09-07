@@ -217,8 +217,10 @@ class ui_structure extends user_interface
 				{
 					$this->uri_check_list[$vp->ui_name][$vp->ui_call] = 1;
 				}
-				// Collect VP resources 
-				//$this->collect_resources($ui, $vp->ui_name);
+
+				// Collect VP resources
+				$this->collect_resources($ui, $vp->ui_name); // передвинуто перед экзеком вью поинта чтобы реусрсы вьюпроинта собирались раньше чем ресурсы включенных в шаблон экзеков  UI
+
 
 				/* 9* some cache procs */
 				if ($vp->cache_enabled == 1)
@@ -260,8 +262,6 @@ class ui_structure extends user_interface
 				if($ui->key_words)
 					$this->key_words[] =  $ui->key_words;
 				*/
-				// Collect VP resources
-				$this->collect_resources($ui, $vp->ui_name);
 			}
 			catch(exception $e)
 			{

@@ -42,6 +42,7 @@ class ui_structure extends user_interface
 		$this->description = array();
 		$this->css_resources = array();
 		$this->js_resources = array();
+		$this->body_class = array();
 		return $this;
 	}
 
@@ -298,6 +299,7 @@ class ui_structure extends user_interface
 		$data['css_hash'] = '{__css_hash__}';
 		// Заменяем в шаблоне маркер {__js_hash__} на такой-же {__js_hash__}, для того, чтобы после сбора всех JS, сгенерировать правильный MD5
 		$data['js_hash'] = '{__js_hash__}';
+		$data['body_class'] = '{__body_class__}';//для вставик в тэг боди классов нудных для каких то UI CSS - такое бывает
 		$data['title'] = join(' ', $this->title_words);
 		$data['keywords'] = join(',', $this->key_words);
 		$data['description'] = join(',', $this->description);
@@ -330,9 +332,11 @@ class ui_structure extends user_interface
 		$_SESSION['paths'][$js_hash] = $js_full;
 		$_SESSION['paths'][$css_hash] = $css_full;
 
+		$body_class_full =  implode(' ', $this->body_class); // склеиваем то что UI напихали в класс тега body
+
 		// Загоняем в шаблон окончательный набор ресурсов CSS и JS
 		$tmpl = new tmpl($out, 'TEXT');
-		$out = $tmpl->parse(array('css_hash' => $css_hash, 'js_hash' => $js_hash));
+		$out = $tmpl->parse(array('css_hash' => $css_hash, 'js_hash' => $js_hash,'body_class'=>$body_class_full));
 		if ($output)
 		{
 			echo($out);
@@ -409,6 +413,16 @@ class ui_structure extends user_interface
 		if($text != '')
 		{
 			$this->description[] = $text;
+			return true;
+		}
+		return false;
+	}
+
+	public function add_body_class($class)
+	{
+		if($class != '')
+		{
+			$this->body_class[] = $class;
 			return true;
 		}
 		return false;

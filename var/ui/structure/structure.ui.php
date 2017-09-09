@@ -427,6 +427,18 @@ class ui_structure extends user_interface
 		}
 		return false;
 	}
+
+	public function pub_add_body_class()
+	{
+		$class = $this->get_args('class','');
+		if($class)
+		{
+			$this->add_body_class($class);
+		}
+		return false;
+	}
+
+
 //9* метод для получения внешними модулями  полной информации из структуры по странице 
 	public function get_page_info()
 	{

@@ -17,6 +17,7 @@ class ui_structure extends user_interface
 	protected $inner_uri_match = false;//9* если есть влоденные uri  то будет true
 	protected $exact_uri_match = false;
 	protected $uri_check_list = array();//9* список уи и методов которые вызываются и дложны быть учтены при  решении 404
+	protected $body_class = array();
 	protected $deps = array(
 		'main' => array(
 			'structure.site_tree',

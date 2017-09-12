@@ -162,6 +162,10 @@ class ui_navigation extends user_interface
 		return $this->parse_tmpl('brothers_menu.html', $res);
 	}
 
+	/*
+		Тащим всех потомков от парента заданного
+		по умолчанию ID 1. Для этого используем сайтмэп ди.
+	*/
 	protected function pub_all_nested()
 	{
 		$data =  array();
@@ -177,6 +181,38 @@ class ui_navigation extends user_interface
 		$data_r = $di->get_all();
 		$data['records'] = $data_r['childs'];
 		$data_r['childs'] = '';;
+		$data['parent'] = $data_r; 
+		$data['args' ]['parent'] = $parent;
+		return $this->parse_tmpl($template,$data);
+	}
+	/*
+		это если надо построить всех потомков для парента текущей страницы. 
+		Указыем левел парента с которого строить. 
+		То есть с прервого левела нпример мы берем для текущей ноды парента 1 уровня и отдаем всех его потомков включая текущего ноду
+	*/
+	protected function pub_down_from_level()
+	{
+		$data =  array();
+		$template = $this->get_args('template', 'down_from_level.html');
+		$st = data_interface::get_instance('structure');
+		$trunc = $st->get_trunc_menu();
+		$level = (int)$this->get_args('level',1);
+		foreach($trunc as $key=>$value)
+		{
+			if($level == $value['level'])
+			{
+				$parent = $value['id'];
+			}
+		}
+		$di = data_interface::get_instance('site_map');
+		$hidden = $this->get_args('hidden',0);
+		$di->set_args(array(
+				'parent'=>$parent,
+				'hidden'=>$hidden,
+				));
+		$data_r = $di->get_all();
+		$data['records'] = $data_r['childs'];
+		$data_r['childs'] = '';
 		$data['parent'] = $data_r; 
 		$data['args' ]['parent'] = $parent;
 		return $this->parse_tmpl($template,$data);

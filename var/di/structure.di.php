@@ -26,6 +26,8 @@ class di_structure extends data_interface
 	* флаг ставится в  true если search_by_uri  дает  точное совпадение  по $uri, иначе  false чтобы учесть позже при отдаче 404
 	*/
 	public $exact_match = false;
+
+	public $current_trunc = false;//Данные по текущему транку. Чтобы кэшировать.
 	/**
 	* @var	array	$fields	Конфигурация таблицы
 	*/
@@ -189,11 +191,15 @@ class di_structure extends data_interface
 	
 	public function get_trunc_menu()
 	{
-		$ns = new nested_sets($this);
 		if(defined('PAGE_ID'))
 		{
-			return $ns->get_parents(PAGE_ID, true);
+			if($this->current_trunc == false)
+			{
+				$ns = new nested_sets($this);
+				$this->current_trunc =$ns->get_parents(PAGE_ID, true);
+			}
 		}
+		return $this->current_trunc;
 	}
 
 	public function _set_page($data)

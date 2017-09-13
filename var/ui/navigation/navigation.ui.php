@@ -182,6 +182,8 @@ class ui_navigation extends user_interface
 		$data['records'] = $data_r['childs'];
 		$data_r['childs'] = '';;
 		$data['parent'] = $data_r; 
+		$std =  user_interface::get_instance('structure');
+		$data['current'] = $std->get_page_info();
 		$data['args' ]['parent'] = $parent;
 		return $this->parse_tmpl($template,$data);
 	}

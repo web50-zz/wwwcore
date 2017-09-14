@@ -159,11 +159,14 @@ class ui_structure extends user_interface
 		if (file_exists($js_deps_file))
 		{
 			include_once($js_deps_file);
-			foreach ($js_deps as $depk => $depv)
+			if(is_array($js_deps))
 			{
-				$path = $this->theme_path . $depv; //9* note that $this->theme_path declared in user_interface prototype class by defults based on  theme init cfg
-//				$data['js_resources'][] = $path;
-				$this->js_resources[$path][] = $path;
+				foreach ($js_deps as $depk => $depv)
+				{
+					$path = $this->theme_path . $depv; //9* note that $this->theme_path declared in user_interface prototype class by defults based on  theme init cfg
+	//				$data['js_resources'][] = $path;
+					$this->js_resources[$path][] = $path;
+				}
 			}
 		}
 
@@ -177,11 +180,14 @@ class ui_structure extends user_interface
 		if (file_exists($css_deps_file))
 		{
 			include_once($css_deps_file);
-			foreach ($css_deps as $depk => $depv)
+			if(is_array($css_deps))
 			{
-				$path = $this->theme_path . $depv; 
-				//$data['js_resources'][] = $path;
-				$this->css_resources[$path][] = $path;
+				foreach ($css_deps as $depk => $depv)
+				{
+					$path = $this->theme_path . $depv; 
+					//$data['js_resources'][] = $path;
+					$this->css_resources[$path][] = $path;
+				}
 			}
 		}
 

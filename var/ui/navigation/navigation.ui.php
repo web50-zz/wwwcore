@@ -74,7 +74,10 @@ class ui_navigation extends user_interface
 	{
 		$st = data_interface::get_instance('structure');
 		$data = $st->get_trunc_menu();
-		$data = array_merge($data, $this->get_sub_structure($data[count($data) - 1]));
+		if(is_array($data))
+		{
+			$data = array_merge($data, $this->get_sub_structure($data[count($data) - 1]));
+		}
 		$this->title_words = '';
 		$this->key_words = '';
 		$this->description = '';
@@ -199,11 +202,14 @@ class ui_navigation extends user_interface
 		$st = data_interface::get_instance('structure');
 		$trunc = $st->get_trunc_menu();
 		$level = (int)$this->get_args('level',1);
-		foreach($trunc as $key=>$value)
+		if(is_array($trunc))
 		{
-			if($level == $value['level'])
+			foreach($trunc as $key=>$value)
 			{
-				$parent = $value['id'];
+				if($level == $value['level'])
+				{
+					$parent = $value['id'];
+				}
 			}
 		}
 		$di = data_interface::get_instance('site_map');

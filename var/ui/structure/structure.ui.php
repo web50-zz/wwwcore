@@ -118,9 +118,12 @@ class ui_structure extends user_interface
 		{
 			$this->description[] = $page['mdescr'];
 		}
-		if($page['title'] != '')
+		if($page['mtitle'] != '')
 		{
 			$this->title_words[] = $page['mtitle'];
+		}else if($page['title'] != '')
+		{
+			$this->title_words[] = $page['title'];
 		}
 		//9* суем глобальное META
 		if(SITE_KEYWORDS != '')

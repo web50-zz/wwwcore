@@ -29,6 +29,7 @@ class ui_www_files_front extends user_interface
 		$page = request::get('page', 1);
 		$sort = $this->get_args('sort','id');
 		$dir = $this->get_args('dir','DESC');
+		$show_title = $this->get_args('show_title',0);
 		$this->args = array(
 			'sort'=>$sort,
 			'dir'=>$dir,
@@ -36,6 +37,10 @@ class ui_www_files_front extends user_interface
 			'_sfm_folders_id'=>$folder,
 			'limit'=>$limit,
 		);
+		if($show_title != 0)
+		{
+			$this->args['show_title'] = $show_title;
+		}
 		if($folder > 0)
 		{
 			$di = data_interface::get_instance('fm_folders');
@@ -70,6 +75,7 @@ class ui_www_files_front extends user_interface
 			$data['pager'] =$pager->get_pager(array('page' => $page, 'total' => $data['total'], 'limit' => $limit, 'prefix' => $_SERVER['QUERY_STRING']));
 			$data['custom_pager'] = array('page' => $page, 'total' => $data['total'], 'limit' => $limit, 'prefix' => $query);
 		}
+		$data['args'] = $this->args;
                 return $this->parse_tmpl($template, $data);
         }
 //9* возвращает сорс файла заданного по id и по названиюсвойтсва заданного в странице через json_params

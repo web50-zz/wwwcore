@@ -121,7 +121,8 @@ ui.structure.node_form = Ext.extend(Ext.form.FormPanel, {
 				{iconCls: 'cancel', text: this.bttCancel, handler: this.Cancel, scope: this}
 			],
 			keys: [
-				{key: [Ext.EventObject.ENTER], handler: this.Save, scope: this}
+				{key: [Ext.EventObject.ENTER], handler: this.Save, scope: this},
+				{key: [Ext.EventObject.ESC], handler: this.Cancel, scope: this}
 			]
 		});
 		Ext.apply(this, config);

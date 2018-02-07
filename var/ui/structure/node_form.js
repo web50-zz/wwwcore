@@ -121,7 +121,7 @@ ui.structure.node_form = Ext.extend(Ext.form.FormPanel, {
 				{iconCls: 'cancel', text: this.bttCancel, handler: this.Cancel, scope: this}
 			],
 			keys: [
-			//	{key: [Ext.EventObject.ENTER], handler: this.Save, scope: this}
+				{key: [Ext.EventObject.ENTER], handler: this.Save, scope: this}
 			]
 		});
 		Ext.apply(this, config);
@@ -133,6 +133,7 @@ ui.structure.node_form = Ext.extend(Ext.form.FormPanel, {
 		this.on({
 			data_saved: function(isNew, formData, respData){
 				this.getForm().setValues([{id: '_sid', value: respData.id}, {id: 'uri', value: respData.uri},{id: 'id', value: respData.id}]);
+				this.fireEvent('cancelled');
 			},
 			data_loaded: function(data, id){
 			},

@@ -112,6 +112,7 @@ class ui_navigation extends user_interface
 		$data['page_uri'] = PAGE_URI;
 		$st =  user_interface::get_instance('structure');
 		$data['current'] = $st->get_page_info();
+		$data['args'] = $this->get_args();
 		return $this->parse_tmpl($template,$data);
 	}
 	/**

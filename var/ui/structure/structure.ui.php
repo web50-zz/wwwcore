@@ -416,6 +416,17 @@ class ui_structure extends user_interface
 		}
 		return false;
 	}
+//9* метод для замены внешними модулями в title  слов на вывод в Title страницы 
+	public function overload_title($text)
+	{
+		if($text != '')
+		{
+			$this->title_words = array();
+			$this->title_words[] = $text;
+			return true;
+		}
+		return false;
+	}
 
 //9* метод для добавления внешними модулями в массив decsription слов на вывод в META description 
 	public function add_description($text)

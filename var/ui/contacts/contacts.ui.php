@@ -58,28 +58,32 @@ class ui_contacts extends user_interface
 			{
 	//9* 22072013 needed only episodically			throw new Exception('Заполните поле "Тема"');
 			}
-			if(!filter_var($args['email'], FILTER_VALIDATE_EMAIL))
-			{
-				throw new Exception('поле "E-mail" заполнено некорректно');
-			}
-			$dns = '';
 
-			// ==== Getting DNS part of the mail ==== //
-			$pieces = explode('@', $args['email']);
-			if(isset($pieces[1]))
+			if(array_key_exists('email',$args) && $args['email'] != '')
 			{
-				$dns = $pieces[1];
-			}
+				if(!filter_var($args['email'], FILTER_VALIDATE_EMAIL))
+				{
+					throw new Exception('поле "E-mail" заполнено некорректно');
+				}
+				$dns = '';
 
-			// ==== Checking if the checkdnsrr exists ==== //
-			if(function_exists('checkdnsrr') && checkdnsrr($dns) === false)
-			{
-				throw new Exception('поле "E-mail" заполнено некорректно');
-			}
-			// ==== Checking if the gethostbyname exists ==== //
-			else if(function_exists('gethostbyname') && gethostbyname($dns) === $dns)
-			{
-				throw new Exception('поле "E-mail" заполнено некорректно');
+				// ==== Getting DNS part of the mail ==== //
+				$pieces = explode('@', $args['email']);
+				if(isset($pieces[1]))
+				{
+					$dns = $pieces[1];
+				}
+
+				// ==== Checking if the checkdnsrr exists ==== //
+				if(function_exists('checkdnsrr') && checkdnsrr($dns) === false)
+				{
+					throw new Exception('поле "E-mail" заполнено некорректно');
+				}
+				// ==== Checking if the gethostbyname exists ==== //
+				else if(function_exists('gethostbyname') && gethostbyname($dns) === $dns)
+				{
+					throw new Exception('поле "E-mail" заполнено некорректно');
+				}
 			}
 			$this->send_email($args);
 			$msg = 'Спасибо, сообщение отправлено';

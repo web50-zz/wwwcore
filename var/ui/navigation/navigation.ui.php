@@ -107,6 +107,9 @@ class ui_navigation extends user_interface
 				}
 			}
 		}
+		$ns = new nested_sets($st);
+		$data['parent'] = $ns->get_node($parent);
+
 		$data['page_id'] = PAGE_ID;
 		$data['srch_uri'] = SRCH_URI;
 		$data['page_uri'] = PAGE_URI;

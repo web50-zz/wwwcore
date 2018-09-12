@@ -19,7 +19,13 @@ try
 
 	//$uri = (empty($_SERVER['REDIRECT_URL'])) ? '/' : $_SERVER['REDIRECT_URL'];
 	//$uri = "/" . request::get('_uri', '');
+
 	$uri = URI;
+	/* 9* 2018-07-30  иногда(на некоторых хостингах  тут бывает вместо ожидаемого / вот это /index.php а по сему некторый фикс */
+        if($uri == '/index.php')
+        {
+            $uri = '/';
+        }
         $diStrc = data_interface::get_instance(SITE_DI);
 	$uiSt = user_interface::get_instance(SITE_UI);
 

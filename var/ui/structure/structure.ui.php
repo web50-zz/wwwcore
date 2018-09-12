@@ -17,6 +17,7 @@ class ui_structure extends user_interface
 	protected $inner_uri_match = false;//9* если есть влоденные uri  то будет true
 	protected $exact_uri_match = false;
 	protected $uri_check_list = array();//9* список уи и методов которые вызываются и дложны быть учтены при  решении 404
+	protected $body_class = array();
 	protected $deps = array(
 		'main' => array(
 			'structure.site_tree',
@@ -42,6 +43,7 @@ class ui_structure extends user_interface
 		$this->description = array();
 		$this->css_resources = array();
 		$this->js_resources = array();
+		$this->body_class = array();
 		return $this;
 	}
 
@@ -116,9 +118,12 @@ class ui_structure extends user_interface
 		{
 			$this->description[] = $page['mdescr'];
 		}
-		if($page['title'] != '')
+		if($page['mtitle'] != '')
 		{
 			$this->title_words[] = $page['mtitle'];
+		}else if($page['title'] != '')
+		{
+			$this->title_words[] = $page['title'];
 		}
 		//9* суем глобальное META
 		if(SITE_KEYWORDS != '')
@@ -157,11 +162,14 @@ class ui_structure extends user_interface
 		if (file_exists($js_deps_file))
 		{
 			include_once($js_deps_file);
-			foreach ($js_deps as $depk => $depv)
+			if(is_array($js_deps))
 			{
-				$path = $this->theme_path . $depv; //9* note that $this->theme_path declared in user_interface prototype class by defults based on  theme init cfg
-//				$data['js_resources'][] = $path;
-				$this->js_resources[$path][] = $path;
+				foreach ($js_deps as $depk => $depv)
+				{
+					$path = $this->theme_path . $depv; //9* note that $this->theme_path declared in user_interface prototype class by defults based on  theme init cfg
+	//				$data['js_resources'][] = $path;
+					$this->js_resources[$path][] = $path;
+				}
 			}
 		}
 
@@ -175,11 +183,14 @@ class ui_structure extends user_interface
 		if (file_exists($css_deps_file))
 		{
 			include_once($css_deps_file);
-			foreach ($css_deps as $depk => $depv)
+			if(is_array($css_deps))
 			{
-				$path = $this->theme_path . $depv; 
-				//$data['js_resources'][] = $path;
-				$this->css_resources[$path][] = $path;
+				foreach ($css_deps as $depk => $depv)
+				{
+					$path = $this->theme_path . $depv; 
+					//$data['js_resources'][] = $path;
+					$this->css_resources[$path][] = $path;
+				}
 			}
 		}
 
@@ -217,8 +228,10 @@ class ui_structure extends user_interface
 				{
 					$this->uri_check_list[$vp->ui_name][$vp->ui_call] = 1;
 				}
-				// Collect VP resources 
-				//$this->collect_resources($ui, $vp->ui_name);
+
+				// Collect VP resources
+				$this->collect_resources($ui, $vp->ui_name); // передвинуто перед экзеком вью поинта чтобы реусрсы вьюпроинта собирались раньше чем ресурсы включенных в шаблон экзеков  UI
+
 
 				/* 9* some cache procs */
 				if ($vp->cache_enabled == 1)
@@ -260,8 +273,6 @@ class ui_structure extends user_interface
 				if($ui->key_words)
 					$this->key_words[] =  $ui->key_words;
 				*/
-				// Collect VP resources
-				$this->collect_resources($ui, $vp->ui_name);
 			}
 			catch(exception $e)
 			{
@@ -298,6 +309,7 @@ class ui_structure extends user_interface
 		$data['css_hash'] = '{__css_hash__}';
 		// Заменяем в шаблоне маркер {__js_hash__} на такой-же {__js_hash__}, для того, чтобы после сбора всех JS, сгенерировать правильный MD5
 		$data['js_hash'] = '{__js_hash__}';
+		$data['body_class'] = '{__body_class__}';//для вставик в тэг боди классов нудных для каких то UI CSS - такое бывает
 		$data['title'] = join(' ', $this->title_words);
 		$data['keywords'] = join(',', $this->key_words);
 		$data['description'] = join(',', $this->description);
@@ -330,9 +342,11 @@ class ui_structure extends user_interface
 		$_SESSION['paths'][$js_hash] = $js_full;
 		$_SESSION['paths'][$css_hash] = $css_full;
 
+		$body_class_full =  implode(' ', $this->body_class); // склеиваем то что UI напихали в класс тега body
+
 		// Загоняем в шаблон окончательный набор ресурсов CSS и JS
 		$tmpl = new tmpl($out, 'TEXT');
-		$out = $tmpl->parse(array('css_hash' => $css_hash, 'js_hash' => $js_hash));
+		$out = $tmpl->parse(array('css_hash' => $css_hash, 'js_hash' => $js_hash,'body_class'=>$body_class_full));
 		if ($output)
 		{
 			echo($out);
@@ -402,6 +416,17 @@ class ui_structure extends user_interface
 		}
 		return false;
 	}
+//9* метод для замены внешними модулями в title  слов на вывод в Title страницы 
+	public function overload_title($text)
+	{
+		if($text != '')
+		{
+			$this->title_words = array();
+			$this->title_words[] = $text;
+			return true;
+		}
+		return false;
+	}
 
 //9* метод для добавления внешними модулями в массив decsription слов на вывод в META description 
 	public function add_description($text)
@@ -413,6 +438,28 @@ class ui_structure extends user_interface
 		}
 		return false;
 	}
+
+	public function add_body_class($class)
+	{
+		if($class != '')
+		{
+			$this->body_class[] = $class;
+			return true;
+		}
+		return false;
+	}
+
+	public function pub_add_body_class()
+	{
+		$class = $this->get_args('class','');
+		if($class)
+		{
+			$this->add_body_class($class);
+		}
+		return false;
+	}
+
+
 //9* метод для получения внешними модулями  полной информации из структуры по странице 
 	public function get_page_info()
 	{

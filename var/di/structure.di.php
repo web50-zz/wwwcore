@@ -101,6 +101,7 @@ class di_structure extends data_interface
 			$sql = 'SELECT * FROM `' . $this->name . '` WHERE `id` = :id';
 			$result = $this->connector->exec($sql, array('id' => 1), true, true);
 		}
+		$this->fire_event('gpbr',array());
 		return $result[0];
 	}
 

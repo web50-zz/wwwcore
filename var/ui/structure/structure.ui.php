@@ -407,7 +407,7 @@ class ui_structure extends user_interface
 	}
 	
 //9* метод для добавления внешними модулями в title  слов на вывод в Title страницы 
-	public function add_title($text)
+	public function add_title($text = '')
 	{
 		if($text != '')
 		{
@@ -417,7 +417,7 @@ class ui_structure extends user_interface
 		return false;
 	}
 //9* метод для замены внешними модулями в title  слов на вывод в Title страницы 
-	public function overload_title($text)
+	public function overload_title($text = '')
 	{
 		if($text != '')
 		{
@@ -428,8 +428,17 @@ class ui_structure extends user_interface
 		return false;
 	}
 
+	public function pub_overload_title()
+	{
+		if($this->args['text'] != '')
+		{
+			$text = $this->args['text'];
+		}
+		$this->overload_title($text);
+	}
+
 //9* метод для добавления внешними модулями в массив decsription слов на вывод в META description 
-	public function add_description($text)
+	public function add_description($text = '')
 	{
 		if($text != '')
 		{
@@ -437,6 +446,26 @@ class ui_structure extends user_interface
 			return true;
 		}
 		return false;
+	}
+
+	public function overload_description($text = '')
+	{
+		if($text != '')
+		{
+			$this->description = array();
+			$this->description[] = $text;
+			return true;
+		}
+		return false;
+	}
+
+	public function pub_overload_description()
+	{
+		if($this->args['text'] != '')
+		{
+			$text = $this->args['text'];
+		}
+		$this->overload_description($text);
 	}
 
 	public function add_body_class($class)

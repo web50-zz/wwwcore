@@ -30,6 +30,10 @@ class ui_text extends user_interface
                 $di = data_interface::get_instance('text');
 		$di->set_args($this->get_args());
 		$data = $di->get();
+		if(!is_array($data))
+		{
+			$data = array();
+		}
 		$data = array_merge($data, $this->args);
                 return $this->parse_tmpl($template, $data);
         }

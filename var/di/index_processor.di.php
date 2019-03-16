@@ -287,7 +287,8 @@ class di_index_processor extends data_interface
 	//9*  custom cyrillic fix. for json_encode
 	public function json_enc($arr)
 	{
-		return str_replace('"','\"',json_encode($arr, JSON_UNESCAPED_UNICODE));// начиная с php 5.4   в более ранних версий этой опции нету JSON_UNESCAPED_UNICODE
+		return str_replace('"','\"',json_encode($arr, 256));
+		//return str_replace('"','\"',json_encode($arr, JSON_UNESCAPED_UNICODE));// начиная с php 5.4   в более ранних версий этой опции нету JSON_UNESCAPED_UNICODE
 		$result = preg_replace_callback(
 			'/\\\u([0-9a-fA-F]{4})/', 
 			create_function('$_m', 'return mb_convert_encoding("&#" . intval($_m[1], 16) . ";", "UTF-8", "HTML-ENTITIES");'),

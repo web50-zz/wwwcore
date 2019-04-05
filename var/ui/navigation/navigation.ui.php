@@ -161,6 +161,14 @@ class ui_navigation extends user_interface
 				$parent = $value;
 			}
 		}
+		//9* вот это для того чтобы на первом уровне в подменю выдавались потомки а не соседи иначе подменю дублирует топ меню
+		if($data[count($data)-1]['level'] == 2)
+		{
+			$parent = $data[count($data)-1];
+		}
+
+		
+
 		$st =  data_interface::get_instance('structure');
 		$res['records'] = $st->get_main_menu($parent['id'],$level_down);
 		$res['parent'] = $parent;

@@ -70,6 +70,7 @@ class ui_structure extends user_interface
 			$this->exact_uri_match = true;
 		}
 		$page = $this->before_process_page($page);
+		glob::set('PAGE_URI',$page['uri']);// для нужд рендера и проч
                 $data = array(
                         'args' => request::get(),
 		);

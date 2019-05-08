@@ -36,7 +36,7 @@ class di_www_users_config extends data_interface
 	*	Получить данные элемента в виде JSON
 	* @access protected
 	*/
-	public function _get($id, $key = null, $default = null)
+	public function _get_v($id, $key = null, $default = null)
 	{
 		if (($record = session::get($id, FALSE, $this->name)) !== FALSE)
 		{
@@ -59,7 +59,7 @@ class di_www_users_config extends data_interface
 	*	Сохранить данные и вернуть JSON-пакет для ExtJS
 	* @access protected
 	*/
-	public function _set($id, $record)
+	public function _set_v($id, $record)
 	{
 		session::set($id, $record, $this->name);
 	}
@@ -68,7 +68,7 @@ class di_www_users_config extends data_interface
 	*	Удалить данные и вернуть JSON-пакет для ExtJS
 	* @access protected
 	*/
-	public function _unset($id)
+	public function _unset_v($id)
 	{
 		return session::del($id, $this->name);
 	}

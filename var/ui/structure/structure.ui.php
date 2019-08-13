@@ -44,6 +44,7 @@ class ui_structure extends user_interface
 		$this->css_resources = array();
 		$this->js_resources = array();
 		$this->body_class = array();
+		$this->meta_tags = array();
 		return $this;
 	}
 
@@ -107,6 +108,7 @@ class ui_structure extends user_interface
 			$this->description = array();
 			$this->css_resources = array();
 			$this->js_resources = array();
+			$this->meta_tags = array();
 		}
 
 
@@ -320,6 +322,11 @@ class ui_structure extends user_interface
 		$data['PAGE_TITLE'] = $page['title'];
 		$data['CANONICAL'] = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
 		$data['SHORTLINK'] =  'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+		$data['meta_tags'] = array();
+		foreach($this->meta_tags as $k=>$v)
+		{
+			$data['meta_tags'][] = array('name'=>$k,'content'=>$v);
+		}
 		if (authenticate::is_logged())
 		{
 			$data['IS_LOGGED'] = 'yes';
@@ -490,6 +497,23 @@ class ui_structure extends user_interface
 		return false;
 	}
 
+	public function pub_add_meta()
+	{
+		$name = $this->get_args('name','');
+		$content = $this->get_args('content','');
+		if($name != '' && $content != '')
+		{
+			$this->add_meta($name,$content);
+		}	
+	}
+
+	private function add_meta($name = '',$content = '')
+	{
+		if($name != '' && $content != '')
+		{
+			$this->meta_tags[$name] = $content;
+		}
+	}
 
 //9* метод для получения внешними модулями  полной информации из структуры по странице 
 	public function get_page_info()

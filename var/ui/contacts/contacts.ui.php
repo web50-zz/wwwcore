@@ -135,7 +135,9 @@ class ui_contacts extends user_interface
 		{
 			$core_domain = 'localhost';
 		}
-		require_once LIB_PATH.'Swift/swift_required.php';
+		$swift_file = INSTANCES_PATH . 'swift/var/lib/Swift/swift_required.php';
+		if (!file_exists($swift_file)) $swift_file = LIB_PATH . 'Swift/swift_required.php';
+		require_once $swift_file;
 		$transport = Swift_MailTransport::newInstance();
 		$mailer = Swift_Mailer::newInstance($transport);
 		$message = Swift_Message::newInstance($title)

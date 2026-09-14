@@ -45,7 +45,7 @@ try
 	define('SRCH_URI', str_replace($page['uri'], "", $uri));
 	define('PAGE_ID', $page['id']);
 	
-	if (!empty($page['redirect']))
+	if (!empty($page['redirect']) && $diStrc->exact_match)
 	{
 		response::redirect($page['redirect']);
 	}

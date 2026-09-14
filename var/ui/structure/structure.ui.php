@@ -711,8 +711,9 @@ class ui_structure extends user_interface
 		{
 			$data['IS_LOGGED'] = 'yes';
 		}
-				$template = '404.html';
-				
+		// 9* 2026-09-14 (задача #008): позволяем теме оверрайдить 404 PHP-шаблоном (404.php —
+		// полный доступ PHP и шаблонизатору). Иначе — штатный 404.html (фолбэк для тем без 404.php).
+		$template = ($this->get_resource_path('404.php', 'absolute')) ? '404.php' : '404.html';
 	
 		$out = $this->parse_tmpl($template, $data);
 		

@@ -3,4 +3,4 @@ CREATE TABLE `structure_content` (
   `cid` mediumint(8) unsigned NOT NULL COMMENT 'Content ID',
   `ui_name` varchar(32) NOT NULL COMMENT 'UI name',
   UNIQUE KEY `pid` (`pid`,`cid`,`ui_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Page Content Link'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Page Content Link'

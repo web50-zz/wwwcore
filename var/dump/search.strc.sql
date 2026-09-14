@@ -8,4 +8,4 @@ CREATE TABLE `search` (
   PRIMARY KEY (`id`),
   KEY `update` (`exists`,`uri`),
   FULLTEXT KEY `content` (`content`)
-) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

@@ -1,8 +1,8 @@
 CREATE TABLE `structure` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `hidden` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'скрыть',
+  `hidden` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '??????',
   `title` varchar(255) NOT NULL DEFAULT '',
-  `name` varchar(255) NOT NULL DEFAULT '',
+  `name` varchar(50) NOT NULL DEFAULT '',
   `uri` varchar(255) NOT NULL DEFAULT '',
   `redirect` varchar(255) NOT NULL DEFAULT '',
   `module` varchar(100) NOT NULL DEFAULT '',
@@ -21,4 +21,4 @@ CREATE TABLE `structure` (
   PRIMARY KEY (`id`),
   KEY `site_part_id` (`left`,`right`,`level`),
   KEY `uri` (`uri`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

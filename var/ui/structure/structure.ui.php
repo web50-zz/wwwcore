@@ -622,7 +622,122 @@ class ui_structure extends user_interface
 	public function do_404()
 	{
 		$data = array();
-		$out = $this->parse_tmpl("404.html", $data);
+		if(!(PAGE_ID > 0)){
+			$this->_res_deps = array();
+			$this->key_words = array();
+			$this->title_words = array();
+			$this->description = array();
+			$this->css_resources = array();
+			$this->js_resources = array();
+			$this->meta_tags = array();
+			
+			$this->theme_path = CURRENT_THEME_PATH;
+			$this->theme = '';
+		
+			$js_deps_file = BASE_PATH.$this->theme_path.'/js_deps.php';
+			if (file_exists($js_deps_file))
+			{
+				include_once($js_deps_file);
+				if(is_array($js_deps))
+				{
+					foreach ($js_deps as $depk => $depv)
+					{
+						$path = $this->theme_path . $depv; 
+		
+						$this->js_resources[$path][] = $path;
+					}
+				}
+			}
+
+			//9* end of js deps inclusion
+
+			// Теперь собираем ресурсы для structure ui
+			$this->collect_resources($this, $this->interfaceName);//9* это должно быть обязательно после того как определилась теме оверлоад
+
+			//9* css ресурсы после структуры css
+			$css_deps_file = BASE_PATH.$this->theme_path.'/css_deps.php';
+			if (file_exists($css_deps_file))
+			{
+				include_once($css_deps_file);
+				if(is_array($css_deps))
+				{
+					foreach ($css_deps as $depk => $depv)
+					{
+						$path = $this->theme_path . $depv; 
+						//$data['js_resources'][] = $path;
+						$this->css_resources[$path][] = $path;
+					}
+				}
+			}
+
+
+			if (!empty($this->_res_deps))
+			{
+				foreach ($this->_res_deps as $dep)
+				{
+					$vps[] = (object)array(
+						'view_point' => 0,
+						'ui_name' => $dep['ui'],
+						'ui_call' => $dep['call'],
+						'ui_configure' => '',
+					);
+				}
+			}
+		}
+		
+		$data['css_hash'] = '{__css_hash__}';
+		// Заменяем в шаблоне маркер {__js_hash__} на такой-же {__js_hash__}, для того, чтобы после сбора всех JS, сгенерировать правильный MD5
+		$data['js_hash'] = '{__js_hash__}';
+		$data['body_class'] = '{__body_class__}';//для вставик в тэг боди классов нудных для каких то UI CSS - такое бывает
+		$data['title'] = join(' ', $this->title_words);
+		$data['keywords'] = join(',', $this->key_words);
+		$data['description'] = join(',', $this->description);
+		$data['CURRENT_THEME_PATH'] = "/{$this->theme_path}";
+		$data['PAGE_ID'] = 0;//9* на 404 страницы нет - $page не определена, не плодим notices
+		$data['SRCH_URI'] = SRCH_URI;
+		$data['PAGE_TITLE'] = '';//9* то же что и PAGE_ID выше
+		$data['CANONICAL'] = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+		$data['SHORTLINK'] =  'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+		$data['meta_tags'] = array();
+		
+		if(is_array($this->meta_tags))
+		{
+			foreach($this->meta_tags as $k=>$v)
+			{
+				$data['meta_tags'][] = array('name'=>$k,'content'=>$v);
+			}
+		}
+		if (authenticate::is_logged())
+		{
+			$data['IS_LOGGED'] = 'yes';
+		}
+				$template = '404.html';
+				
+	
+		$out = $this->parse_tmpl($template, $data);
+		
+		// Окончательный сбор данных по ресурсам
+		$css_res = array();
+		foreach ($this->css_resources as $a) $css_res = array_merge($css_res, $a);
+		$css_full = '/' . join(',/', $css_res);
+		//$css_full = '/' . join(',/', $this->css_resources);
+		$css_hash = md5($css_full);
+		
+		$js_res = array();
+		//dbg::show($this->js_resources);
+		foreach ($this->js_resources as $a) $js_res = array_merge($js_res, $a);
+		$js_full = '/' . join(',/', $js_res);
+		//$js_full = '/' . join(',/', $this->js_resources);
+		$js_hash = md5($js_full);
+
+		$_SESSION['paths'][$js_hash] = $js_full;
+		$_SESSION['paths'][$css_hash] = $css_full;
+
+		$body_class_full =  implode(' ', $this->body_class); // склеиваем то что UI напихали в класс тега body
+
+		// Загоняем в шаблон окончательный набор ресурсов CSS и JS
+		$tmpl = new tmpl($out, 'TEXT');
+		$out = $tmpl->parse(array('css_hash' => $css_hash, 'js_hash' => $js_hash,'body_class'=>$body_class_full));
 		header(" ",true,'404');
 		response::send($out, 'html');
 	}

@@ -145,7 +145,12 @@ class di_structure extends data_interface
 		$branch = $ns->get_childs($parent, $level_down);
 		if(defined('PAGE_ID'))
 		{
-			$top_parent = $ns->get_parent(PAGE_ID, 2);//9* вот то что ниже надо что бы если мы рисуем топ менюдля  страниц нижних уровней индицировать в топ уровне выбранную ветку
+			if(PAGE_ID>0){ //PAGE_ID на 404 например не задано оно пустое
+				$page_id = PAGE_ID;
+			}else{
+				$page_id = 1;// а по дефолту мы корнеь будем брать
+			}
+			$top_parent = $ns->get_parent($page_id, 2);//9* вот то что ниже надо что бы если мы рисуем топ менюдля  страниц нижних уровней индицировать в топ уровне выбранную ветку
 		}
 		foreach($branch as $key=>$value)
 		{

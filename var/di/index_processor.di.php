@@ -285,10 +285,17 @@ class di_index_processor extends data_interface
 	}
 
 	//9*  custom cyrillic fix. for json_encode
-	public function json_enc($arr)
+	public function json_enc($arr,$version_two = false)
 	{
-		//return str_replace('"','\"',json_encode($arr, 256));//закомментарено в пользу варианта строкой ниже
-		return str_replace('\t','',str_replace('\n','',str_replace('"','\"',json_encode($arr, 256))));//вариант с фиксом перезходов строк и табулций. Без этого воявляются артефакты в стила nt n t
+		//return str_replace('"','\"',json_encode($arr, 256));//закомментировано в пользу варианта строкой ниже
+		if($version_two == false){
+			return str_replace('\t','',str_replace('\n','',str_replace('"','\"',json_encode($arr, 256))));//старый вариант с двойным экранированием - вызыввал ошибки. Но необходим для соззраняния ззаказов.;
+		}
+		// тут для индексации кривых характеееристик с дублями экранирований
+		$json = json_encode($arr, 256);
+		$json = str_replace('\t','',str_replace('\n','',$json));
+		// Избегаем двойного экранирования - заменяем только неэкранированные кавычки
+		return preg_replace('/(?<!\\)"/', '\"', $json);
 		//return str_replace('"','\"',json_encode($arr, JSON_UNESCAPED_UNICODE));// начиная с php 5.4   в более ранних версий этой опции нету JSON_UNESCAPED_UNICODE
 		$result = preg_replace_callback(
 			'/\\\u([0-9a-fA-F]{4})/', 

@@ -84,8 +84,7 @@ class ui_navigation extends user_interface
 		$this->title_words = $data[count($data)-1]['title'];
 		$this->key_words = $data[count($data)-1]['title'];
 		$this->description = $data[count($data)-1]['title'];
-		$site = registry::get('SITE_URL');
-		return ($site && class_exists('lib_jsonld') ? lib_jsonld::breadcrumb_list($data, $site) : '') . $this->parse_tmpl('trunc_menu.html', $data);
+		return $this->parse_tmpl('trunc_menu.html', $data);
 	}
 
 	/*9* берем первый левел и чайлдов для каждого из топов *. Итогом Будут столбцы топ и его чайлды */	

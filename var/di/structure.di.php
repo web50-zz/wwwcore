@@ -106,6 +106,88 @@ class di_structure extends data_interface
 	}
 
 	/**
+	*	Список публичных страниц сайта с их URL
+	*
+	*	Для инстансов, которым нужно сопоставить страницы с записями своих таблиц
+	*	(карточки OpenGraph, sitemap). Отдаёт только URL, которые реально отдаются
+	*	наружу: без редиректов и без служебных (private) страниц.
+	*
+	*	`hidden` здесь НЕ учитывается: это атрибут навигации (см. get_main_menu),
+	*	а не признак недоступности страницы — /news/ и /poleznoe/ скрыты из меню,
+	*	но публичны и участвуют в выдаче og-мета.
+	*
+	*	@access	public
+	*	@return	array	массив вида [ ['id' => 1, 'url' => '/', 'title' => '…', 'mtitle' => '…'], … ]
+	*/
+	public function get_page_url_list()
+	{
+		$this->_flush();
+		// Гасим _s*/_n* из входящих аргументов, иначе они попадут в WHERE
+		$this->set_args(array());
+
+		$this->where = "`{$this->name}`.`level` >= 1"
+			. " AND (`{$this->name}`.`redirect` = '' OR `{$this->name}`.`redirect` IS NULL)"
+			. " AND `{$this->name}`.`private` = 0";
+
+		$this->set_what(array('id', 'uri', 'title', 'mtitle'));
+		$this->set_order('level');
+		$this->set_order('id');
+		$this->_get();
+
+		$results = $this->get_results();
+		$this->_flush();
+
+		$list = array();
+		foreach ((array)$results as $row)
+		{
+			// Главная в структуре хранится как /home/, наружу отдаётся как /
+			$url = (intval($row->id) == 1) ? '/' : rtrim($row->uri, '/') . '/';
+			$list[] = array(
+				'id'     => intval($row->id),
+				'url'    => $url,
+				'title'  => $row->title,
+				// mtitle — отдельный мета-заголовок; он же приоритетнее title
+				// при выводе <title> (см. structure.ui.php)
+				'mtitle' => isset($row->mtitle) ? $row->mtitle : '',
+			);
+		}
+		return $list;
+	}
+
+	/**
+	*	Список URI разделов по их идентификаторам
+	*
+	*	@access	public
+	*	@param	array	$ids	Массив идентификаторов разделов
+	*	@return	array	массив вида [ 50 => '/news/', … ]
+	*/
+	public function get_page_uri_map($ids)
+	{
+		$ids = array_values(array_unique(array_map('intval', (array)$ids)));
+		if (empty($ids))
+		{
+			return array();
+		}
+
+		$this->_flush();
+		$this->set_args(array());
+
+		$this->set_what(array('id', 'uri'));
+		$this->where = "`{$this->name}`.`id` IN (" . join(', ', $ids) . ')';
+		$this->_get();
+
+		$results = $this->get_results();
+		$this->_flush();
+
+		$map = array();
+		foreach ((array)$results as $row)
+		{
+			$map[intval($row->id)] = ($row->id == 1) ? '/' : rtrim($row->uri, '/') . '/';
+		}
+		return $map;
+	}
+
+	/**
 	*	Получить полное дерево и описание корневой ноды для отрисовки сложных шаблонов с подменю
 	* @access	public
 	* @param	integer	$parent		Идентификатор корневой ноды, если не указан, то будет браться корневая нода по id=1

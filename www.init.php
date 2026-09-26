@@ -39,6 +39,12 @@ try
 		}
 	}
 
+	// Главная в структуре хранится как /home/, наружу отдаётся как /
+	if($uri == '/home/')
+	{
+		$uiSt->do_404();
+	}
+
         $page = $diStrc->get_page_by_uri($uri);
 	define('PAGE_URI', $page['uri']);
 	define('PAGE_NAME', $page['name']);

@@ -48,7 +48,7 @@ try
         $page = $diStrc->get_page_by_uri($uri);
 	define('PAGE_URI', $page['uri']);
 	define('PAGE_NAME', $page['name']);
-	define('SRCH_URI', str_replace($page['uri'], "", $uri));
+	define('SRCH_URI', str_replace($page['uri'] ?? '', '', $uri));
 	define('PAGE_ID', $page['id']);
 	
 	if (!empty($page['redirect']) && $diStrc->exact_match)
